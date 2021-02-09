@@ -1,0 +1,132 @@
+#include "playinfo.h"
+
+PlayInfo::PlayInfo(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
+{
+    player = mp;
+    image = new Image;
+    author = new QLabel;
+    name = new QLabel;
+    video = new VideoWidget;
+    isVideo = false;
+    isFSVideo = false;
+
+    author->setFont(QFont(this->font().family(), 12, QFont::Bold));
+    name->setFont(QFont(this->font().family(), 10));
+
+    author->setAlignment(Qt::AlignCenter);
+    name->setAlignment(Qt::AlignCenter);
+
+    video->setVisible(false);
+    player->setVideoOutput(video);
+
+    QVBoxLayout *l = new QVBoxLayout;
+    l->addWidget(image, 1);
+    l->addWidget(video, 1);
+    l->addWidget(author, 0);
+    l->addWidget(name, 0);
+    setLayout(l);
+
+    connect(player, &QMediaPlayer::mediaStatusChanged, this, &PlayInfo::mediaStatus);
+    connect(player, &QMediaPlayer::videoAvailableChanged, this, &PlayInfo::videoChanged);
+
+    connect(video, &VideoWidget::clicked, this, &PlayInfo::videoClicked);
+    connect(video, &VideoWidget::doubleClicked, this, &PlayInfo::videoDoubleClicked);
+
+    mediaStatus(QMediaPlayer::MediaStatus::NoMedia);
+
+    layout()->setSpacing(0);
+    layout()->setContentsMargins(0, 0, 0, 0);
+}
+
+void PlayInfo::setNotFull(bool v)
+{
+    author->setVisible(v);
+    name->setVisible(v);
+}
+
+void PlayInfo::focus()
+{
+    video->setFocus();
+}
+
+void PlayInfo::setTitle()
+{
+    QString s = "";
+
+    switch (player->mediaStatus()) {
+    case QMediaPlayer::MediaStatus::InvalidMedia:
+    case QMediaPlayer::MediaStatus::NoMedia:
+    case QMediaPlayer::MediaStatus::UnknownMediaStatus:
+        break;
+
+    default:
+        if (not author->text().isEmpty()) {
+            s += author->text();
+        }
+        if (not name->text().isEmpty()) {
+            s += " - " + name->text();
+        }
+    }
+
+    if (not s.isEmpty()) {
+        s += " # " + qApp->applicationName();
+    }
+
+    emit newTitle(s);
+}
+
+void PlayInfo::mediaStatus(QMediaPlayer::MediaStatus s)
+{
+    switch (s) {
+    case QMediaPlayer::MediaStatus::BufferedMedia:
+    case QMediaPlayer::MediaStatus::LoadedMedia:
+        image->setPix(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::CoverArtImage)));
+        author->setText(qvariant_cast<QString>(player->metaData(QMediaMetaData::AlbumArtist)));
+        name->setText(qvariant_cast<QString>(player->metaData(QMediaMetaData::Title)));
+        break;
+
+    case QMediaPlayer::MediaStatus::NoMedia:
+        image->setPix(QPixmap());
+        author->setText(tr("No media"));
+        name->setText("");
+        break;
+
+    case QMediaPlayer::MediaStatus::InvalidMedia:
+        image->setPix(QPixmap());
+        author->setText(tr("Invalid media"));
+        name->setText("");
+        break;
+
+    default:
+        break;
+    }
+
+    setTitle();
+}
+
+void PlayInfo::videoChanged(bool v)
+{
+    isVideo = v;
+    image->setVisible(not v);
+    author->setVisible(not v);
+    video->setVisible(v);
+
+    if (not isVideo and not name->isVisible()) {
+        emit fsClicked();
+    }
+}
+
+void PlayInfo::videoClicked()
+{
+    if (player->state() == QMediaPlayer::PlayingState) {
+        player->pause();
+    }
+    else {
+        player->play();
+    }
+}
+
+void PlayInfo::videoDoubleClicked()
+{
+    emit fsClicked();
+}
