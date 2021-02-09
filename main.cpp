@@ -19,6 +19,10 @@ int main(int argc, char *argv[])
     a.setApplicationName("Caligo");
     a.setApplicationVersion("0.1");
 
+#ifdef Q_OS_WINDOWS
+    a.setStyle("Fusion");
+#endif
+
     QTranslator t1;
     t1.load(QString(":/tr/qt_") + QLocale::system().name());
     a.installTranslator(&t1);
