@@ -24,9 +24,9 @@ Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
     aboutButton->setIcon(QPixmap(":/img/info"));
 
     QMenu *abMenu = new QMenu;
-    abMenu->addAction(tr("Help"), this, &Controls::help);
-    abMenu->addAction(tr("About"), this, &Controls::about);
-    abMenu->addAction(tr("About Qt"), qApp, &QApplication::aboutQt);
+    abMenu->addAction(QPixmap(":/img/help"), tr("Help"), this, &Controls::help);
+    abMenu->addAction(QPixmap(":/img/info"), tr("About"), this, &Controls::about);
+    abMenu->addAction(QPixmap(":/img/qt"), tr("About Qt"), qApp, &QApplication::aboutQt);
     aboutButton->setMenu(abMenu);
 
     prevButton = new QPushButton;

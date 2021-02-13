@@ -32,7 +32,12 @@ void Image::paintEvent(QPaintEvent *)
 
     // pix.isNull() == true  if  music not contains image in metadata, invalid media or playlist is empty.
     if (pix.isNull()) {
-        return;
+        pix = QPixmap(":/img/noImage");
+    }
+
+    QSize s = pix.size();
+    if (s.width() < x or s.height() < x) {
+        x = s.width() < s.height() ? s.height() : s.width();
     }
 
     if (width() > height()) {
@@ -43,6 +48,10 @@ void Image::paintEvent(QPaintEvent *)
         px = 0;
         py = height() / 2 - x / 2;
     }
+
+    px = width() / 2 - x / 2;
+    py = height() / 2 - x / 2;
+
     if (notSquare)
         p.drawPixmap(px, py, pix);
     else

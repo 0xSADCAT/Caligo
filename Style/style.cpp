@@ -8,10 +8,10 @@ namespace style {
 // MediaElement style
 // me  -->  MediaElement
 namespace me {
-
+// #B0D0F7
 static QString none = "";
 static QString playing = "* {"
-                         "background-color: #B0D0F7;"
+                         "background-color: rgba(150, 200, 255, 150);"
                          "color: #000000;"
                          "}";
 static QString selected = "* {"
@@ -37,18 +37,22 @@ static QString light = "QPushButton:hover {"
                        "QSplitter::handle:hover {"
                        "background-color: #B0D0F7;"
                        "}";
+
 static QString dark = "* {"
-                      "background-color: #454545;"
+                      "background-color: #505050;"
                       "color: #FFFFFF;"
                       "}"
                       "QPushButton:hover {"
-                      "background-color: #B0D0F7;"
+                      "background-color: #2F4165;"
+                      "}"
+                      "QMenu::item:selected {"
+                      "background-color: #2F4165;"
                       "}"
                       "QSplitter::handle {"
                       "background-color: #656565;"
                       "}"
                       "QSplitter::handle:hover {"
-                      "background-color: #B0D0F7;"
+                      "background-color: #2F4165;"
                       "}";
 
 } // namespace theme

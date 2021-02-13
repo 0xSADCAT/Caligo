@@ -1,6 +1,9 @@
 #include "widget.h"
 
 #include <QApplication>
+#include <QString>
+
+#include <iostream>
 
 /* It works, but:
  *
@@ -14,6 +17,18 @@
 
 int main(int argc, char *argv[])
 {
+    if (argc > 1) {
+        if (QString(argv[1]) == "--version") {
+            std::cout << "Caligo version 0.1" << std::endl;
+            return 0;
+        }
+        if (QString(argv[1]) == "--help") {
+            std::cout << "Caligo - opensource multimedia player. Source code:\n"
+                         "https://github.com/Alex13kyky/Caligo" << std::endl;
+            return 0;
+        }
+    }
+
     QApplication a(argc, argv);
 
     a.setApplicationName("Caligo");

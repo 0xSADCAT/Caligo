@@ -74,7 +74,7 @@ SettingsWindow::SettingsWindow(QSettings *s, PlaylistControls *pc) : QWidget(nul
 
     darkThemeCheck = new QCheckBox;
     connect(darkThemeCheck, &QCheckBox::toggled, this, &SettingsWindow::darkTheme);
-    QLabel *darkThemeLabel = new QLabel(tr("Use dark theme [Experimental]"));
+    QLabel *darkThemeLabel = new QLabel(tr("Use dark theme"));
     QHBoxLayout *darkThemeLayout = new QHBoxLayout;
     darkThemeLayout->addWidget(darkThemeLabel, 1);
     darkThemeLayout->addWidget(darkThemeCheck, 0);

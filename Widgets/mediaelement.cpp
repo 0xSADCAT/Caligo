@@ -18,8 +18,8 @@ MediaElement::MediaElement(const QString &path, QWidget *parent) : QWidget(paren
     selected = false;
 
     contextMenu = new QMenu;
-    contextMenu->addAction(tr("Select all"), this, &MediaElement::selectAll);
-    contextMenu->addAction(tr("Remove selected"), this, &MediaElement::deleteSelected);
+    contextMenu->addAction(QPixmap(":/img/selectAll"), tr("Select all"), this, &MediaElement::selectAll);
+    contextMenu->addAction(QPixmap(":/img/delete"), tr("Remove selected"), this, &MediaElement::deleteSelected);
 }
 
 QString MediaElement::getPath() const
