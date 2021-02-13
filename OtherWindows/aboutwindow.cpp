@@ -4,8 +4,13 @@ AboutWindow::AboutWindow() : QWidget(nullptr)
 {
     setWindowIcon(QIcon(":/img/icon"));
 
-    bgImg = new QLabel;
-    bgImg->setPixmap(QPixmap(":/img/aboutImage").scaledToWidth(qApp->desktop()->width() / 10));
+//    bgImg = new QLabel;
+//    bgImg->setPixmap(QPixmap(":/img/aboutImage").scaledToWidth(qApp->desktop()->width() / 10));
+    bgImg = new Image;
+    bgImg->setPix(QPixmap(":/img/aboutImage").scaledToWidth(qApp->desktop()->width() / 10));
+    bgImg->setVisible(true);
+    bgImg->notSquare = true;
+    bgImg->setFixedWidth(qApp->desktop()->width() / 10);
 
     link = "https://github.com/Alex13kyky/Caligo";
     samLink = "https://www.artstation.com/twinshado";

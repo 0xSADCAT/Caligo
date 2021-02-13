@@ -13,6 +13,8 @@ public:
 
     void setPix(const QPixmap &value);
 
+    bool notSquare;
+
 protected:
     virtual void paintEvent(QPaintEvent *) override;
 

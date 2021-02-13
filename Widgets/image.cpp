@@ -4,6 +4,8 @@ Image::Image(QWidget *parent) : QWidget(parent)
 {
     pix = QPixmap();
     setMinimumSize(32, 32);
+
+    notSquare = false;
 }
 
 void Image::setPix(const QPixmap &value)
@@ -36,5 +38,8 @@ void Image::paintEvent(QPaintEvent *)
         px = 0;
         py = height() / 2 - x / 2;
     }
-    p.drawPixmap(px, py, pix.scaled(x, x));
+    if (notSquare)
+        p.drawPixmap(px, py, pix);
+    else
+        p.drawPixmap(px, py, pix.scaled(x, x));
 }

@@ -3,6 +3,8 @@
 
 #include <QtWidgets>
 
+#include <Widgets/image.h>
+
 class AboutWindow : public QWidget
 {
     Q_OBJECT
@@ -10,7 +12,7 @@ public:
     explicit AboutWindow();
 
 private:
-    QLabel *bgImg;
+    Image *bgImg;
 
     QLabel *title;
 

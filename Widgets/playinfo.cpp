@@ -80,7 +80,10 @@ void PlayInfo::mediaStatus(QMediaPlayer::MediaStatus s)
     switch (s) {
     case QMediaPlayer::MediaStatus::BufferedMedia:
     case QMediaPlayer::MediaStatus::LoadedMedia:
-        image->setPix(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::CoverArtImage)));
+        if (player->availableMetaData().contains(QMediaMetaData::CoverArtImage))
+            image->setPix(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::CoverArtImage)));
+        else
+            image->setPix(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::ThumbnailImage)));
         author->setText(qvariant_cast<QString>(player->metaData(QMediaMetaData::AlbumArtist)));
         name->setText(qvariant_cast<QString>(player->metaData(QMediaMetaData::Title)));
         break;
