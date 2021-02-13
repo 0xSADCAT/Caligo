@@ -1,6 +1,7 @@
 #include "playlist.h"
 
 Playlist::Playlist(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
+// Playlist widget. Contains model and view of element.
 {
     player = mp;
     index = -1;
@@ -30,6 +31,7 @@ QStringList Playlist::getList()
 }
 
 void Playlist::add(const QString &path)
+// Add file from path
 {
     if (path.endsWith(".cpl")) {
         emit loadPlaylist(path);
@@ -50,6 +52,7 @@ void Playlist::add(const QString &path)
 }
 
 void Playlist::add(const QStringList &paths)
+// Add files from list
 {
     if (paths.isEmpty())
         return;
@@ -77,6 +80,7 @@ void Playlist::add(const QStringList &paths)
 }
 
 void Playlist::clear()
+// Clear playlist
 {
     player->stop();
     player->setMedia(QUrl());
@@ -88,12 +92,14 @@ void Playlist::clear()
     index = -1;
 }
 
-void Playlist::forceUpdate()
+/* public SLOT */ void Playlist::forceUpdate()
+// Update metadata in playlist
 {
     scaner->forceScan();
 }
 
-void Playlist::next()
+/* public SLOT */ void Playlist::next()
+// Set next track
 {
     int c = list.count();
     if (c < 2)
@@ -109,7 +115,8 @@ void Playlist::next()
     player->play();
 }
 
-void Playlist::prev()
+/* public SLOT */ void Playlist::prev()
+// Set previous track
 {
     int c = list.count();
     if (c < 2)
@@ -127,6 +134,8 @@ void Playlist::prev()
 
 void Playlist::keyPressEvent(QKeyEvent *e)
 {
+    // Key Del
+    // Remove selected element from playlist
     if (e->key() == Qt::Key::Key_Delete) {
         if (lastClicked == nullptr)
             return;
@@ -156,6 +165,9 @@ void Playlist::keyPressEvent(QKeyEvent *e)
         }
         selection.clear();
     }
+
+    // Key Return
+    // Play selected element, if selected > 1  -->  play last clicked
     else if (e->key() == Qt::Key::Key_Return) {
         if (lastClicked == nullptr)
             return;
@@ -176,6 +188,9 @@ void Playlist::keyPressEvent(QKeyEvent *e)
             selection << lastClicked;
         }
     }
+
+    // Key up
+    // Select up element, if has ShiftModifer  -->  add upper element to selection or remove it from selection
     else if (e->key() == Qt::Key::Key_Up) {
         if (list.isEmpty())
             return;
@@ -226,6 +241,9 @@ void Playlist::keyPressEvent(QKeyEvent *e)
         selection.clear();
         selection << lastClicked;
     }
+
+    // Key down
+    // Like key up
     else if (e->key() == Qt::Key::Key_Down) {
         if (list.isEmpty())
             return;
@@ -288,7 +306,7 @@ void Playlist::mousePressEvent(QMouseEvent *)
     }
 }
 
-void Playlist::mediaStatus(QMediaPlayer::MediaStatus s)
+/* private SLOT */ void Playlist::mediaStatus(QMediaPlayer::MediaStatus s)
 {
     switch (s) {
     case QMediaPlayer::EndOfMedia:
@@ -307,7 +325,7 @@ void Playlist::mediaStatus(QMediaPlayer::MediaStatus s)
     }
 }
 
-void Playlist::clickElement()
+/* private SLOT */ void Playlist::clickElement()
 {
     selection.clear();
     lastClicked = (MediaElement*) sender();
@@ -318,7 +336,7 @@ void Playlist::clickElement()
     lastClicked->setSelected(true);
 }
 
-void Playlist::shiftClickElement()
+/* private SLOT */ void Playlist::shiftClickElement()
 {
     MediaElement *from = lastClicked;
     lastClicked = (MediaElement*) sender();
@@ -329,6 +347,7 @@ void Playlist::shiftClickElement()
     if (iFrom == iTo)
         return;
 
+    // XOR swap
     if (iFrom > iTo) {
         iFrom ^= iTo;
         iTo ^= iFrom;
@@ -343,7 +362,7 @@ void Playlist::shiftClickElement()
     }
 }
 
-void Playlist::ctrlClickElement()
+/* private SLOT */ void Playlist::ctrlClickElement()
 {
     lastClicked = (MediaElement*) sender();
     if (selection.contains(lastClicked)) {
@@ -357,7 +376,7 @@ void Playlist::ctrlClickElement()
     }
 }
 
-void Playlist::doubleClickElement()
+/* private SLOT */ void Playlist::doubleClickElement()
 {
     MediaElement *e = (MediaElement*) sender();
     list[index]->setPlaying(false);
@@ -368,12 +387,13 @@ void Playlist::doubleClickElement()
     list[index]->setPlaying(true);
 }
 
-void Playlist::focusFromElement()
+/* private SLOT */ void Playlist::focusFromElement()
 {
     this->setFocus();
 }
 
-void Playlist::cmSelectAll()
+/* private SLOT */ void Playlist::cmSelectAll()
+// Context menu event.
 {
     if (list.isEmpty())
         return;
@@ -386,7 +406,8 @@ void Playlist::cmSelectAll()
     }
 }
 
-void Playlist::cmDeleteSelected()
+/* private SLOT */ void Playlist::cmDeleteSelected()
+// Context menu event.
 {
     if (lastClicked == nullptr)
         return;
@@ -418,6 +439,7 @@ void Playlist::cmDeleteSelected()
 }
 
 QString Playlist::getMetaData()
+// Return metadata of current track in format 'Artist - Title'.
 {
     QString s = "";
     QStringList l = player->availableMetaData();

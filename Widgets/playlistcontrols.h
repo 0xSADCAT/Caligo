@@ -34,7 +34,9 @@ private:
 
     bool clearBeforeOpen;
 
+    // Path to playlists
     QString pathPlaylists;
+    // Path to music library
     QString pathMusic;
 
 private slots:

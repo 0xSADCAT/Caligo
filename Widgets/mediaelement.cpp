@@ -1,6 +1,7 @@
 #include "mediaelement.h"
 
 MediaElement::MediaElement(const QString &path, QWidget *parent) : QWidget(parent)
+// Custom widget. Element of playlist. Contains model and view of component.
 {
     this->path = path;
 
@@ -32,6 +33,7 @@ bool MediaElement::hasMeta() const
 }
 
 void MediaElement::setText(const QString &text)
+// Set metadata
 {
     this->text->setText("  " + text);
     meta = true;

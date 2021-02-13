@@ -31,6 +31,14 @@ int main(int argc, char *argv[])
     t2.load(QString(":/tr/qtbase_") + QLocale::system().name());
     a.installTranslator(&t2);
 
+    QTranslator t3;
+    t3.load(QString(":/tr/qt_help_") + QLocale::system().name());
+    a.installTranslator(&t3);
+
+    QTranslator t4;
+    t4.load(QString(":/tr/qtlocation_") + QLocale::system().name());
+    a.installTranslator(&t4);
+
     QTranslator t0;
     t0.load(QString(":/tr/" + a.applicationName() + "_") + QLocale::system().name());
     a.installTranslator(&t0);

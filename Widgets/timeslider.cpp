@@ -1,12 +1,20 @@
 #include "timeslider.h"
 
 TimeSlider::TimeSlider(QWidget *parent) : QWidget(parent)
+// Custom widget. Shows QMediaPlayer::position().
+// QSlider not used because:
+  // 1. Connect recursivly:
+  //        sliderMoved --> setPlayerPosition --> positionChanged --> moveSlider --> sliderMoved --> etc...
+  //        Bad audio output...
+  // 2. Signal QSlider::sliderMoved() emits not then mousePress or mouseRelease, but then mouseMoved:
+  //        Noise then mouseMoved
 {
     _pos = _dur = 0;
     isIn = false;
 }
 
-void TimeSlider::setDuration(qint64 v)
+/* public SLOT */ void TimeSlider::setDuration(qint64 v)
+// Set maximum value
 {
     if (v < 0)
         v = 0;
@@ -14,7 +22,8 @@ void TimeSlider::setDuration(qint64 v)
     repaint();
 }
 
-void TimeSlider::setPosition(qint64 v)
+/* public SLOT */ void TimeSlider::setPosition(qint64 v)
+// Set current value
 {
     if (v > _dur)
         v = _dur;

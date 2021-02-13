@@ -18,13 +18,18 @@ public:
     void forceScan();
 
 private:
+    // Contains pointers of playlist elements.
     QList<MediaElement*> *list;
 
+    // Second QMediaPlayer for recursive algorithm.
     QMediaPlayer player;
 
+    // Current scanning index.
     int index;
+    // Count elements of playlist.
     int count;
 
+    // Old variable. Not deleted because algorithm for scanning metadata is in dev.
     bool force;
 
 private slots:

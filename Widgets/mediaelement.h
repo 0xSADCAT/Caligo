@@ -27,8 +27,10 @@ signals:
     void ctrlClicked();
     void doubleClicked();
 
+    // Needs to set focus to Playlist but not on element (playlist keyboard controls)
     void focus();
 
+    // Signals from context menu.
     void selectAll();
     void deleteSelected();
 
@@ -40,8 +42,10 @@ protected:
 
 private:
     QLabel *text;
+    // Path to file.
     QString path;
     bool meta;
+    // Playing/selected states.
     bool playing;
     bool selected;
 

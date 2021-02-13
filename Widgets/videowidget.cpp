@@ -1,8 +1,8 @@
 #include "videowidget.h"
 
 VideoWidget::VideoWidget(QWidget *parent) : QVideoWidget(parent)
+// Inherits QVideoWidget. Needs only for emit signals.
 {
-
 }
 
 void VideoWidget::mousePressEvent(QMouseEvent *e)

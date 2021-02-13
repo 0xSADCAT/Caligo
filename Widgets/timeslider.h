@@ -12,6 +12,7 @@ public:
     explicit TimeSlider(QWidget *parent = nullptr);
 
 signals:
+    // Clicked on element (_pos)
     void clicked(qint64);
 
 public slots:
@@ -26,6 +27,7 @@ protected:
 
 private:
     qint64 _pos, _dur;
+    // Mouse in widget
     bool isIn;
 };
 

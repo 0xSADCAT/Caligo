@@ -1,14 +1,23 @@
 <RCC>
     <qresource prefix="/img">
         <file alias="aboutImage">Res/image.jpeg</file>
-        <file alias="clear24">Res/clear24.png</file>
         <file alias="fullScreen24">Res/fullscreen24.png</file>
         <file alias="settings24">Res/settings24.png</file>
         <file alias="icon">Res/icon.ico</file>
+        <file alias="volume">Res/volume.png</file>
+        <file alias="save">Res/save.png</file>
+        <file alias="reload">Res/reload.png</file>
+        <file alias="mute">Res/mute.png</file>
+        <file alias="load">Res/load.png</file>
+        <file alias="info">Res/info.png</file>
+        <file alias="clear">Res/clear.png</file>
+        <file alias="add">Res/add.png</file>
     </qresource>
     <qresource prefix="/tr">
         <file>qt_ru.qm</file>
         <file>qtbase_ru.qm</file>
         <file>Caligo_ru_RU.qm</file>
+        <file>qtlocation_ru.qm</file>
+        <file>qt_help_ru.qm</file>
     </qresource>
 </RCC>

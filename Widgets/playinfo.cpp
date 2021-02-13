@@ -1,6 +1,7 @@
 #include "playinfo.h"
 
 PlayInfo::PlayInfo(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
+// Shows metadata of current track if this is music or video.
 {
     player = mp;
     image = new Image;
@@ -50,6 +51,7 @@ void PlayInfo::focus()
 }
 
 void PlayInfo::setTitle()
+// Set new winodw title.
 {
     QString s = "";
 
@@ -75,7 +77,7 @@ void PlayInfo::setTitle()
     emit newTitle(s);
 }
 
-void PlayInfo::mediaStatus(QMediaPlayer::MediaStatus s)
+/* private SLOT */ void PlayInfo::mediaStatus(QMediaPlayer::MediaStatus s)
 {
     switch (s) {
     case QMediaPlayer::MediaStatus::BufferedMedia:
@@ -107,7 +109,8 @@ void PlayInfo::mediaStatus(QMediaPlayer::MediaStatus s)
     setTitle();
 }
 
-void PlayInfo::videoChanged(bool v)
+/* private SLOT */ void PlayInfo::videoChanged(bool v)
+// Sets visibility of Album image or QVideoWidget
 {
     isVideo = v;
     image->setVisible(not v);
@@ -119,7 +122,7 @@ void PlayInfo::videoChanged(bool v)
     }
 }
 
-void PlayInfo::videoClicked()
+/* private SLOT */ void PlayInfo::videoClicked()
 {
     if (player->state() == QMediaPlayer::PlayingState) {
         player->pause();
@@ -129,7 +132,7 @@ void PlayInfo::videoClicked()
     }
 }
 
-void PlayInfo::videoDoubleClicked()
+/* private SLOT */ void PlayInfo::videoDoubleClicked()
 {
     emit fsClicked();
 }

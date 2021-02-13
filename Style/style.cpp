@@ -5,6 +5,8 @@
 
 namespace style {
 
+// MediaElement style
+// me  -->  MediaElement
 namespace me {
 
 static QString none = "";
@@ -23,6 +25,7 @@ static QString all = "* {"
 
 } // namespace me
 
+// Application theme
 namespace theme {
 
 static QString light = "QPushButton:hover {"

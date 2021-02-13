@@ -1,6 +1,7 @@
 #include "metascaner.h"
 
 MetaScaner::MetaScaner(QList<MediaElement*> *playlist, QObject *parent) : QObject(parent)
+// Gets metadata to playlist elements via second QMediaPlayer.
 {
     list = playlist;
     index = -1;
@@ -11,7 +12,11 @@ MetaScaner::MetaScaner(QList<MediaElement*> *playlist, QObject *parent) : QObjec
 }
 
 void MetaScaner::scan()
+// First part of recursive algorithm based on QMediaPlayer::MediaStatus::BufferMedia and LoadedMedia.
+// Use second QMediaPlayer which defined in this class.
 {
+    force = true;
+
     if (index == -1) {
         index = 0;
         count = list->count();
@@ -21,12 +26,14 @@ void MetaScaner::scan()
 }
 
 void MetaScaner::forceScan()
+// Earler 'forece = true' was only here.
 {
     force = true;
     scan();
 }
 
-void MetaScaner::mediaStatus(QMediaPlayer::MediaStatus s)
+/* SLOT */ void MetaScaner::mediaStatus(QMediaPlayer::MediaStatus s)
+// Second path of signal-slot recursive algorithm.
 {
     switch (s) {
     case QMediaPlayer::MediaStatus::BufferedMedia:

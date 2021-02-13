@@ -1,6 +1,7 @@
 #include "controls.h"
 
 Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
+// Bottom widget. Playback/volume controls and Settings and About buttons.
 {
     player = mp;
 
@@ -20,7 +21,7 @@ Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
 
     aboutButton = new QPushButton;
     aboutButton->setToolTip(tr("About"));
-    aboutButton->setIcon(style()->standardIcon(QStyle::SP_MessageBoxInformation));
+    aboutButton->setIcon(QPixmap(":/img/info"));
 
     QMenu *abMenu = new QMenu;
     abMenu->addAction(tr("Help"), this, &Controls::help);
@@ -50,7 +51,7 @@ Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
 
     muteButton = new QPushButton;
     muteButton->setToolTip(tr("Mute"));
-    muteButton->setIcon(style()->standardIcon(QStyle::SP_MediaVolume));
+    muteButton->setIcon(QPixmap(":/img/volume"));
 
     volumeSlider = new QSlider;
     volumeSlider->setRange(0, 100);
@@ -143,12 +144,12 @@ int Controls::getVolume()
     return player->volume();
 }
 
-void Controls::videoAvailable(bool v)
+/* private SLOT */ void Controls::videoAvailable(bool v)
 {
     fullScreenButton->setEnabled(v);
 }
 
-void Controls::mediaState(QMediaPlayer::State s)
+/* private SLOT */ void Controls::mediaState(QMediaPlayer::State s)
 {
     if (s == QMediaPlayer::State::PlayingState) {
         playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
@@ -160,31 +161,31 @@ void Controls::mediaState(QMediaPlayer::State s)
     }
 }
 
-void Controls::mutedState(bool v)
+/* private SLOT */ void Controls::mutedState(bool v)
 {
     if (v) {
-        muteButton->setIcon(style()->standardIcon(QStyle::SP_MediaVolumeMuted));
+        muteButton->setIcon(QPixmap(":/img/mute"));
         muteButton->setToolTip(tr("Unmute"));
     }
     else {
-        muteButton->setIcon(style()->standardIcon(QStyle::SP_MediaVolume));
+        muteButton->setIcon(QPixmap(":/img/volume"));
         muteButton->setToolTip(tr("Mute"));
     }
 }
 
-void Controls::setDur(qint64 v)
+/* private SLOT */ void Controls::setDur(qint64 v)
 {
     timeSlider->setDuration(v);
     durLabel->setText(msToStr(v));
 }
 
-void Controls::setPos(qint64 v)
+/* private SLOT */ void Controls::setPos(qint64 v)
 {
     timeSlider->setPosition(v);
     posLabel->setText(msToStr(v));
 }
 
-void Controls::playPause()
+/* public SLOT */ void Controls::playPause()
 {
     if (player->state() == QMediaPlayer::State::PlayingState) {
         player->pause();
@@ -194,7 +195,7 @@ void Controls::playPause()
     }
 }
 
-void Controls::mute()
+/* public SLOT */ void Controls::mute()
 {
     if (player->isMuted()) {
         player->setMuted(false);
@@ -204,18 +205,21 @@ void Controls::mute()
     }
 }
 
-void Controls::stop()
+/* public SLOT */ void Controls::stop()
+// Not used QMediaPlayer::stop() because emits signal QMediaPlayer::mediaStatusChanged(QMediaPlayer::LoadedMedia)
 {
     player->pause();
     player->setPosition(0);
 }
 
-void Controls::plusVol()
+/* public SLOT */ void Controls::plusVol()
+// Hotkey
 {
     setVolume(player->volume() + 5);
 }
 
-void Controls::minusVol()
+/* public SLOT */ void Controls::minusVol()
+// Hotkey
 {
     setVolume(player->volume() - 5);
 }
