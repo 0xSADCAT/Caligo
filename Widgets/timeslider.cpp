@@ -55,10 +55,15 @@ void TimeSlider::paintEvent(QPaintEvent *)
     int w = width();
     int h = height();
 
+    p.save();
+    p.setPen(QColor(0, 0, 0, 127));
+    p.drawRect(0, 0, w, h);
+    p.restore();
+
     if (isIn)
-        p.fillRect(0, 0, w, h, QColor(245, 245, 245, 50));
+        p.fillRect(0, 0, w, h, QColor(245, 245, 245, 127));
     else
-        p.fillRect(0, 0, w, h, QColor(230, 230, 230, 50));
+        p.fillRect(0, 0, w, h, QColor(230, 230, 230, 127));
 
     if (_dur == 0)
         return;

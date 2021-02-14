@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 {
     if (argc > 1) {
         if (QString(argv[1]) == "--version") {
-            std::cout << "Caligo version 0.1" << std::endl;
+            std::cout << "Caligo version 0.2" << std::endl;
             return 0;
         }
         if (QString(argv[1]) == "--help") {
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     a.setApplicationName("Caligo");
-    a.setApplicationVersion("0.1");
+    a.setApplicationVersion("0.2");
 
 #ifdef Q_OS_WINDOWS
     a.setStyle("Fusion");
