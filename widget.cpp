@@ -149,13 +149,18 @@ void Widget::dropEvent(QDropEvent *e)
     foreach (QUrl u, urls) {
         QApplication::processEvents();
         if (u.isLocalFile()) {
-            QFileInfo fi(u.path());
+            QString tp = QDir::toNativeSeparators(u.path());
+            if (tp.startsWith("/") or tp.startsWith("\\")) {
+                tp.remove(0, 1);
+            }
+            tp.replace("/", "\\");
+            QFileInfo fi(tp);
             if (fi.isDir()) {
-                QDir d(u.path());
+                QDir d(tp);
                 recursiveEntryPoints(d);
             }
             else {
-                droppedFiles << u.path();
+                droppedFiles << tp;
             }
         }
     }
