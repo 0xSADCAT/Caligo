@@ -3,6 +3,10 @@
 Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
 // Bottom widget. Playback/volume controls and Settings and About buttons.
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << ">>> Controls init";
+#endif
+
     player = mp;
 
     timeSlider = new TimeSlider;
@@ -125,6 +129,10 @@ void Controls::setSizes(int v)
 
 void Controls::setVolume(int v)
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "Controls::setVolume" << v;
+#endif
+
     if (v >= 0 && v <= 100) {
         player->setVolume(v);
         volumeSlider->setValue(v);
@@ -146,11 +154,19 @@ int Controls::getVolume()
 
 /* private SLOT */ void Controls::videoAvailable(bool v)
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "SLOT Controls::videoAvailable" << v;
+#endif
+
     fullScreenButton->setEnabled(v);
 }
 
 /* private SLOT */ void Controls::mediaState(QMediaPlayer::State s)
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "SLOT Controls::mediaState" << s;
+#endif
+
     if (s == QMediaPlayer::State::PlayingState) {
         playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
         playButton->setToolTip(tr("Pause"));
@@ -163,6 +179,10 @@ int Controls::getVolume()
 
 /* private SLOT */ void Controls::mutedState(bool v)
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "SLOT Controls::mutedState" << v;
+#endif
+
     if (v) {
         muteButton->setIcon(QPixmap(":/img/mute"));
         muteButton->setToolTip(tr("Unmute"));
@@ -175,6 +195,10 @@ int Controls::getVolume()
 
 /* private SLOT */ void Controls::setDur(qint64 v)
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "SLOT Controls::setDur" << v;
+#endif
+
     timeSlider->setDuration(v);
     durLabel->setText(msToStr(v));
 }
@@ -187,6 +211,10 @@ int Controls::getVolume()
 
 /* public SLOT */ void Controls::playPause()
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "SLOT Controls::playPause()";
+#endif
+
     if (player->state() == QMediaPlayer::State::PlayingState) {
         player->pause();
     }
@@ -197,6 +225,10 @@ int Controls::getVolume()
 
 /* public SLOT */ void Controls::mute()
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "SLOT Controls::mute()";
+#endif
+
     if (player->isMuted()) {
         player->setMuted(false);
     }
@@ -208,6 +240,10 @@ int Controls::getVolume()
 /* public SLOT */ void Controls::stop()
 // Not used QMediaPlayer::stop() because emits signal QMediaPlayer::mediaStatusChanged(QMediaPlayer::LoadedMedia)
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "SLOT Controls::stop()";
+#endif
+
     player->pause();
     player->setPosition(0);
 }
@@ -215,12 +251,20 @@ int Controls::getVolume()
 /* public SLOT */ void Controls::plusVol()
 // Hotkey
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "SLOT Controls::plusVol()";
+#endif
+
     setVolume(player->volume() + 5);
 }
 
 /* public SLOT */ void Controls::minusVol()
 // Hotkey
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "SLOT Controls::minusVol()";
+#endif
+
     setVolume(player->volume() - 5);
 }
 

@@ -3,6 +3,10 @@
 MetaScaner::MetaScaner(QList<MediaElement*> *playlist, QObject *parent) : QObject(parent)
 // Gets metadata to playlist elements via second QMediaPlayer.
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << ">>> MetaScaner init";
+#endif
+
     list = playlist;
     index = -1;
     count = -1;
@@ -39,20 +43,26 @@ void MetaScaner::forceScan()
     case QMediaPlayer::MediaStatus::BufferedMedia:
     case QMediaPlayer::MediaStatus::LoadedMedia:
         if (not list->at(index)->hasMeta() or force) {
-            QString s = "";
+            QString str = "";
             QStringList l = player.availableMetaData();
             if (l.contains(QMediaMetaData::AlbumArtist)) {
-                s += qvariant_cast<QString>(player.metaData(QMediaMetaData::AlbumArtist));
+                str += qvariant_cast<QString>(player.metaData(QMediaMetaData::AlbumArtist));
             }
             if (l.contains(QMediaMetaData::Title)) {
-                if (not s.isEmpty()) {
-                    s += " - ";
+                if (not str.isEmpty()) {
+                    str += " - ";
                 }
-                s += qvariant_cast<QString>(player.metaData(QMediaMetaData::Title));
+                str += qvariant_cast<QString>(player.metaData(QMediaMetaData::Title));
             }
-            if (not s.isEmpty()) {
-                list->at(index)->setText(s);
+            if (not str.isEmpty()) {
+                list->at(index)->setText(str);
             }
+
+#ifdef DEBUG_OUTPUT
+        qDebug() << "SLOT MetaScaner::mediaStatus(...)";
+        qDebug() << "Result:" << str;
+#endif
+
         }
         index++;
         if (index >= count) {

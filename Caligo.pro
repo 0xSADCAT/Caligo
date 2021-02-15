@@ -52,3 +52,6 @@ RESOURCES += \
     resources.qrc
 
 RC_ICONS = Res/icon.ico
+
+# Uncomment next line for hide qDebug() output
+# DEFINES += DEBUG_OUTPUT

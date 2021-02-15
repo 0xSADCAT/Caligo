@@ -3,6 +3,10 @@
 PlayInfo::PlayInfo(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
 // Shows metadata of current track if this is music or video.
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << ">>> PlayInfo init";
+#endif
+
     player = mp;
     image = new Image;
     author = new QLabel;
@@ -79,6 +83,10 @@ void PlayInfo::setTitle()
 
 /* private SLOT */ void PlayInfo::mediaStatus(QMediaPlayer::MediaStatus s)
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "PlayInfo::mediaStatus" << s;
+#endif
+
     switch (s) {
     case QMediaPlayer::MediaStatus::BufferedMedia:
     case QMediaPlayer::MediaStatus::LoadedMedia:
@@ -112,6 +120,10 @@ void PlayInfo::setTitle()
 /* private SLOT */ void PlayInfo::videoChanged(bool v)
 // Sets visibility of Album image or QVideoWidget
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "PlayInfo::videoChanged" << v;
+#endif
+
     isVideo = v;
     image->setVisible(not v);
     author->setVisible(not v);

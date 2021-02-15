@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QString>
+#include <QDebug>
 
 #include <iostream>
 
@@ -33,6 +34,10 @@ int main(int argc, char *argv[])
 
     a.setApplicationName("Caligo");
     a.setApplicationVersion("0.2");
+
+#ifdef DEBUG_OUTPUT
+    qDebug() << a.applicationName() << a.applicationVersion() << "debug version.";
+#endif
 
 #ifdef Q_OS_WINDOWS
     a.setStyle("Fusion");

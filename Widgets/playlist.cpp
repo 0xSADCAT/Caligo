@@ -3,6 +3,10 @@
 Playlist::Playlist(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
 // Playlist widget. Contains model and view of element.
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << ">>> Playlist init";
+#endif
+
     player = mp;
     index = -1;
     l = new QVBoxLayout;
@@ -27,12 +31,23 @@ QStringList Playlist::getList()
     foreach (MediaElement *e, list) {
         l << e->getPath();
     }
+
+#ifdef DEBUG_OUTPUT
+        qDebug() << "Playlist::getList()";
+        qDebug() << l;
+#endif
+
     return l;
 }
 
 void Playlist::add(const QString &path)
 // Add file from path
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "Playlist::add(QString&)";
+        qDebug() << path;
+#endif
+
     if (path.endsWith(".cpl")) {
         emit loadPlaylist(path);
         return;
@@ -54,6 +69,11 @@ void Playlist::add(const QString &path)
 void Playlist::add(const QStringList &paths)
 // Add files from list
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "Playlist::add(QStringList&)";
+        qDebug() << paths;
+#endif
+
     if (paths.isEmpty())
         return;
 
@@ -82,6 +102,10 @@ void Playlist::add(const QStringList &paths)
 void Playlist::clear()
 // Clear playlist
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "Playlist::clear()";
+#endif
+
     player->stop();
     player->setMedia(QUrl());
     foreach (MediaElement *e, list) {
@@ -95,12 +119,21 @@ void Playlist::clear()
 /* public SLOT */ void Playlist::forceUpdate()
 // Update metadata in playlist
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "SLOT Playlist::forceUpdate()";
+#endif
+
     scaner->forceScan();
 }
 
 /* public SLOT */ void Playlist::next()
 // Set next track
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "SLOT Playlist::next()";
+        qDebug() << "Current index:" << index;
+#endif
+
     int c = list.count();
     if (c < 2)
         return;
@@ -113,11 +146,20 @@ void Playlist::clear()
     list[index]->setPlaying(true);
     player->setMedia(QUrl::fromLocalFile(list[index]->getPath()));
     player->play();
+
+#ifdef DEBUG_OUTPUT
+        qDebug() << "New index:" << index;
+#endif
 }
 
 /* public SLOT */ void Playlist::prev()
 // Set previous track
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "SLOT Playlist::prev()";
+        qDebug() << "Current index:" << index;
+#endif
+
     int c = list.count();
     if (c < 2)
         return;
@@ -130,6 +172,10 @@ void Playlist::clear()
     list[index]->setPlaying(true);
     player->setMedia(QUrl::fromLocalFile(list[index]->getPath()));
     player->play();
+
+#ifdef DEBUG_OUTPUT
+        qDebug() << "New index:" << index;
+#endif
 }
 
 void Playlist::keyPressEvent(QKeyEvent *e)
@@ -441,6 +487,10 @@ void Playlist::mousePressEvent(QMouseEvent *)
 QString Playlist::getMetaData()
 // Return metadata of current track in format 'Artist - Title'.
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "Playlist::getMetaData() [ret QString]";
+#endif
+
     QString s = "";
     QStringList l = player->availableMetaData();
     if (l.contains(QMediaMetaData::AlbumArtist)) {
@@ -455,5 +505,10 @@ QString Playlist::getMetaData()
     if (s.isEmpty()) {
         s = list[index]->getPath();
     }
+
+#ifdef DEBUG_OUTPUT
+        qDebug() << s;
+#endif
+
     return s;
 }

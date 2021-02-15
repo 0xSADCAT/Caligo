@@ -3,6 +3,10 @@
 MediaElement::MediaElement(const QString &path, QWidget *parent) : QWidget(parent)
 // Custom widget. Element of playlist. Contains model and view of component.
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << ">>> MediaElement init:" << path;
+#endif
+
     this->path = path;
 
     text = new QLabel("  " + path);
@@ -35,18 +39,33 @@ bool MediaElement::hasMeta() const
 void MediaElement::setText(const QString &text)
 // Set metadata
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "MediaElement::setText" << path;
+        qDebug() << "---> " << text;
+#endif
+
     this->text->setText("  " + text);
     meta = true;
 }
 
 void MediaElement::setPlaying(bool value)
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "MediaElement::setPlaying" << path;
+        qDebug() << "---> " << value;
+#endif
+
     playing = value;
     updStyle();
 }
 
 void MediaElement::setSelected(bool value)
 {
+#ifdef DEBUG_OUTPUT
+        qDebug() << "MediaElement::setSelected" << path;
+        qDebug() << "---> " << value;
+#endif
+
     selected = value;
     updStyle();
 }

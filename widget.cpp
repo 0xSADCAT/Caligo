@@ -3,6 +3,10 @@
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
+#ifdef DEBUG_OUTPUT
+    qDebug() << ">>> Widget class init";
+#endif
+
     setWindowIcon(QIcon(":/img/icon"));
 
     mp = new QMediaPlayer;
@@ -102,6 +106,10 @@ Widget::~Widget()
 
 void Widget::closeEvent(QCloseEvent *)
 {
+#ifdef DEBUG_OUTPUT
+    qDebug() << "Widget::closeEvent";
+#endif
+
     settings->setValue("windowConfig/size", this->size());
     settings->setValue("windowConfig/position", this->pos());
     settings->setValue("windowConfig/splitterLeft", this->spl->sizes()[0]);
@@ -118,6 +126,11 @@ void Widget::closeEvent(QCloseEvent *)
 
 void Widget::dragEnterEvent(QDragEnterEvent *e)
 {
+#ifdef DEBUG_OUTPUT
+    qDebug() << "Widget::dragEnterEvent";
+    qDebug() << "QDragEnterEvent::mimeData()" << e->mimeData();
+#endif
+
     if (e->mimeData()->hasFormat("text/uri-list")) {
         e->acceptProposedAction();
     }
@@ -125,6 +138,11 @@ void Widget::dragEnterEvent(QDragEnterEvent *e)
 
 void Widget::dropEvent(QDropEvent *e)
 {
+#ifdef DEBUG_OUTPUT
+    qDebug() << "Widget::dropEvent()";
+    qDebug() << "QDropEvent::mimeData->urls()" << e->mimeData()->urls();
+#endif
+
     QList<QUrl> urls = e->mimeData()->urls();
     droppedFiles.clear();
 
@@ -158,6 +176,9 @@ void Widget::dropEvent(QDropEvent *e)
 
 void Widget::loadSettings()
 {
+#ifdef DEBUG_OUTPUT
+    qDebug() << "Widget::loadSettings()";
+#endif
     this->resize(qvariant_cast<QSize>(settings->value("windowConfig/size")));
     this->move(qvariant_cast<QPoint>(settings->value("windowConfig/position", QPoint(qApp->desktop()->width()/3, qApp->desktop()->height()/3))));
     QList<int> s;
@@ -168,11 +189,48 @@ void Widget::loadSettings()
     }
     controls->setVolume(qvariant_cast<int>(settings->value("other/volume", 50)));
     bool loadOld = qvariant_cast<bool>(settings->value("other/loadOld", false));
-    if (loadOld) {
+    if (loadOld and qApp->arguments().count() == 1) {
         QStringList list = qvariant_cast<QStringList>(settings->value("other/playlist"));
+
+#ifdef DEBUG_OUTPUT
+        qDebug() << "Old playlist:";
+        qDebug() << list;
+#endif
+
         if (not list.isEmpty()) {
             playlist->add(list);
         }
+    }
+
+    if (qApp->arguments().count() != 1) {
+        QStringList slist;
+        for (int i = 1; i < qApp->arguments().count(); ++i) {
+            if (QFile(qApp->arguments()[i]).exists() and
+                    (QMimeDatabase().mimeTypeForFile(qApp->arguments()[i]).name().contains("audio/")
+                     or QMimeDatabase().mimeTypeForFile(qApp->arguments()[i]).name().contains("video/")
+                     or QMimeDatabase().mimeTypeForFile(qApp->arguments()[i]).name().endsWith(".cpl"))) {
+                qApp->processEvents();
+                slist << qApp->arguments()[i];
+            }
+
+#ifdef DEBUG_OUTPUT
+            if (QFile(qApp->arguments()[i]).exists()) {
+                qDebug() << "File exists:" << qApp->arguments()[i];
+                qDebug() << "Mime type:" << QMimeDatabase().mimeTypeForFile(qApp->arguments()[i]).name();
+            }
+#endif
+
+        }
+
+#ifdef DEBUG_OUTPUT
+        qDebug() << "qApp->arguments() != 1";
+        qDebug() << "Arguments:";
+        qDebug() << qApp->arguments();
+        qDebug() << "List:";
+        qDebug() << slist;
+#endif
+
+        playlist->add(slist);
     }
 }
 
