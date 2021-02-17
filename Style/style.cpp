@@ -8,19 +8,21 @@ namespace style {
 // MediaElement style
 // me  -->  MediaElement
 namespace me {
-// #B0D0F7
+
 static QString none = "";
 static QString playing = "* {"
-                         "background-color: rgba(150, 200, 255, 150);"
+                         "border: 2px solid #7F7F7F;"
+                         "background: qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 #DDDDDD, stop:1 #AAAAAA);"
                          "color: #000000;"
                          "}";
 static QString selected = "* {"
-                          "background-color: #8AA4C7;"
-                          "color: #000000;"
+                          "background-color: #11386F;"
+                          "color: #FFFFFF;"
                           "}";
 static QString all = "* {"
                      "background-color: #11386F;"
                      "color: #FFFFFF;"
+                     "border: 2px solid #000000"
                      "}";
 
 } // namespace me
@@ -31,28 +33,35 @@ namespace theme {
 static QString light = "QPushButton:hover {"
                             "background-color: #B0D0F7;"
                        "}"
-                            "QSplitter::handle {"
-                            "background-color: #DDDDDD;"
-                       "}"
                             "QSplitter::handle:hover {"
                             "background-color: #B0D0F7;"
+                       "}"
+                       "QPushButton {"
+                            "border: none;"
+                            "padding: 5px 5px 5px 5px;"
+                            "border-radius: 5px;"
                        "}";
 
 static QString dark = "* {"
-                            "background-color: #505050;"
+                            "background-color: #606060;"
                             "color: #FFFFFF;"
                       "}"
+                      "QPushButton {"
+                            "border: none;"
+                            "padding: 5px 5px 5px 5px;"
+                            "border-radius: 5px;"
+                      "}"
                       "QPushButton:hover {"
-                            "background-color: #2F4165;"
+                            "background-color: #959595;"
                       "}"
                       "QMenu::item:selected {"
-                            "background-color: #2F4165;"
+                            "background-color: #959595;"
                       "}"
                       "QSplitter::handle {"
                             "background-color: #656565;"
                       "}"
                       "QSplitter::handle:hover {"
-                            "background-color: #2F4165;"
+                            "background-color: #959595;"
                       "}";
 
 } // namespace theme

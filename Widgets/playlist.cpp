@@ -384,7 +384,14 @@ void Playlist::mousePressEvent(QMouseEvent *)
 
 /* private SLOT */ void Playlist::shiftClickElement()
 {
+    if (list.count() < 2)
+        return;
+
     MediaElement *from = lastClicked;
+    if (from == nullptr) {
+        from = list[index];
+    }
+
     lastClicked = (MediaElement*) sender();
 
     int iFrom = list.indexOf(from);

@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 {
     if (argc > 1) {
         if (QString(argv[1]) == "--version") {
-            std::cout << "Caligo version 0.2" << std::endl;
+            std::cout << "Caligo version 0.3.0" << std::endl;
             return 0;
         }
         if (QString(argv[1]) == "--help") {
@@ -33,7 +33,11 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     a.setApplicationName("Caligo");
-    a.setApplicationVersion("0.2");
+    a.setApplicationVersion("0.3.0");
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
+#endif
 
 #ifdef DEBUG_OUTPUT
     qDebug() << a.applicationName() << a.applicationVersion() << "debug version.";

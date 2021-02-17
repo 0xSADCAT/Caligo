@@ -1,6 +1,6 @@
 #include "settingswindow.h"
 
-SettingsWindow::SettingsWindow(QSettings *s, PlaylistControls *pc) : QWidget(nullptr)
+SettingsWindow::SettingsWindow(QSettings *s, PlaylistControls *pc, QWidget *wgt) : QWidget(nullptr)
 {
     setWindowIcon(QIcon(":/img/icon"));
 
@@ -8,6 +8,7 @@ SettingsWindow::SettingsWindow(QSettings *s, PlaylistControls *pc) : QWidget(nul
 
     settings = s;
     listControls = pc;
+    widget = wgt;
 
     l = new QVBoxLayout;
     setLayout(l);
@@ -179,9 +180,13 @@ void SettingsWindow::loadOld(bool v)
 void SettingsWindow::darkTheme(bool v)
 {
     if (v) {
+//        Uncomment for design only main window
+//        widget->setStyleSheet(style::theme::dark);
         qApp->setStyleSheet(style::theme::dark);
     }
     else {
+//        Uncomment for design only main window
+//        widget->setStyleSheet(style::theme::light);
         qApp->setStyleSheet(style::theme::light);
     }
 

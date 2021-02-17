@@ -58,7 +58,7 @@ Widget::Widget(QWidget *parent)
 
     this->setAcceptDrops(true);
 
-    settingsWindow = new SettingsWindow(settings, plControls);
+    settingsWindow = new SettingsWindow(settings, plControls, this);
     aboutWindow = new AboutWindow;
     helpWindow = new HelpWindow;
 
@@ -150,7 +150,7 @@ void Widget::dropEvent(QDropEvent *e)
         QApplication::processEvents();
         if (u.isLocalFile()) {
             QString tp = QDir::toNativeSeparators(u.path());
-            
+
 #ifdef Q_OS_WINDOWS
             if (tp.startsWith("/") or tp.startsWith("\\")) {
                 tp.remove(0, 1);

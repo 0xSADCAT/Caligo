@@ -3,7 +3,7 @@
 Image::Image(QWidget *parent) : QWidget(parent)
 // Custom widget to display image.
 {
-    pix = QPixmap();
+    pix = QPixmap(":/img/noImage");
     setMinimumSize(32, 32);
 
     // By default.

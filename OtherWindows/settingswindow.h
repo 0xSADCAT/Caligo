@@ -10,11 +10,12 @@ class SettingsWindow : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SettingsWindow(QSettings *s, PlaylistControls *pc);
+    explicit SettingsWindow(QSettings *s, PlaylistControls *pc, QWidget *wgt);
 
 private:
     QSettings *settings;
     PlaylistControls *listControls;
+    QWidget *widget;
 
     void setState();
 
