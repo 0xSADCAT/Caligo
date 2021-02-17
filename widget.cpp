@@ -150,10 +150,14 @@ void Widget::dropEvent(QDropEvent *e)
         QApplication::processEvents();
         if (u.isLocalFile()) {
             QString tp = QDir::toNativeSeparators(u.path());
+            
+#ifdef Q_OS_WINDOWS
             if (tp.startsWith("/") or tp.startsWith("\\")) {
                 tp.remove(0, 1);
             }
             tp.replace("/", "\\");
+#endif
+
             QFileInfo fi(tp);
             if (fi.isDir()) {
                 QDir d(tp);
