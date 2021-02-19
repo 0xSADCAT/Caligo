@@ -25,6 +25,7 @@ private:
     Playlist *playlist;
 
     QPushButton *addButton;
+    QPushButton *addUrlButton;
     QPushButton *clearButton;
 
     QPushButton *savePlaylist;
@@ -41,6 +42,7 @@ private:
 
 private slots:
     void add();
+    void addUrl();
     void clear();
 
     void save();

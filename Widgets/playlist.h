@@ -16,7 +16,7 @@ public:
 
     QStringList getList();
 
-    void add(const QString &path);
+    void add(const QString &path, bool sc=false);
     void add(const QStringList &paths);
 
     void clear();
@@ -48,6 +48,8 @@ private:
     MetaScaner *scaner;
 
     QString getMetaData();
+
+    void setCurrentIndexMedia();
 
 private slots:
     void mediaStatus(QMediaPlayer::MediaStatus s);

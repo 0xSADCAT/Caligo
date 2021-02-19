@@ -26,7 +26,15 @@ void MetaScaner::scan()
         count = list->count();
     }
 
-    player.setMedia(QUrl::fromLocalFile(list->at(index)->getPath()));
+    QString u = list->at(index)->getPath();
+    QUrl url;
+    if (u.startsWith("http")) {
+        url = QUrl(u);
+    }
+    else {
+        url = QUrl::fromLocalFile(u);
+    }
+    player.setMedia(url);
 }
 
 void MetaScaner::forceScan()

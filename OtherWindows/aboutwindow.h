@@ -10,29 +10,20 @@ public:
     explicit AboutWindow();
 
 private:
-    QLabel *bgImg;
-
     QLabel *title;
 
     QLabel *mainLabel;
-
-    QLabel *thanksLabel;
-    QPushButton *samButton;
 
     QLabel *gitHubLinkLabel;
 
     QLabel *contactsLabel;
 
     QPushButton *openInBrowser;
-    QPushButton *closeButton;
 
     QString link;
-    QString samLink;
 
 private slots:
     void oib();
-    void clw();
-    void sam();
 };
 
 #endif // ABOUTWINDOW_H

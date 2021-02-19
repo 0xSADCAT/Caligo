@@ -19,20 +19,6 @@ Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
     topLayout->addWidget(timeSlider, 1);
     topLayout->addWidget(durLabel, 0);
 
-    settingsButton = new QPushButton;
-    settingsButton->setToolTip(tr("Settings"));
-    settingsButton->setIcon(QPixmap(":/img/settings24"));
-
-    aboutButton = new QPushButton;
-    aboutButton->setToolTip(tr("About"));
-    aboutButton->setIcon(QPixmap(":/img/info"));
-
-    QMenu *abMenu = new QMenu;
-    abMenu->addAction(QPixmap(":/img/help"), tr("Help"), this, &Controls::help);
-    abMenu->addAction(QPixmap(":/img/info"), tr("About"), this, &Controls::about);
-    abMenu->addAction(QPixmap(":/img/qt"), tr("About Qt"), qApp, &QApplication::aboutQt);
-    aboutButton->setMenu(abMenu);
-
     prevButton = new QPushButton;
     prevButton->setToolTip(tr("Previous track"));
     prevButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
@@ -65,8 +51,6 @@ Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
     player->setVolume(volumeSlider->value());
 
     botLayout = new QHBoxLayout;
-    botLayout->addWidget(settingsButton, 0);
-    botLayout->addWidget(aboutButton, 0);
     botLayout->addStretch(1);
     botLayout->addSpacing(15);
     botLayout->addWidget(prevButton, 0);
@@ -98,7 +82,6 @@ Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
     connect(mp, &QMediaPlayer::positionChanged, this, &Controls::setPos);
     connect(timeSlider, &TimeSlider::clicked, mp, &QMediaPlayer::setPosition);
 
-    connect(settingsButton, &QPushButton::clicked, this, &Controls::settings);
     connect(prevButton, &QPushButton::clicked, this, &Controls::prev);
     connect(playButton, &QPushButton::clicked, this, &Controls::playPause);
     connect(stopButton, &QPushButton::clicked, this, &Controls::stop);
@@ -117,8 +100,6 @@ void Controls::setSizes(int v)
     QSize s(v, v);
     qreal vr = qreal(v) * 1.5;
     QSize ps((int(vr)), (int(vr)));
-    settingsButton->setIconSize(s);
-    aboutButton->setIconSize(s);
     prevButton->setIconSize(s);
     playButton->setIconSize(ps);
     stopButton->setIconSize(s);

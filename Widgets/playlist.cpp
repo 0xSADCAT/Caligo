@@ -40,8 +40,8 @@ QStringList Playlist::getList()
     return l;
 }
 
-void Playlist::add(const QString &path)
-// Add file from path
+void Playlist::add(const QString &path, bool sc)
+// Add from path or url
 {
 #ifdef DEBUG_OUTPUT
         qDebug() << "Playlist::add(QString&)";
@@ -64,6 +64,15 @@ void Playlist::add(const QString &path)
     connect(e, &MediaElement::ctrlClicked, this, &Playlist::ctrlClickElement);
     connect(e, &MediaElement::selectAll, this, &Playlist::cmSelectAll);
     connect(e, &MediaElement::deleteSelected, this, &Playlist::cmDeleteSelected);
+
+    if (index == -1) {
+        index = 0;
+        setCurrentIndexMedia();
+        list[0]->setPlaying(true);
+    }
+
+    if (sc)
+        scaner->scan();
 }
 
 void Playlist::add(const QStringList &paths)
@@ -91,9 +100,8 @@ void Playlist::add(const QStringList &paths)
 
     if (index == -1) {
         index = 0;
-        player->setMedia(QUrl::fromLocalFile(list[0]->getPath()));
+        setCurrentIndexMedia();
         list[0]->setPlaying(true);
-        player->play();
     }
 
     scaner->scan();
@@ -144,8 +152,7 @@ void Playlist::clear()
         index = 0;
     }
     list[index]->setPlaying(true);
-    player->setMedia(QUrl::fromLocalFile(list[index]->getPath()));
-    player->play();
+    setCurrentIndexMedia();
 
 #ifdef DEBUG_OUTPUT
         qDebug() << "New index:" << index;
@@ -170,8 +177,7 @@ void Playlist::clear()
         index = c - 1;
     }
     list[index]->setPlaying(true);
-    player->setMedia(QUrl::fromLocalFile(list[index]->getPath()));
-    player->play();
+    setCurrentIndexMedia();
 
 #ifdef DEBUG_OUTPUT
         qDebug() << "New index:" << index;
@@ -221,9 +227,7 @@ void Playlist::keyPressEvent(QKeyEvent *e)
         list[index]->setPlaying(false);
         lastClicked->setPlaying(true);
         index = list.indexOf(lastClicked);
-        player->stop();
-        player->setMedia(QUrl::fromLocalFile(list[index]->getPath()));
-        player->play();
+        setCurrentIndexMedia();
         if (selection.count() > 1) {
             foreach (MediaElement* e, selection) {
                 if (e != lastClicked) {
@@ -232,6 +236,7 @@ void Playlist::keyPressEvent(QKeyEvent *e)
             }
             selection.clear();
             selection << lastClicked;
+            lastClicked->setSelected(false);
         }
     }
 
@@ -434,10 +439,11 @@ void Playlist::mousePressEvent(QMouseEvent *)
     MediaElement *e = (MediaElement*) sender();
     list[index]->setPlaying(false);
     index = list.indexOf(e);
-    player->stop();
-    player->setMedia(QUrl::fromLocalFile(list[index]->getPath()));
-    player->play();
+    setCurrentIndexMedia();
     list[index]->setPlaying(true);
+    list[index]->setSelected(false);
+    lastClicked = e;
+    selection.clear();
 }
 
 /* private SLOT */ void Playlist::focusFromElement()
@@ -517,5 +523,20 @@ QString Playlist::getMetaData()
         qDebug() << s;
 #endif
 
-    return s;
+        return s;
+}
+
+void Playlist::setCurrentIndexMedia()
+{
+    player->stop();
+    QString u = list[index]->getPath();
+    QUrl url;
+    if (u.startsWith("http")) {
+        url = QUrl(u);
+    }
+    else {
+        url = QUrl::fromLocalFile(u);
+    }
+    player->setMedia(url);
+    player->play();
 }

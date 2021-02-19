@@ -16,6 +16,7 @@ PlaylistControls::PlaylistControls(Playlist *pl, QWidget *parent) : QWidget(pare
     }
 
     addButton = new QPushButton;
+    addUrlButton = new QPushButton;
     clearButton = new QPushButton;
 
     savePlaylist = new QPushButton;
@@ -25,6 +26,8 @@ PlaylistControls::PlaylistControls(Playlist *pl, QWidget *parent) : QWidget(pare
 
     QHBoxLayout *l = new QHBoxLayout;
     l->addWidget(addButton, 0);
+    l->addSpacing(10);
+    l->addWidget(addUrlButton, 0);
     l->addStretch(1);
     l->addWidget(loadPlaylist, 0);
     l->addSpacing(10);
@@ -36,6 +39,7 @@ PlaylistControls::PlaylistControls(Playlist *pl, QWidget *parent) : QWidget(pare
     setLayout(l);
 
     addButton->setIcon(QPixmap(":/img/add"));
+    addUrlButton->setIcon(style()->standardIcon(QStyle::SP_DriveNetIcon));
     clearButton->setIcon(QPixmap(":/img/clear"));
 
     savePlaylist->setIcon(QPixmap(":/img/save"));
@@ -44,12 +48,14 @@ PlaylistControls::PlaylistControls(Playlist *pl, QWidget *parent) : QWidget(pare
     forceScanButton->setIcon(QPixmap(":/img/reload"));
 
     addButton->setToolTip(tr("Add media"));
+    addUrlButton->setToolTip(tr("Add media from URL"));
     clearButton->setToolTip(tr("Clear playlist"));
     savePlaylist->setToolTip(tr("Save this playlist"));
     loadPlaylist->setToolTip(tr("Open playlist"));
     forceScanButton->setToolTip(tr("Update metadata"));
 
     connect(addButton, &QPushButton::clicked, this, &PlaylistControls::add);
+    connect(addUrlButton, &QPushButton::clicked, this, &PlaylistControls::addUrl);
     connect(clearButton, &QPushButton::clicked, this, &PlaylistControls::clear);
     connect(savePlaylist, &QPushButton::clicked, this, &PlaylistControls::save);
     connect(loadPlaylist, &QPushButton::clicked, this, &PlaylistControls::load);
@@ -82,6 +88,7 @@ void PlaylistControls::setSizes(int v)
     QSize s(v, v);
 
     addButton->setIconSize(s);
+    addUrlButton->setIconSize(s);
     clearButton->setIconSize(s);
     savePlaylist->setIconSize(s);
     loadPlaylist->setIconSize(s);
@@ -170,6 +177,20 @@ void PlaylistControls::setPathMusic(const QString &value)
         qDebug() << "Selected paths:";
         qDebug() << l;
 #endif
+}
+
+void PlaylistControls::addUrl()
+{
+    bool isOk;
+    QString url = QInputDialog::getText(0, tr("Add from URL") + " # " + qApp->applicationName(), tr("Enter URL:"),
+                                        QLineEdit::Normal, "", &isOk);
+    if (not isOk) {
+        // Cancel clicked
+        return;
+    }
+    if (not url.isEmpty() and url.startsWith("http")) {
+        playlist->add(url, true);
+    }
 }
 
 /* private SLOT */ void PlaylistControls::clear()

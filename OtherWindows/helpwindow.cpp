@@ -18,11 +18,26 @@ HelpWindow::HelpWindow() : QWidget(nullptr)
     sa->setWidget(usageTab);
     sa->setWidgetResizable(true);
     QWidget *hotkeyTab = new QWidget;
-    QWidget *linkTab = new QWidget;
+
+    /* From author tab */
+    QLabel *authorLabel = new QLabel(tr("<center><b>From the author</b></center> Why is the default directory selected for music? Nowadays, "
+                                        "most people use such programs specifically for music, if you are not comfortable - you can change "
+                                        "the path in the settings.<br>At the moment, errors are known:<br><ol>"
+                                        "<li>Due to an imperfect algorithm for parsing the metadata of media "
+                                        "files, the path to the file may be displayed in the playlist instead of the name of the music. "
+                                        "The behavior is random, and work is being done to eliminate it. It does not affect the performance."
+                                        "You can start force update metadata by clicking on button on playlist control panel."
+                                        "</li>"
+                                        "<li><b>Couldn't open the file. </b>The player does not provide additional multimedia codecs, but "
+                                        "uses the ones installed in the system. You can solve the problem by installing them. For example, "
+                                        "for Linux it is <b>GStreamer</b>, for Windows - <b>K-Lite Codec Pack</b>. Codecs can be found freely "
+                                        "available on the Internet. Which codec to choose is up to you.</li></ol>"));
+    authorLabel->setWordWrap(true);
+    authorLabel->setAlignment(Qt::AlignJustify);
 
     tabs->addTab(sa, tr("Usage"));
     tabs->addTab(hotkeyTab, tr("Hotkeys"));
-    tabs->addTab(linkTab, tr("Links"));
+    tabs->addTab(authorLabel, tr("From author"));
 
     /* usage tab */
     QVBoxLayout *usageLayout = new QVBoxLayout;
@@ -61,22 +76,12 @@ HelpWindow::HelpWindow() : QWidget(nullptr)
                                        "automatically exit the full-screen mode.<br>"));
     videoLabel->setWordWrap(true);
     videoLabel->setAlignment(Qt::AlignJustify);
-    QLabel *authorLabel = new QLabel(tr("<center><b>From the author</b></center> Why is the default directory selected for music? Nowadays, "
-                                        "most people use such programs specifically for music, if you are not comfortable - you can change "
-                                        "the path in the settings.<br>At the moment, errors are known:<br><ol><li>Closing the application "
-                                        "results in termination with the code 139, the reason has not yet been established, but it does "
-                                        "not affect in any way.</li><li>Due to an imperfect algorithm for parsing the metadata of media "
-                                        "files, the path to the file may be displayed in the playlist instead of the name of the music. "
-                                        "The behavior is random, and work is being done to eliminate it. It does not affect the performance."
-                                        "</li></ol>"));
-    authorLabel->setWordWrap(true);
-    authorLabel->setAlignment(Qt::AlignJustify);
 
     usageLayout->addWidget(playlistLabel, 0);
     usageLayout->addWidget(pathLabel, 0);
     usageLayout->addWidget(dragLabel, 0);
     usageLayout->addWidget(videoLabel, 0);
-    usageLayout->addWidget(authorLabel, 0);
+//    usageLayout->addWidget(authorLabel, 0);
     usageLayout->addStretch(1);
 
     /* hotkey tab */
@@ -163,43 +168,27 @@ HelpWindow::HelpWindow() : QWidget(nullptr)
     QGridLayout *otherGrid = new QGridLayout;
     hkOther->setLayout(otherGrid);
     QLabel *helpKey = new QLabel("Ctrl+H");
-    QLabel *helpDes = new QLabel("Open this window");
+    QLabel *helpDes = new QLabel(tr("Open this window"));
     otherGrid->addWidget(helpKey, 0, 0);
     otherGrid->addWidget(helpDes, 0, 1);
 
-    /* link tab */
-    QVBoxLayout *linkGrid = new QVBoxLayout;
-    linkTab->setLayout(linkGrid);
+//    QLabel *gitLabel = new QLabel(tr("Source code"));
+//    QPushButton *gitButton = new QPushButton("GitHub");
+//    gitButton->setToolTip(tr("Open in browser"));
+//    connect(gitButton, &QPushButton::clicked, this, &HelpWindow::openGitHub);
+//    QHBoxLayout *gitLayout = new QHBoxLayout;
+//    gitLayout->addWidget(gitLabel, 1);
+//    gitLayout->addWidget(gitButton, 0);
 
-    QLabel *gitLabel = new QLabel(tr("Source code"));
-    QPushButton *gitButton = new QPushButton("GitHub");
-    gitButton->setToolTip(tr("Open in browser"));
-    connect(gitButton, &QPushButton::clicked, this, &HelpWindow::openGitHub);
-    QHBoxLayout *gitLayout = new QHBoxLayout;
-    gitLayout->addWidget(gitLabel, 1);
-    gitLayout->addWidget(gitButton, 0);
-    linkGrid->addLayout(gitLayout, 0);
-
-    linkGrid->addWidget(new QLabel("<center>" + tr("Specian thanks") + "</center>"), 0);
-
-    QLabel *samLabel = new QLabel("<b>SAM Art</b> " + tr("for art"));
-    QPushButton *samButton = new QPushButton("ArtStation");
-    samButton->setToolTip(tr("Open in browser"));
-    connect(samButton, &QPushButton::clicked, this, &HelpWindow::openArtStation);
-    QHBoxLayout *samLayout = new QHBoxLayout;
-    samLayout->addWidget(samLabel, 1);
-    samLayout->addWidget(samButton, 0);
-    linkGrid->addLayout(samLayout, 0);
-
-    linkGrid->addStretch(1);
+//    QLabel *samLabel = new QLabel("<b>SAM Art</b> " + tr("for art"));
+//    QPushButton *samButton = new QPushButton("ArtStation");
+//    samButton->setToolTip(tr("Open in browser"));
+//    QHBoxLayout *samLayout = new QHBoxLayout;
+//    samLayout->addWidget(samLabel, 1);
+//    samLayout->addWidget(samButton, 0);
 }
 
 void HelpWindow::openGitHub()
 {
     QDesktopServices::openUrl(QUrl("https://github.com/Alex13kyky/Caligo"));
-}
-
-void HelpWindow::openArtStation()
-{
-    QDesktopServices::openUrl(QUrl("https://www.artstation.com/twinshado"));
 }

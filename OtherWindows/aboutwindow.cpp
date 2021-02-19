@@ -4,12 +4,7 @@ AboutWindow::AboutWindow() : QWidget(nullptr)
 {
     setWindowIcon(QIcon(":/img/icon"));
 
-    bgImg = new QLabel;
-    bgImg->setPixmap(QPixmap(":/img/aboutImage").scaledToWidth(qApp->desktop()->width() / 10));
-    bgImg->setFixedWidth(qApp->desktop()->width() / 10);
-
     link = "https://github.com/Alex13kyky/Caligo";
-    samLink = "https://www.artstation.com/twinshado";
 
     setWindowTitle(tr("About application") + " # " + qApp->applicationName());
 
@@ -20,13 +15,9 @@ AboutWindow::AboutWindow() : QWidget(nullptr)
     gitHubLinkLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
     openInBrowser = new QPushButton(tr("GitHub"));
     openInBrowser->setToolTip(tr("Open in browser"));
-    closeButton = new QPushButton(tr("Close"));
-    closeButton->setIcon(style()->standardIcon(QStyle::SP_DialogCloseButton));
+    setStyleSheet("QPushButton {border: 1px solid black;}");
     contactsLabel = new QLabel;
     contactsLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    thanksLabel = new QLabel;
-    samButton = new QPushButton(tr("ArtStation"));
-    samButton->setToolTip(tr("Open in browser"));
 
     QHBoxLayout *hl = new QHBoxLayout;
     QVBoxLayout *l = new QVBoxLayout;
@@ -37,31 +28,31 @@ AboutWindow::AboutWindow() : QWidget(nullptr)
     gl->setSpacing(0);
     gl->setContentsMargins(0, 0, 0, 0);
 
+    QPushButton *aboutQtButton = new QPushButton(tr("About Qt"));
+    connect(aboutQtButton, &QPushButton::clicked, qApp, &QApplication::aboutQt);
+    aboutQtButton->setStyleSheet("QPushButton {padding: 10px 10px 10px 10px; border: 1px solid black;}");
+
     QHBoxLayout *cl = new QHBoxLayout;
     cl->addStretch(1);
-    cl->addWidget(closeButton, 0);
+    cl->addWidget(aboutQtButton, 0);
+    cl->addStretch(1);
     cl->setSpacing(0);
     cl->setContentsMargins(0, 0, 0, 0);
 
     QHBoxLayout *samL = new QHBoxLayout;
     QLabel *samLabel = new QLabel;
-    samLabel->setText("<b>SAM Art</b> " + tr("for art in this window") + "<br>ArtStation: " +
-                      "<a href='" + samLink + "'>" + samLink + "</a>");
     samLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
     samL->addWidget(samLabel, 1);
-    samL->addWidget(samButton, 0);
 
     l->addWidget(title, 0);
     l->addWidget(mainLabel, 0);
     l->addStretch(1);
-    l->addWidget(thanksLabel, 0);
     l->addLayout(samL, 0);
     l->addStretch(1);
     l->addLayout(gl, 0);
     l->addWidget(contactsLabel, 0);
     l->addLayout(cl, 0);
 
-    hl->addWidget(bgImg, 0);
     hl->addLayout(l, 0);
     setLayout(hl);
 
@@ -89,24 +80,10 @@ AboutWindow::AboutWindow() : QWidget(nullptr)
                 );
     mainLabel->setAlignment(Qt::AlignJustify);
 
-    thanksLabel->setText(tr("<center><b><h4>Special thanks</h4></b></center>"));
-
     connect(openInBrowser, &QPushButton::clicked, this, &AboutWindow::oib);
-    connect(closeButton, &QPushButton::clicked, this, &AboutWindow::clw);
-    connect(samButton, &QPushButton::clicked, this, &AboutWindow::sam);
 }
 
 void AboutWindow::oib()
 {
     QDesktopServices::openUrl(link);
-}
-
-void AboutWindow::clw()
-{
-    this->close();
-}
-
-void AboutWindow::sam()
-{
-    QDesktopServices::openUrl(samLink);
 }

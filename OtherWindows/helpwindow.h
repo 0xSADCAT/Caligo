@@ -11,7 +11,6 @@ public:
 
 private slots:
     void openGitHub();
-    void openArtStation();
 };
 
 #endif // HELPWINDOW_H

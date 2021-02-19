@@ -16,11 +16,23 @@
  * I don't know where it was, but all works currectly.
  * */
 
+/* TODO:
+ *
+ * 1. Добавить описание кнопки Add URL
+ * 2. Иконка этой кнопки
+ * 3. Напилить иконки в фармате SVG
+ * 4. Иконка Qt
+ *
+ * 6. Вынести раздел "От автора" в отдельную вкладку
+ * */
+
 int main(int argc, char *argv[])
 {
+    std::string ver = "0.4.0";
+
     if (argc > 1) {
         if (QString(argv[1]) == "--version") {
-            std::cout << "Caligo version 0.3.0" << std::endl;
+            std::cout << "Caligo version " + ver << std::endl;
             return 0;
         }
         if (QString(argv[1]) == "--help") {
@@ -33,7 +45,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     a.setApplicationName("Caligo");
-    a.setApplicationVersion("0.3.0");
+    a.setApplicationVersion(QString::fromStdString(ver));
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);

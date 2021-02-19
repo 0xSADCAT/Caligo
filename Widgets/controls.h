@@ -20,9 +20,6 @@ public:
 signals:
     void next();
     void prev();
-    void settings();
-    void about();
-    void help();
     void fullScreen();
 
 public slots:
@@ -41,8 +38,6 @@ private:
     QLabel *durLabel;
     QHBoxLayout *topLayout;
 
-    QPushButton *settingsButton;
-    QPushButton *aboutButton;
     QPushButton *prevButton;
     QPushButton *playButton;
     QPushButton *stopButton;

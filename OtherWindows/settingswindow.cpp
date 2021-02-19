@@ -91,6 +91,8 @@ SettingsWindow::SettingsWindow(QSettings *s, PlaylistControls *pc, QWidget *wgt)
     l->addStretch(1); /* cosmetic */
     setLayout(l);
 
+    setStyleSheet("QPushButton {border: 1px solid black;}");
+
     setState();
 }
 
