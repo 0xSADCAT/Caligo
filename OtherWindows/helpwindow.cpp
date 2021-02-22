@@ -14,10 +14,13 @@ HelpWindow::HelpWindow() : QWidget(nullptr)
     layout()->setContentsMargins(0, 0, 0, 0);
 
     QWidget *usageTab = new QWidget;
-    QScrollArea *sa = new QScrollArea;
-    sa->setWidget(usageTab);
-    sa->setWidgetResizable(true);
+    QScrollArea *saUsage = new QScrollArea;
+    saUsage->setWidget(usageTab);
+    saUsage->setWidgetResizable(true);
     QWidget *hotkeyTab = new QWidget;
+    QScrollArea *saHotkey = new QScrollArea;
+    saHotkey->setWidget(hotkeyTab);
+    saHotkey->setWidgetResizable(true);
 
     /* From author tab */
     QLabel *authorLabel = new QLabel(tr("<center><b>From the author</b></center> Why is the default directory selected for music? Nowadays, "
@@ -34,10 +37,14 @@ HelpWindow::HelpWindow() : QWidget(nullptr)
                                         "available on the Internet. Which codec to choose is up to you.</li></ol>"));
     authorLabel->setWordWrap(true);
     authorLabel->setAlignment(Qt::AlignJustify);
+    authorLabel->setStyleSheet("QLabel {margin: 5px 5px 5px 5px;}");
+    QScrollArea *saAuthor = new QScrollArea;
+    saAuthor->setWidget(authorLabel);
+    saAuthor->setWidgetResizable(true);
 
-    tabs->addTab(sa, tr("Usage"));
-    tabs->addTab(hotkeyTab, tr("Hotkeys"));
-    tabs->addTab(authorLabel, tr("From author"));
+    tabs->addTab(saUsage, tr("Usage"));
+    tabs->addTab(saHotkey, tr("Hotkeys"));
+    tabs->addTab(saAuthor, tr("From author"));
 
     /* usage tab */
     QVBoxLayout *usageLayout = new QVBoxLayout;
@@ -81,7 +88,6 @@ HelpWindow::HelpWindow() : QWidget(nullptr)
     usageLayout->addWidget(pathLabel, 0);
     usageLayout->addWidget(dragLabel, 0);
     usageLayout->addWidget(videoLabel, 0);
-//    usageLayout->addWidget(authorLabel, 0);
     usageLayout->addStretch(1);
 
     /* hotkey tab */
@@ -152,18 +158,26 @@ HelpWindow::HelpWindow() : QWidget(nullptr)
     QLabel *openMusDes = new QLabel(tr("Open music"));
     playlistGrid->addWidget(openMusKey, 0, 0);
     playlistGrid->addWidget(openMusDes, 0, 1);
+    QLabel *urlKey = new QLabel("Ctrl+U");
+    QLabel *urlDes = new QLabel(tr("Open URL"));
+    playlistGrid->addWidget(urlKey, 1, 0);
+    playlistGrid->addWidget(urlDes, 1, 1);
     QLabel *openPlaKey = new QLabel("Shift+O");
     QLabel *openPlaDes = new QLabel(tr("Open playlist"));
-    playlistGrid->addWidget(openPlaKey, 1, 0);
-    playlistGrid->addWidget(openPlaDes, 1, 1);
+    playlistGrid->addWidget(openPlaKey, 2, 0);
+    playlistGrid->addWidget(openPlaDes, 2, 1);
     QLabel *saveKey = new QLabel("Ctrl+Shift+S");
     QLabel *saveDes = new QLabel(tr("Save playlist"));
-    playlistGrid->addWidget(saveKey, 2, 0);
-    playlistGrid->addWidget(saveDes, 2, 1);
+    playlistGrid->addWidget(saveKey, 3, 0);
+    playlistGrid->addWidget(saveDes, 3, 1);
     QLabel *clearKey = new QLabel("Ctrl+Shift+C");
     QLabel *clearDes = new QLabel(tr("Clear playlist"));
-    playlistGrid->addWidget(clearKey, 3, 0);
-    playlistGrid->addWidget(clearDes, 3, 1);
+    playlistGrid->addWidget(clearKey, 4, 0);
+    playlistGrid->addWidget(clearDes, 4, 1);
+    QLabel *forceKey = new QLabel("Shift+U");
+    QLabel *forceDes = new QLabel(tr("Update playlist metadata"));
+    playlistGrid->addWidget(forceKey, 5, 0);
+    playlistGrid->addWidget(forceDes, 5, 1);
 
     QGridLayout *otherGrid = new QGridLayout;
     hkOther->setLayout(otherGrid);
@@ -171,21 +185,6 @@ HelpWindow::HelpWindow() : QWidget(nullptr)
     QLabel *helpDes = new QLabel(tr("Open this window"));
     otherGrid->addWidget(helpKey, 0, 0);
     otherGrid->addWidget(helpDes, 0, 1);
-
-//    QLabel *gitLabel = new QLabel(tr("Source code"));
-//    QPushButton *gitButton = new QPushButton("GitHub");
-//    gitButton->setToolTip(tr("Open in browser"));
-//    connect(gitButton, &QPushButton::clicked, this, &HelpWindow::openGitHub);
-//    QHBoxLayout *gitLayout = new QHBoxLayout;
-//    gitLayout->addWidget(gitLabel, 1);
-//    gitLayout->addWidget(gitButton, 0);
-
-//    QLabel *samLabel = new QLabel("<b>SAM Art</b> " + tr("for art"));
-//    QPushButton *samButton = new QPushButton("ArtStation");
-//    samButton->setToolTip(tr("Open in browser"));
-//    QHBoxLayout *samLayout = new QHBoxLayout;
-//    samLayout->addWidget(samLabel, 1);
-//    samLayout->addWidget(samButton, 0);
 }
 
 void HelpWindow::openGitHub()

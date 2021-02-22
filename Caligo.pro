@@ -9,33 +9,47 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Inside/librarymetascaner.cpp \
     Inside/metascaner.cpp \
     OtherWindows/aboutwindow.cpp \
     OtherWindows/helpwindow.cpp \
     OtherWindows/settingswindow.cpp \
     Style/style.cpp \
     Widgets/controls.cpp \
+    Widgets/elementplaylist.cpp \
     Widgets/image.cpp \
+    Widgets/libraryelement.cpp \
+    Widgets/libraryplaylists.cpp \
     Widgets/mediaelement.cpp \
+    Widgets/medialibrary.cpp \
     Widgets/playinfo.cpp \
     Widgets/playlist.cpp \
     Widgets/playlistcontrols.cpp \
+    Widgets/radioelement.cpp \
+    Widgets/radiolibrary.cpp \
     Widgets/timeslider.cpp \
     Widgets/videowidget.cpp \
     main.cpp \
     widget.cpp
 
 HEADERS += \
+    Inside/librarymetascaner.h \
     Inside/metascaner.h \
     OtherWindows/aboutwindow.h \
     OtherWindows/helpwindow.h \
     OtherWindows/settingswindow.h \
     Widgets/controls.h \
+    Widgets/elementplaylist.h \
     Widgets/image.h \
+    Widgets/libraryelement.h \
+    Widgets/libraryplaylists.h \
     Widgets/mediaelement.h \
+    Widgets/medialibrary.h \
     Widgets/playinfo.h \
     Widgets/playlist.h \
     Widgets/playlistcontrols.h \
+    Widgets/radioelement.h \
+    Widgets/radiolibrary.h \
     Widgets/timeslider.h \
     Widgets/videowidget.h \
     widget.h

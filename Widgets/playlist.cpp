@@ -29,15 +29,37 @@ QStringList Playlist::getList()
 {
     QStringList l;
     foreach (MediaElement *e, list) {
-        l << e->getPath();
+        l << e->getString();
     }
 
 #ifdef DEBUG_OUTPUT
-        qDebug() << "Playlist::getList()";
-        qDebug() << l;
+    qDebug() << "Playlist::getList()";
+    qDebug() << l;
 #endif
 
     return l;
+}
+
+void Playlist::add(const QString &path, const QString &text)
+{
+    MediaElement *e = new MediaElement(path);
+    e->setText(text);
+    l->addWidget(e, 0);
+    list << e;
+
+    connect(e, &MediaElement::focus, this, &Playlist::focusFromElement);
+    connect(e, &MediaElement::clicked, this, &Playlist::clickElement);
+    connect(e, &MediaElement::doubleClicked, this, &Playlist::doubleClickElement);
+    connect(e, &MediaElement::shiftClicked, this, &Playlist::shiftClickElement);
+    connect(e, &MediaElement::ctrlClicked, this, &Playlist::ctrlClickElement);
+    connect(e, &MediaElement::selectAll, this, &Playlist::cmSelectAll);
+    connect(e, &MediaElement::deleteSelected, this, &Playlist::cmDeleteSelected);
+
+    if (index == -1) {
+        index = 0;
+        setCurrentIndexMedia();
+        list[0]->setPlaying(true);
+    }
 }
 
 void Playlist::add(const QString &path, bool sc)

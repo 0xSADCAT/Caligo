@@ -20,27 +20,27 @@ Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
     topLayout->addWidget(durLabel, 0);
 
     prevButton = new QPushButton;
-    prevButton->setToolTip(tr("Previous track"));
-    prevButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
+    prevButton->setToolTip(tr("Previous track") + " [B]");
+    prevButton->setIcon(QIcon(":/img/previous"));
 
     playButton = new QPushButton;
-    playButton->setToolTip(tr("Play"));
-    playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    playButton->setToolTip(tr("Play") + " [P]");
+    playButton->setIcon(QIcon(":/img/play"));
 
     stopButton = new QPushButton;
-    stopButton->setToolTip(tr("Stop"));
-    stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
+    stopButton->setToolTip(tr("Stop") + " [S]");
+    stopButton->setIcon(QIcon(":/img/stop"));
 
     nextButton = new QPushButton;
-    nextButton->setToolTip(tr("Next track"));
-    nextButton->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
+    nextButton->setToolTip(tr("Next track") + " [N]");
+    nextButton->setIcon(QIcon(":/img/next"));
 
     fullScreenButton = new QPushButton;
     fullScreenButton->setToolTip(tr("Toggle fullscreen (video only)") + " [F]");
-    fullScreenButton->setIcon(QPixmap(":/img/fullScreen24"));
+    fullScreenButton->setIcon(QPixmap(":/img/fullscreen"));
 
     muteButton = new QPushButton;
-    muteButton->setToolTip(tr("Mute"));
+    muteButton->setToolTip(tr("Mute") + " [Ctrl+M]");
     muteButton->setIcon(QPixmap(":/img/volume"));
 
     volumeSlider = new QSlider;
@@ -149,12 +149,12 @@ int Controls::getVolume()
 #endif
 
     if (s == QMediaPlayer::State::PlayingState) {
-        playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
-        playButton->setToolTip(tr("Pause"));
+        playButton->setIcon(QIcon(":/img/pause"));
+        playButton->setToolTip(tr("Pause") + " [P]");
     }
     else {
-        playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
-        playButton->setToolTip(tr("Play"));
+        playButton->setIcon(QIcon(":/img/play"));
+        playButton->setToolTip(tr("Play") + " [P]");
     }
 }
 
@@ -165,12 +165,12 @@ int Controls::getVolume()
 #endif
 
     if (v) {
-        muteButton->setIcon(QPixmap(":/img/mute"));
-        muteButton->setToolTip(tr("Unmute"));
+        muteButton->setIcon(QIcon(":/img/mute"));
+        muteButton->setToolTip(tr("Unmute") + " [Ctrl+M]");
     }
     else {
-        muteButton->setIcon(QPixmap(":/img/volume"));
-        muteButton->setToolTip(tr("Mute"));
+        muteButton->setIcon(QIcon(":/img/volume"));
+        muteButton->setToolTip(tr("Mute") + " [Ctrl+M]");
     }
 }
 

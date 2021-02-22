@@ -15,8 +15,10 @@ Widget::Widget(QWidget *parent)
     playlist = new Playlist(mp);
     plControls = new PlaylistControls(playlist);
 
-    controls->setSizes(24);
-    plControls->setSizes(24);
+    tabWidget = new QTabWidget;
+
+    controls->setSizes(20);
+    plControls->setSizes(16);
 
     QVBoxLayout *plL = new QVBoxLayout;
     plL->addWidget(plControls, 0);
@@ -32,7 +34,7 @@ Widget::Widget(QWidget *parent)
     sw->layout()->setContentsMargins(0, 0, 0, 0);
 
     spl = new QSplitter;
-    spl->addWidget(playInfo);
+    spl->addWidget(tabWidget);
     spl->addWidget(sw);
 
     QVBoxLayout *l = new QVBoxLayout;
@@ -43,6 +45,25 @@ Widget::Widget(QWidget *parent)
 
     setLayout(l);
 
+    library = new MediaLibrary(playlist);
+    radioLibrary = new RadioLibrary(playlist);
+    playlistLibrary = new LibraryPlaylists(playlist);
+
+    settings = new QSettings(qApp->applicationDirPath() + QDir::separator() + qApp->applicationName() + "_settings.ini", QSettings::IniFormat);
+    loadSettings();
+
+    settingsWindow = new SettingsWindow(settings, plControls, this);
+    aboutWindow = new AboutWindow;
+    helpWindow = new HelpWindow;
+
+    tabWidget->addTab(playInfo, tr("Now Playing"));
+    tabWidget->addTab(library, tr("Media library"));
+    tabWidget->addTab(playlistLibrary, tr("Playlists"));
+    tabWidget->addTab(radioLibrary, tr("Radio library"));
+    tabWidget->addTab(settingsWindow, tr("Settings"));
+    tabWidget->addTab(aboutWindow, tr("About"));
+    tabWidget->addTab(helpWindow, tr("Help"));
+
     connect(controls, &Controls::next, playlist, &Playlist::next);
     connect(controls, &Controls::prev, playlist, &Playlist::prev);
 
@@ -51,20 +72,9 @@ Widget::Widget(QWidget *parent)
     layout()->setSpacing(0);
     layout()->setContentsMargins(0, 0, 0, 0);
 
-    settings = new QSettings(qApp->applicationDirPath() + QDir::separator() + qApp->applicationName() + "_settings.ini", QSettings::IniFormat);
-    loadSettings();
-
     playlist->setFocus();
 
     this->setAcceptDrops(true);
-
-    settingsWindow = new SettingsWindow(settings, plControls, this);
-    aboutWindow = new AboutWindow;
-    helpWindow = new HelpWindow;
-
-    connect(controls, &Controls::help, this, &Widget::help);
-    connect(controls, &Controls::about, this, &Widget::about);
-    connect(controls, &Controls::settings, this, &Widget::appSettings);
 
     connect(playInfo, &PlayInfo::fsClicked, this, &Widget::videoFullscreen);
     connect(controls, &Controls::fullScreen, this, &Widget::videoFullscreen);
@@ -120,8 +130,6 @@ void Widget::closeEvent(QCloseEvent *)
     /* Hide error code 139 */
     settings->~QSettings();
     std::exit(0);
-//    qApp->exit(0);
-//    QWidget::closeEvent(e);
 }
 
 void Widget::dragEnterEvent(QDragEnterEvent *e)
@@ -206,8 +214,26 @@ void Widget::loadSettings()
         qDebug() << list;
 #endif
 
-        if (not list.isEmpty()) {
-            playlist->add(list);
+        bool needScan = false;
+        foreach (QString s, list) {
+            QStringList li = s.split(" ## ");
+            if (li.count() == 1) {
+                playlist->add(li[0]);
+                needScan = true;
+            }
+            else {
+                if (li[1] == " ") {
+                    playlist->add(li[0]);
+                    needScan = true;
+                }
+                else {
+                    playlist->add(li[0], li[1]);
+                }
+            }
+        }
+
+        if (needScan) {
+            playlist->forceUpdate();
         }
     }
 
@@ -241,6 +267,9 @@ void Widget::loadSettings()
 
         playlist->add(slist);
     }
+
+    radioLibrary->scanLibrary();
+    playlistLibrary->scan();
 }
 
 void Widget::recursiveEntryPoints(QDir d)
@@ -263,19 +292,9 @@ void Widget::setNewTitle(const QString &s)
     this->setWindowTitle(s);
 }
 
-void Widget::appSettings()
-{
-    settingsWindow->show();
-}
-
-void Widget::about()
-{
-    aboutWindow->show();
-}
-
 void Widget::help()
 {
-    helpWindow->show();
+    tabWidget->setCurrentIndex(tabWidget->count()-1);
 }
 
 /* In DEV */

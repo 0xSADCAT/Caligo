@@ -14,6 +14,7 @@ AboutWindow::AboutWindow() : QWidget(nullptr)
     gitHubLinkLabel = new QLabel;
     gitHubLinkLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
     openInBrowser = new QPushButton(tr("GitHub"));
+    openInBrowser->setIcon(QIcon(":/img/github"));
     openInBrowser->setToolTip(tr("Open in browser"));
     setStyleSheet("QPushButton {border: 1px solid black;}");
     contactsLabel = new QLabel;
@@ -29,6 +30,7 @@ AboutWindow::AboutWindow() : QWidget(nullptr)
     gl->setContentsMargins(0, 0, 0, 0);
 
     QPushButton *aboutQtButton = new QPushButton(tr("About Qt"));
+    aboutQtButton->setIcon(QIcon(":/img/qt"));
     connect(aboutQtButton, &QPushButton::clicked, qApp, &QApplication::aboutQt);
     aboutQtButton->setStyleSheet("QPushButton {padding: 10px 10px 10px 10px; border: 1px solid black;}");
 
@@ -54,7 +56,14 @@ AboutWindow::AboutWindow() : QWidget(nullptr)
     l->addLayout(cl, 0);
 
     hl->addLayout(l, 0);
-    setLayout(hl);
+    QScrollArea *sa = new QScrollArea;
+    QWidget *w = new QWidget;
+    w->setLayout(hl);
+    sa->setWidget(w);
+    sa->setWidgetResizable(true);
+    QVBoxLayout *la = new QVBoxLayout;
+    la->addWidget(sa);
+    setLayout(la);
 
     title->setText(
                 "<center><h3>" + qApp->applicationName() + " version " + qApp->applicationVersion() +

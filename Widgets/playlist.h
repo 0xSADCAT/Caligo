@@ -16,6 +16,7 @@ public:
 
     QStringList getList();
 
+    void add(const QString &path, const QString &text);
     void add(const QString &path, bool sc=false);
     void add(const QStringList &paths);
 

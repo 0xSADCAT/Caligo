@@ -17,10 +17,10 @@ SettingsWindow::SettingsWindow(QSettings *s, PlaylistControls *pc, QWidget *wgt)
     pathMusicValue = new QLabel;
     setPathMusicButton = new QPushButton;
     setPathMusicButton->setToolTip(tr("Select directory"));
-    setPathMusicButton->setIcon(style()->standardIcon(QStyle::SP_DirOpenIcon));
+    setPathMusicButton->setIcon(QIcon(":/img/dir"));
     setDefaultPathMusicButton = new QPushButton;
     setDefaultPathMusicButton->setToolTip(tr("Set default path"));
-    setDefaultPathMusicButton->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
+    setDefaultPathMusicButton->setIcon(QIcon(":/img/update"));
     connect(setPathMusicButton, &QPushButton::clicked, this, &SettingsWindow::pathMusic);
     connect(setDefaultPathMusicButton, &QPushButton::clicked, this, &SettingsWindow::pathMusicDefault);
     /* Add this layout to main layout */
@@ -39,10 +39,10 @@ SettingsWindow::SettingsWindow(QSettings *s, PlaylistControls *pc, QWidget *wgt)
     pathListValue = new QLabel;
     setPathListButton = new QPushButton;
     setPathListButton->setToolTip(tr("Select directory"));
-    setPathListButton->setIcon(style()->standardIcon(QStyle::SP_DirOpenIcon));
+    setPathListButton->setIcon(QIcon(":/img/dir"));
     setDefaultPathListButton = new QPushButton;
     setDefaultPathListButton->setToolTip(tr("Set default path"));
-    setDefaultPathListButton->setIcon(style()->standardIcon(QStyle::SP_BrowserReload));
+    setDefaultPathListButton->setIcon(QIcon(":/img/update"));
     connect(setPathListButton, &QPushButton::clicked, this, &SettingsWindow::pathList);
     connect(setDefaultPathListButton, &QPushButton::clicked, this, &SettingsWindow::pathListDefault);
     /* Add this layout to main layout */
@@ -89,7 +89,14 @@ SettingsWindow::SettingsWindow(QSettings *s, PlaylistControls *pc, QWidget *wgt)
     /* end adding elements to main layout */
 
     l->addStretch(1); /* cosmetic */
-    setLayout(l);
+    QScrollArea *sa = new QScrollArea;
+    QWidget *w = new QWidget;
+    w->setLayout(l);
+    sa->setWidget(w);
+    sa->setWidgetResizable(true);
+    QVBoxLayout *la = new QVBoxLayout;
+    la->addWidget(sa);
+    setLayout(la);
 
     setStyleSheet("QPushButton {border: 1px solid black;}");
 

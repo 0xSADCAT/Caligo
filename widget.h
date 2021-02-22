@@ -9,6 +9,9 @@
 #include <Widgets/playinfo.h>
 #include <Widgets/playlist.h>
 #include <Widgets/playlistcontrols.h>
+#include <Widgets/medialibrary.h>
+#include <Widgets/radiolibrary.h>
+#include <Widgets/libraryplaylists.h>
 
 #include <OtherWindows/aboutwindow.h>
 #include <OtherWindows/helpwindow.h>
@@ -35,6 +38,10 @@ private:
     Playlist *playlist;
     PlaylistControls *plControls;
 
+    MediaLibrary *library;
+    RadioLibrary *radioLibrary;
+    LibraryPlaylists *playlistLibrary;
+
     QSplitter *spl;
     QWidget *sw;
 
@@ -49,10 +56,10 @@ private:
     HelpWindow *helpWindow;
     SettingsWindow *settingsWindow;
 
+    QTabWidget *tabWidget;
+
 private slots:
     void setNewTitle(const QString &s);
-    void appSettings();
-    void about();
     void help();
 
     void videoFullscreen();

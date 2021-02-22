@@ -44,7 +44,7 @@ void MediaElement::setText(const QString &text)
         qDebug() << "---> " << text;
 #endif
 
-    this->text->setText("  " + text);
+    this->text->setText(text);
     meta = true;
 }
 
@@ -68,6 +68,17 @@ void MediaElement::setSelected(bool value)
 
     selected = value;
     updStyle();
+}
+
+QString MediaElement::getString() const
+{
+    QString s;
+    s += path;
+    s += " ## ";
+    if (text->text() != path) {
+        s += text->text();
+    }
+    return s;
 }
 
 void MediaElement::mousePressEvent(QMouseEvent *e)

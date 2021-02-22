@@ -21,6 +21,8 @@ public:
 
     void setSelected(bool value);
 
+    QString getString() const;
+
 signals:
     void clicked();
     void shiftClicked();
