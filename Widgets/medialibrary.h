@@ -1,3 +1,8 @@
+/* This file is path of the Caligo multimedia player
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
 #ifndef MEDIALIBRARY_H
 #define MEDIALIBRARY_H
 
@@ -38,7 +43,7 @@ private:
     QVBoxLayout *mainLayout;
 
     QPushButton *scanButton;
-    QPushButton *pathButton;
+//    QPushButton *pathButton;
 
     void add(QString &path);
     void remove(LibraryElement *e);

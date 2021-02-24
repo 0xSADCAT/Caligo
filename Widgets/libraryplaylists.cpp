@@ -1,7 +1,14 @@
+/* This file is path of the Caligo multimedia player
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
 #include "libraryplaylists.h"
 
 LibraryPlaylists::LibraryPlaylists(Playlist *pls, QWidget *parent) : QWidget(parent)
 {
+    clearBeforeOpen = true;
+
     playlist = pls;
     pathPlaylists = qApp->applicationDirPath() + QDir::separator() + "playlists";
     mainLayout = new QVBoxLayout;
@@ -14,23 +21,21 @@ LibraryPlaylists::LibraryPlaylists(Playlist *pls, QWidget *parent) : QWidget(par
     scanButton->setToolTip(tr("Search playlists in selected directory"));
     connect(scanButton, &QPushButton::clicked, this, &LibraryPlaylists::scan);
 
-    QPushButton *setPathButton = new QPushButton("");
-    setPathButton->setIcon(QIcon(":/img/dir"));
-    setPathButton->setToolTip(tr("Select directory with playlists"));
-    connect(setPathButton, &QPushButton::clicked, this, &LibraryPlaylists::setPath);
-
-    header->addWidget(setPathButton, 0);
-    header->addSpacing(10);
     header->addStretch(1);
     header->addWidget(scanButton, 0);
 
     QVBoxLayout *l = new QVBoxLayout;
     l->addLayout(header, 0);
-    l->addLayout(mainLayout, 0);
-    l->addStretch(1);
+    QScrollArea *sa = new QScrollArea;
+    QWidget *w = new QWidget;
+    QVBoxLayout *sal = new QVBoxLayout;
+    sal->addLayout(mainLayout, 0);
+    sal->addStretch(1);
+    w->setLayout(sal);
+    sa->setWidget(w);
+    sa->setWidgetResizable(true);
+    l->addWidget(sa, 1);
     setLayout(l);
-
-    setStyleSheet("QPushButton {border: 1px solid black;}");
 }
 
 void LibraryPlaylists::add(QString &path, QString &name)
@@ -107,6 +112,11 @@ void LibraryPlaylists::scan()
     }
 }
 
+void LibraryPlaylists::setClearBeforeOpen(bool value)
+{
+    clearBeforeOpen = value;
+}
+
 QString LibraryPlaylists::getPathPlaylists() const
 {
     return pathPlaylists;
@@ -115,6 +125,7 @@ QString LibraryPlaylists::getPathPlaylists() const
 void LibraryPlaylists::setPathPlaylists(const QString &value)
 {
     pathPlaylists = value;
+    scan();
 }
 
 void LibraryPlaylists::elementClicked()
@@ -130,7 +141,10 @@ void LibraryPlaylists::elementClicked()
 
 void LibraryPlaylists::elementDouble()
 {
-    playlist->clear();
+    if (clearBeforeOpen) {
+        playlist->clear();
+    }
+
     ElementPlaylist *e = (ElementPlaylist*) sender();
     QFile file(e->getPath());
     bool needScan = false;

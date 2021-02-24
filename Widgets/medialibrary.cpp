@@ -1,3 +1,8 @@
+/* This file is path of the Caligo multimedia player
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
 #include "medialibrary.h"
 
 MediaLibrary::MediaLibrary(Playlist *pls, QWidget *parent) : QWidget(parent)
@@ -17,14 +22,7 @@ MediaLibrary::MediaLibrary(Playlist *pls, QWidget *parent) : QWidget(parent)
     scanButton->setToolTip(tr("Scan media library"));
     connect(scanButton, &QPushButton::clicked, this, &MediaLibrary::scanLibrary);
 
-    pathButton = new QPushButton("");
-    pathButton->setIcon(QIcon(":/img/dir"));
-    pathButton->setToolTip(tr("Set path to media library"));
-    connect(pathButton, &QPushButton::clicked, this, &MediaLibrary::setScanPath);
-
     QHBoxLayout *controls = new QHBoxLayout;
-    controls->addWidget(pathButton, 0);
-    controls->addSpacing(10);
     controls->addStretch(1);
     controls->addWidget(scanButton, 0);
 

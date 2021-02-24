@@ -1,3 +1,8 @@
+/* This file is path of the Caligo multimedia player
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
 #include "radiolibrary.h"
 
 RadioLibrary::RadioLibrary(Playlist *pls, QWidget *parent) : QWidget(parent)
@@ -12,11 +17,16 @@ RadioLibrary::RadioLibrary(Playlist *pls, QWidget *parent) : QWidget(parent)
     QHBoxLayout *header = new QHBoxLayout;
     QHBoxLayout *buttons = new QHBoxLayout;
     QVBoxLayout *l = new QVBoxLayout;
-    l->addLayout(buttons, 0);
-    l->addSpacing(5);
     l->addLayout(header, 0);
-    l->addLayout(mainLayout, 0);
-    l->addStretch(1);
+    QScrollArea *sa = new QScrollArea;
+    QWidget *w = new QWidget;
+    QVBoxLayout *sal = new QVBoxLayout;
+    sal->addLayout(mainLayout, 0);
+    sal->addStretch(1);
+    w->setLayout(sal);
+    sa->setWidget(w);
+    sa->setWidgetResizable(true);
+    l->addWidget(sa, 1);
 
     header->addWidget(new QLabel(tr("Radio URL")), 0);
     header->addStretch(1);
@@ -28,12 +38,6 @@ RadioLibrary::RadioLibrary(Playlist *pls, QWidget *parent) : QWidget(parent)
     scanDirButton->setToolTip(tr("Search radio lists"));
     connect(scanDirButton, &QPushButton::clicked, this, &RadioLibrary::scanLibrary);
 
-    QPushButton *setPathButton = new QPushButton("");
-    setPathButton->setIcon(QIcon(":/img/dir"));
-    setPathButton->setToolTip(tr("Set directory with radio lists"));
-    connect(setPathButton, &QPushButton::clicked, this, &RadioLibrary::setLibraryPath);
-
-    buttons->addWidget(setPathButton, 0);
     buttons->addSpacing(10);
     buttons->addStretch(1);
     buttons->addWidget(scanDirButton, 0);
@@ -41,11 +45,14 @@ RadioLibrary::RadioLibrary(Playlist *pls, QWidget *parent) : QWidget(parent)
     QHBoxLayout *ml = new QHBoxLayout;
     ml->addWidget(listWidget, 0);
     ml->addLayout(l, 1);
-    setLayout(ml);
+
+    QVBoxLayout *tabLayout = new QVBoxLayout;
+    tabLayout->addLayout(buttons, 0);
+    tabLayout->addSpacing(5);
+    tabLayout->addLayout(ml, 1);
+    setLayout(tabLayout);
 
     connect(listWidget, &QListWidget::itemClicked, this, &RadioLibrary::itemClicked);
-
-    setStyleSheet("QPushButton {border: 1px solid black;}");
 }
 
 void RadioLibrary::clear()
@@ -108,6 +115,7 @@ QString RadioLibrary::getRadioPath() const
 void RadioLibrary::setRadioPath(const QString &value)
 {
     radioPath = value;
+    scanLibrary();
 }
 
 void RadioLibrary::save(const QString &fileName)

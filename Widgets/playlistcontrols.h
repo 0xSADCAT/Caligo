@@ -1,3 +1,8 @@
+/* This file is path of the Caligo multimedia player
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
 #ifndef PLAYLISTCONTROLS_H
 #define PLAYLISTCONTROLS_H
 

@@ -1,3 +1,8 @@
+/* This file is path of the Caligo multimedia player
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
 #include "librarymetascaner.h"
 
 LibraryMetaScaner::LibraryMetaScaner(QList<LibraryElement*> *list, QProgressBar *prBar, QObject *parent) : QObject(parent)

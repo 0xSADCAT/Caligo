@@ -1,3 +1,8 @@
+/* This file is path of the Caligo multimedia player
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
 #include "widget.h"
 
 #include <QApplication>
@@ -16,19 +21,9 @@
  * I don't know where it was, but all works currectly.
  * */
 
-/* TODO:
- *
- * 1. Добавить описание кнопки Add URL
- * 2. Иконка этой кнопки
- * 3. Напилить иконки в формате SVG
- * 4. Иконка Qt
- *
- * 6. Вынести раздел "От автора" в отдельную вкладку
- * */
-
 int main(int argc, char *argv[])
 {
-    std::string ver = "0.5.0";
+    std::string ver = "0.6.0 beta";
 
     if (argc > 1) {
         if (QString(argv[1]) == "--version") {

@@ -1,3 +1,6 @@
+# This file is path of the Caligo multimedia player
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 QT       += core gui multimedia multimediawidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -67,5 +70,5 @@ RESOURCES += \
 
 RC_ICONS = Res/icon.ico
 
-# Uncomment next line for hide qDebug() output
+# Uncomment next line for show qDebug() output
 # DEFINES += DEBUG_OUTPUT

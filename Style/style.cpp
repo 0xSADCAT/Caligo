@@ -1,3 +1,8 @@
+/* This file is path of the Caligo multimedia player
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
 #ifndef STYLE_CPP
 #define STYLE_CPP
 
@@ -62,32 +67,11 @@ static QString light = "* {"
                             "background-color: #B0D0F7;"
                        "}"
                        "QPushButton {"
+                            "background-color: #EFEFEF;"
                             "border: 1px solid black;"
                             "padding: 5px 5px 5px 5px;"
                             "border-radius: 5px;"
                        "}";
-
-static QString dark = "* {"
-                            "background-color: #606060;"
-                            "color: #FFFFFF;"
-                      "}"
-                      "QPushButton {"
-                            "border: none;"
-                            "padding: 5px 5px 5px 5px;"
-                            "border-radius: 5px;"
-                      "}"
-                      "QPushButton:hover {"
-                            "background-color: #959595;"
-                      "}"
-                      "QMenu::item:selected {"
-                            "background-color: #959595;"
-                      "}"
-                      "QSplitter::handle {"
-                            "background-color: #656565;"
-                      "}"
-                      "QSplitter::handle:hover {"
-                            "background-color: #959595;"
-                      "}";
 
 } // namespace theme
 

@@ -1,14 +1,25 @@
 <RCC>
     <qresource prefix="/img">
-        <file alias="fullScreen24">Res/fullscreen24.png</file>
         <file alias="icon">Res/icon.ico</file>
-        <file alias="volume">Res/volume.png</file>
-        <file alias="save">Res/save.png</file>
-        <file alias="reload">Res/reload.png</file>
-        <file alias="mute">Res/mute.png</file>
-        <file alias="load">Res/load.png</file>
-        <file alias="clear">Res/clear.png</file>
-        <file alias="add">Res/add.png</file>
+        <file alias="noImage">Res/noImage.svg</file>
+        <file alias="qt">Res/qt.svg</file>
+        <file alias="clear">Res/clear.svg</file>
+        <file alias="dir">Res/dir.svg</file>
+        <file alias="fullscreen">Res/fullscreen.svg</file>
+        <file alias="github">Res/github.svg</file>
+        <file alias="save">Res/save.svg</file>
+        <file alias="scan">Res/scan.svg</file>
+        <file alias="stop">Res/stop.svg</file>
+        <file alias="update">Res/update.svg</file>
+        <file alias="openUrl">Res/url.svg</file>
+        <file alias="volume">Res/volume.svg</file>
+        <file alias="load">Res/load.svg</file>
+        <file alias="mute">Res/mute.svg</file>
+        <file alias="next">Res/next.svg</file>
+        <file alias="openFile">Res/open.svg</file>
+        <file alias="pause">Res/pause.svg</file>
+        <file alias="play">Res/play.svg</file>
+        <file alias="previous">Res/prev.svg</file>
     </qresource>
     <qresource prefix="/tr">
         <file>qt_ru.qm</file>

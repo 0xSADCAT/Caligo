@@ -1,3 +1,8 @@
+/* This file is path of the Caligo multimedia player
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
 #include "widget.h"
 
 Widget::Widget(QWidget *parent)
@@ -52,7 +57,7 @@ Widget::Widget(QWidget *parent)
     settings = new QSettings(qApp->applicationDirPath() + QDir::separator() + qApp->applicationName() + "_settings.ini", QSettings::IniFormat);
     loadSettings();
 
-    settingsWindow = new SettingsWindow(settings, plControls, this);
+    settingsWindow = new SettingsWindow(settings, plControls, library, radioLibrary, playlistLibrary, this);
     aboutWindow = new AboutWindow;
     helpWindow = new HelpWindow;
 
@@ -108,6 +113,8 @@ Widget::Widget(QWidget *parent)
 
     QShortcut *sHelp = new QShortcut(QKeySequence("CTRL+H"), this);
     connect(sHelp, &QShortcut::activated, this, &Widget::help);
+
+    setStyleSheet(style::theme::light);
 }
 
 Widget::~Widget()

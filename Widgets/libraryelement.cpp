@@ -1,3 +1,8 @@
+/* This file is path of the Caligo multimedia player
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
 #include "libraryelement.h"
 
 LibraryElement::LibraryElement(QString &path, QWidget *parent) : QWidget(parent)

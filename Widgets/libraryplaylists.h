@@ -1,3 +1,8 @@
+/* This file is path of the Caligo multimedia player
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
 #ifndef LIBRARYPLAYLISTS_H
 #define LIBRARYPLAYLISTS_H
 
@@ -13,10 +18,14 @@ public:
     QString getPathPlaylists() const;
     void setPathPlaylists(const QString &value);
 
+    void setClearBeforeOpen(bool value);
+
 public slots:
     void scan();
 
 private:
+    bool clearBeforeOpen;
+
     Playlist *playlist;
     QList<ElementPlaylist*> list;
     QVBoxLayout *mainLayout;
