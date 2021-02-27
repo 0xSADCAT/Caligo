@@ -23,7 +23,7 @@
 
 int main(int argc, char *argv[])
 {
-    std::string ver = "0.6.0 beta";
+    std::string ver = "0.7.0";
 
     if (argc > 1) {
         if (QString(argv[1]) == "--version") {

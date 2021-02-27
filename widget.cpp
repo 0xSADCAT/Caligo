@@ -127,6 +127,8 @@ void Widget::closeEvent(QCloseEvent *)
     qDebug() << "Widget::closeEvent";
 #endif
 
+    library->save();
+
     settings->setValue("windowConfig/size", this->size());
     settings->setValue("windowConfig/position", this->pos());
     settings->setValue("windowConfig/splitterLeft", this->spl->sizes()[0]);

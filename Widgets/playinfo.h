@@ -23,6 +23,8 @@ public:
     void setNotFull(bool v);
     void focus();
 
+    VideoWidget *video;
+
 signals:
     void newTitle(const QString &s);
     void fsClicked();
@@ -33,7 +35,6 @@ private:
     Image *image;
     QLabel *author;
     QLabel *name;
-    VideoWidget *video;
     bool isVideo;
     bool isFSVideo;
 

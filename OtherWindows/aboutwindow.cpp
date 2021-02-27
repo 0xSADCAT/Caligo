@@ -24,6 +24,15 @@ AboutWindow::AboutWindow() : QWidget(nullptr)
     setStyleSheet("QPushButton {border: 1px solid black;}");
     contactsLabel = new QLabel;
     contactsLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    licenseLabel = new QLabel;
+    licenseLabel->setWordWrap(true);
+    QHBoxLayout *licenseLayout = new QHBoxLayout;
+    QLabel *licenseImage = new QLabel;
+    int imageWidth = qApp->desktop()->width() > 1920 ? 250 : 200;
+    licenseImage->setPixmap(QPixmap(":/img/gpl").scaledToWidth(imageWidth));
+    licenseImage->setFixedWidth(imageWidth);
+    licenseLayout->addWidget(licenseImage, 0);
+    licenseLayout->addWidget(licenseLabel, 1);
 
     QHBoxLayout *hl = new QHBoxLayout;
     QVBoxLayout *l = new QVBoxLayout;
@@ -46,15 +55,10 @@ AboutWindow::AboutWindow() : QWidget(nullptr)
     cl->setSpacing(0);
     cl->setContentsMargins(0, 0, 0, 0);
 
-    QHBoxLayout *samL = new QHBoxLayout;
-    QLabel *samLabel = new QLabel;
-    samLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    samL->addWidget(samLabel, 1);
-
     l->addWidget(title, 0);
     l->addWidget(mainLabel, 0);
     l->addStretch(1);
-    l->addLayout(samL, 0);
+    l->addLayout(licenseLayout, 0);
     l->addStretch(1);
     l->addLayout(gl, 0);
     l->addWidget(contactsLabel, 0);
@@ -71,8 +75,8 @@ AboutWindow::AboutWindow() : QWidget(nullptr)
     setLayout(la);
 
     title->setText(
-                "<center><h3>" + qApp->applicationName() + " version " + qApp->applicationVersion() +
-                "</h3><br><h4>" + tr("About application") + "</h4></center>"
+                "<center><h2>" + qApp->applicationName() + " " + qApp->applicationVersion() +
+                "</h2><br><h3>" + tr("About application") + "</h3></center>"
                 );
 
     gitHubLinkLabel->setText(tr("Source code") + ": <a href='" + link + "'>" + link + "</a>");
@@ -92,6 +96,12 @@ AboutWindow::AboutWindow() : QWidget(nullptr)
                 "Development is currently being conducted by one person, some functions have not yet been implemented. "
                 "Development assistance would be welcome.<br>")
                 );
+
+    licenseLabel->setText(
+                tr("This application is free software and is distributed under the GNU "
+                   "General Public License. The license text can be found in the program directory.")
+                );
+
     mainLabel->setAlignment(Qt::AlignJustify);
 
     connect(openInBrowser, &QPushButton::clicked, this, &AboutWindow::oib);

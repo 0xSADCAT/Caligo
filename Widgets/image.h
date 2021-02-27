@@ -22,6 +22,8 @@ public:
 
 protected:
     virtual void paintEvent(QPaintEvent *) override;
+    virtual void enterEvent(QEvent *) override;
+    virtual void leaveEvent(QEvent *) override;
 
 private:
     QPixmap pix;

@@ -25,10 +25,15 @@ public:
     QString getLibraryPath() const;
     void setLibraryPath(QString path);
 
+    void save();
+
 public slots:
     void done();
     void setProgress(int v);
     void setStatus(Status s);
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *e) override;
 
 private:
     QList<LibraryElement*> list;
@@ -43,7 +48,6 @@ private:
     QVBoxLayout *mainLayout;
 
     QPushButton *scanButton;
-//    QPushButton *pathButton;
 
     void add(QString &path);
     void remove(LibraryElement *e);
@@ -57,7 +61,6 @@ private:
 
     LibraryMetaScaner *scaner;
 
-    void save();
     void load();
     QString libraryFilePath;
     bool rewriteLibrary;

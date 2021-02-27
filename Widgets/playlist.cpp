@@ -48,7 +48,8 @@ QStringList Playlist::getList()
 void Playlist::add(const QString &path, const QString &text)
 {
     MediaElement *e = new MediaElement(path);
-    e->setText(text);
+    if (not (text.isEmpty() or text == " "))
+        e->setText(text);
     l->addWidget(e, 0);
     list << e;
 

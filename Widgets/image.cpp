@@ -62,3 +62,15 @@ void Image::paintEvent(QPaintEvent *)
     else
         p.drawPixmap(px, py, pix.scaled(x, x));
 }
+
+void Image::enterEvent(QEvent *)
+{
+    /* do nothing */
+    return;
+}
+
+void Image::leaveEvent(QEvent *)
+{
+    /* do nothing */
+    return;
+}

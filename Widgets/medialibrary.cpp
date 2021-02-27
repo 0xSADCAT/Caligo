@@ -95,6 +95,43 @@ void MediaLibrary::setStatus(Status s)
     }
 }
 
+void MediaLibrary::keyPressEvent(QKeyEvent *e)
+{
+    // Key Del
+    // Remove selected element from library
+    if (e->key() == Qt::Key::Key_Delete) {
+        if (lastClicked == nullptr)
+            return;
+
+        lastClicked = nullptr;
+
+        if (selection.count() == list.count()) {
+            clear();
+            return;
+        }
+
+        foreach (LibraryElement* e, selection) {
+            list.removeAll(e);
+            mainLayout->removeWidget(e);
+            e->deleteLater();
+        }
+        selection.clear();
+        rewriteLibrary = true;
+    }
+    // Key Return
+    // Add selected to playlist
+    else if (e->key() == Qt::Key::Key_Return) {
+        if (lastClicked == nullptr)
+            return;
+        if (selection.isEmpty())
+            return;
+
+        foreach (LibraryElement *e, selection) {
+            playlist->add(e->getPath(), e->getName());
+        }
+    }
+}
+
 QString MediaLibrary::getLibraryPath() const
 {
     return scanPath;
@@ -157,7 +194,7 @@ void MediaLibrary::scanDir(QDir d)
 
 void MediaLibrary::save()
 {
-    if (not rewriteLibrary or list.isEmpty())
+    if (not rewriteLibrary)
         return;
 
     QFile file(libraryFilePath);

@@ -19,6 +19,8 @@ private:
 
     QLabel *mainLabel;
 
+    QLabel *licenseLabel;
+
     QLabel *gitHubLinkLabel;
 
     QLabel *contactsLabel;

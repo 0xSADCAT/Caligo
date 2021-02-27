@@ -20,6 +20,7 @@
         <file alias="pause">Res/pause.svg</file>
         <file alias="play">Res/play.svg</file>
         <file alias="previous">Res/prev.svg</file>
+        <file alias="gpl">Res/gpl-v3-logo.svg</file>
     </qresource>
     <qresource prefix="/tr">
         <file>qt_ru.qm</file>
