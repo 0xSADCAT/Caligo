@@ -18,3 +18,11 @@ The functionality includes scanning the selected directory for the presence of m
 ## Radio lists and playlists formats
 Playlists must have the extension *.cpl (Caligo playlist), radio lists - *.crl (Caligo radio list).
 The formats of playlists and radio lists have the same structure. This is a plain text document that contains a file path or a link to a stream. The differences are only in the storage directory, by default, the ./radio directory is used for radio, and the ./playlists directory is used for playlists. If you need to add a name, then after the path to the file or the link to the stream, write the name, separated by a combination of characters <b>" ## "</b> (without quotes). Also, you can add comments to the lists, for this the line must start with the <b>#</b> character. The name of the list that is displayed in the program corresponds to a file name without an extension. At the moment, saving the radio list from the program is not possible, only when using a third-party text editor.
+
+## Building from sources
+Ubuntu:
+```
+sudo apt install qt5-qmake qt5-default qtmultimedia5-dev
+qmake
+make
+```
