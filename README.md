@@ -23,6 +23,9 @@ The formats of playlists and radio lists have the same structure. This is a plai
 Ubuntu:
 ```
 sudo apt install qt5-qmake qt5-default qtmultimedia5-dev
-qmake
+git clone https://github.com/Alex13kyky/Caligo
+cd Caligo
+mkdir build && cd ./build
+qmake ..
 make
 ```
