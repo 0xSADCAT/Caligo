@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -6,20 +7,20 @@
 #include "videowidget.h"
 
 VideoWidget::VideoWidget(QWidget *parent) : QVideoWidget(parent)
-// Inherits QVideoWidget. Needs only for emit signals.
+/// Inherits QVideoWidget. Needs only for emit signals.
 {
 }
 
 void VideoWidget::mousePressEvent(QMouseEvent *e)
 {
-    if (e->button() == Qt::LeftButton) {
-        emit clicked();
+  if (e->button() == Qt::LeftButton) {
+      emit clicked();
     }
 }
 
 void VideoWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    if (e->button() == Qt::LeftButton) {
-        emit doubleClicked();
+  if (e->button() == Qt::LeftButton) {
+      emit doubleClicked();
     }
 }

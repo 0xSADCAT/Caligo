@@ -1,4 +1,5 @@
 # This file is path of the Caligo multimedia player
+# https://github.com/Alex13kyky/Caligo
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 QT       += core gui multimedia multimediawidgets
@@ -28,8 +29,6 @@ SOURCES += \
     Widgets/playinfo.cpp \
     Widgets/playlist.cpp \
     Widgets/playlistcontrols.cpp \
-    Widgets/radioelement.cpp \
-    Widgets/radiolibrary.cpp \
     Widgets/timeslider.cpp \
     Widgets/videowidget.cpp \
     main.cpp \
@@ -51,8 +50,6 @@ HEADERS += \
     Widgets/playinfo.h \
     Widgets/playlist.h \
     Widgets/playlistcontrols.h \
-    Widgets/radioelement.h \
-    Widgets/radiolibrary.h \
     Widgets/timeslider.h \
     Widgets/videowidget.h \
     widget.h

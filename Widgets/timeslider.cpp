@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -8,71 +9,71 @@
 TimeSlider::TimeSlider(QWidget *parent) : QWidget(parent)
 // Custom widget. Shows QMediaPlayer::position().
 // QSlider not used because:
-  // 1. Connect recursivly:
-  //        sliderMoved --> setPlayerPosition --> positionChanged --> moveSlider --> sliderMoved --> etc...
-  //        Bad audio output...
-  // 2. Signal QSlider::sliderMoved() emits not then mousePress or mouseRelease, but then mouseMoved:
-  //        Noise then mouseMoved
+// 1. Connect recursivly:
+//        sliderMoved --> setPlayerPosition --> positionChanged --> moveSlider --> sliderMoved --> etc...
+//        Bad audio output...
+// 2. Signal QSlider::sliderMoved() emits not then mousePress or mouseRelease, but then mouseMoved:
+//        Noise then mouseMoved
 {
-    _pos = _dur = 0;
-    isIn = false;
+  _pos = _dur = 0;
+  isIn = false;
 }
 
 /* public SLOT */ void TimeSlider::setDuration(qint64 v)
 // Set maximum value
 {
-    if (v < 0)
-        v = 0;
-    _dur = v;
-    repaint();
+  if (v < 0)
+    v = 0;
+  _dur = v;
+  repaint();
 }
 
 /* public SLOT */ void TimeSlider::setPosition(qint64 v)
 // Set current value
 {
-    if (v > _dur)
-        v = _dur;
-    _pos = v;
-    repaint();
+  if (v > _dur)
+    v = _dur;
+  _pos = v;
+  repaint();
 }
 
 void TimeSlider::enterEvent(QEvent *)
 {
-    isIn = true;
-    repaint();
+  isIn = true;
+  repaint();
 }
 
 void TimeSlider::leaveEvent(QEvent *)
 {
-    isIn = false;
-    repaint();
+  isIn = false;
+  repaint();
 }
 
 void TimeSlider::mousePressEvent(QMouseEvent *e)
 {
-    qreal x = (qreal) e->x();
-    emit clicked(qint64(qreal(_dur) / qreal(width()) * x));
+  qreal x = (qreal) e->x();
+  emit clicked(qint64(qreal(_dur) / qreal(width()) * x));
 }
 
 void TimeSlider::paintEvent(QPaintEvent *)
 {
-    QPainter p(this);
-    int w = width();
-    int h = height();
+  QPainter p(this);
+  int w = width();
+  int h = height();
 
-    p.save();
-    p.setPen(QColor(0, 0, 0, 127));
-    p.drawRect(0, 0, w, h);
-    p.restore();
+  p.save();
+  p.setPen(QColor(0, 0, 0, 127));
+  p.drawRect(0, 0, w, h);
+  p.restore();
 
-    if (isIn)
-        p.fillRect(0, 0, w, h, QColor(245, 245, 245, 127));
-    else
-        p.fillRect(0, 0, w, h, QColor(230, 230, 230, 127));
+  if (isIn)
+    p.fillRect(0, 0, w, h, QColor(245, 245, 245, 127));
+  else
+    p.fillRect(0, 0, w, h, QColor(230, 230, 230, 127));
 
-    if (_dur == 0)
-        return;
+  if (_dur == 0)
+    return;
 
-    int fx = int(qreal(_pos) / qreal(_dur) * qreal(w));
-    p.fillRect(0, 0, fx, h, QColor(0, 127, 255, 127));
+  int fx = int(qreal(_pos) / qreal(_dur) * qreal(w));
+  p.fillRect(0, 0, fx, h, QColor(0, 127, 255, 127));
 }

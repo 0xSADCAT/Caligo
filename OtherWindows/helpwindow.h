@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -10,12 +11,13 @@
 
 class HelpWindow : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    HelpWindow();
+  HelpWindow();
 
 private slots:
-    void openGitHub();
+  /// Open GitHub repository in browser
+  void openGitHub();
 };
 
 #endif // HELPWINDOW_H

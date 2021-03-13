@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -12,28 +13,31 @@
 
 class TimeSlider : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit TimeSlider(QWidget *parent = nullptr);
+  explicit TimeSlider(QWidget *parent = nullptr);
 
 signals:
-    // Clicked on element (_pos)
-    void clicked(qint64);
+  /// Clicked on element (_pos)
+  void clicked(qint64);
 
 public slots:
-    void setDuration(qint64 v);
-    void setPosition(qint64 v);
+  /// Track duration
+  void setDuration(qint64 v);
+
+  /// Current media position
+  void setPosition(qint64 v);
 
 protected:
-    virtual void enterEvent(QEvent *) override;
-    virtual void leaveEvent(QEvent *) override;
-    virtual void mousePressEvent(QMouseEvent *e) override;
-    virtual void paintEvent(QPaintEvent *) override;
+  virtual void enterEvent(QEvent *) override;
+  virtual void leaveEvent(QEvent *) override;
+  virtual void mousePressEvent(QMouseEvent *e) override;
+  virtual void paintEvent(QPaintEvent *) override;
 
 private:
-    qint64 _pos, _dur;
-    // Mouse in widget
-    bool isIn;
+  qint64 _pos, _dur;
+  /// Mouse in widget rectangle
+  bool isIn;
 };
 
 #endif // TIMESLIDER_H

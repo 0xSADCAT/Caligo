@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -6,95 +7,95 @@
 #include "librarymetascaner.h"
 
 LibraryMetaScaner::LibraryMetaScaner(QList<LibraryElement*> *list, QProgressBar *prBar, QObject *parent) : QObject(parent)
-  // Copy of MetaScaner
+// Copy of MetaScaner
 {
-    this->list = list;
-    progress = prBar;
-    index = -1;
-    count = -1;
-    force = false;
+  this->list = list;
+  progress = prBar;
+  index = -1;
+  count = -1;
+  force = false;
 
-    connect(&player, &QMediaPlayer::mediaStatusChanged, this, &LibraryMetaScaner::mediaStatus);
+  connect(&player, &QMediaPlayer::mediaStatusChanged, this, &LibraryMetaScaner::mediaStatus);
 }
 
 void LibraryMetaScaner::scan()
 // First part of recursive algorithm based on QMediaPlayer::MediaStatus::BufferMedia and LoadedMedia.
 // Use second QMediaPlayer which defined in this class.
 {
-    force = true;
+  force = true;
 
-    if (index == -1) {
-        index = 0;
-        count = list->count();
+  if (index == -1) {
+      index = 0;
+      count = list->count();
     }
 
-    QString u = list->at(index)->getPath();
-    QUrl url;
-    if (u.startsWith("http")) {
-        url = QUrl(u);
+  QString u = list->at(index)->getPath();
+  QUrl url;
+  if (u.startsWith("http")) {
+      url = QUrl(u);
     }
-    else {
-        url = QUrl::fromLocalFile(u);
-    }
-
-    if (count != 0) {
-        int pr = int(qreal(index) / qreal(count) * qreal(100));
-        progress->setValue(pr);
+  else {
+      url = QUrl::fromLocalFile(u);
     }
 
-    player.setMedia(url);
+  if (count != 0) {
+      int pr = int(qreal(index) / qreal(count) * qreal(100));
+      progress->setValue(pr);
+    }
+
+  player.setMedia(url);
 }
 
 void LibraryMetaScaner::forceScan()
 // Earler 'forece = true' was only here.
 {
-    force = true;
-    scan();
+  force = true;
+  scan();
 }
 
 /* SLOT */ void LibraryMetaScaner::mediaStatus(QMediaPlayer::MediaStatus s)
 // Second path of signal-slot recursive algorithm.
 {
-    switch (s) {
+  switch (s) {
     case QMediaPlayer::MediaStatus::BufferedMedia:
     case QMediaPlayer::MediaStatus::LoadedMedia:
 
-        if (force) {
-            QString str = "";
-            QStringList l = player.availableMetaData();
-            if (l.contains(QMediaMetaData::AlbumArtist)) {
-                str += qvariant_cast<QString>(player.metaData(QMediaMetaData::AlbumArtist));
+      if (force) {
+          QString str = "";
+          QStringList l = player.availableMetaData();
+          if (l.contains(QMediaMetaData::AlbumArtist)) {
+              str += qvariant_cast<QString>(player.metaData(QMediaMetaData::AlbumArtist));
             }
-            if (l.contains(QMediaMetaData::Title)) {
-                if (not str.isEmpty()) {
-                    str += " - ";
+          if (l.contains(QMediaMetaData::Title)) {
+              if (not str.isEmpty()) {
+                  str += " - ";
                 }
-                str += qvariant_cast<QString>(player.metaData(QMediaMetaData::Title));
+              str += qvariant_cast<QString>(player.metaData(QMediaMetaData::Title));
             }
-            if (not str.isEmpty()) {
-                list->at(index)->setText(str);
+          if (not str.isEmpty()) {
+              list->at(index)->setText(str);
             }
 
 #ifdef DEBUG_OUTPUT
-        qDebug() << "SLOT LibraryMetaScaner::mediaStatus(...)";
-        qDebug() << "Result:" << str;
+          qDebug() << "SLOT LibraryMetaScaner::mediaStatus(...)";
+          qDebug() << "Result:" << str;
 #endif
 
         }
-        index++;
-        if (index >= count) {
-            index = -1;
-            count = -1;
-            player.setMedia(QUrl());
-            force = false;
-            emit done();
+      index++;
+      if (index >= count) {
+          index = -1;
+          count = -1;
+          player.setMedia(QUrl());
+          force = false;
+          emit done();
         }
-        else {
-            scan();
+      else {
+          scan();
         }
-        break;
+      break;
 
     default:
-        break;
+      break;
     }
 }

@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -9,128 +10,128 @@ MediaElement::MediaElement(const QString &path, QWidget *parent) : QWidget(paren
 // Custom widget. Element of playlist. Contains model and view of component.
 {
 #ifdef DEBUG_OUTPUT
-        qDebug() << ">>> MediaElement init:" << path;
+  qDebug() << ">>> MediaElement init:" << path;
 #endif
 
-    this->path = path;
+  this->path = path;
 
-    text = new QLabel("  " + path);
+  text = new QLabel("  " + path);
 
-    QHBoxLayout *l = new QHBoxLayout;
-    l->addWidget(text);
-    setLayout(l);
+  QHBoxLayout *l = new QHBoxLayout;
+  l->addWidget(text);
+  setLayout(l);
 
-    layout()->setSpacing(0);
-    layout()->setContentsMargins(0, 0, 0, 0);
+  layout()->setSpacing(0);
+  layout()->setContentsMargins(0, 0, 0, 0);
 
-    playing = false;
-    selected = false;
+  playing = false;
+  selected = false;
 
-    contextMenu = new QMenu;
-    contextMenu->addAction(QPixmap(":/img/selectAll"), tr("Select all"), this, &MediaElement::selectAll);
-    contextMenu->addAction(QPixmap(":/img/delete"), tr("Remove selected"), this, &MediaElement::deleteSelected);
+  contextMenu = new QMenu;
+  contextMenu->addAction(QPixmap(":/img/selectAll"), tr("Select all"), this, &MediaElement::selectAll);
+  contextMenu->addAction(QPixmap(":/img/delete"), tr("Remove selected"), this, &MediaElement::deleteSelected);
 }
 
 QString MediaElement::getPath() const
 {
-    return path;
+  return path;
 }
 
 bool MediaElement::hasMeta() const
 {
-    return meta;
+  return meta;
 }
 
 void MediaElement::setText(const QString &text)
 // Set metadata
 {
 #ifdef DEBUG_OUTPUT
-        qDebug() << "MediaElement::setText" << path;
-        qDebug() << "---> " << text;
+  qDebug() << "MediaElement::setText" << path;
+  qDebug() << "---> " << text;
 #endif
 
-    this->text->setText(text);
-    meta = true;
+  this->text->setText(text);
+  meta = true;
 }
 
 void MediaElement::setPlaying(bool value)
 {
 #ifdef DEBUG_OUTPUT
-        qDebug() << "MediaElement::setPlaying" << path;
-        qDebug() << "---> " << value;
+  qDebug() << "MediaElement::setPlaying" << path;
+  qDebug() << "---> " << value;
 #endif
 
-    playing = value;
-    updStyle();
+  playing = value;
+  updStyle();
 }
 
 void MediaElement::setSelected(bool value)
 {
 #ifdef DEBUG_OUTPUT
-        qDebug() << "MediaElement::setSelected" << path;
-        qDebug() << "---> " << value;
+  qDebug() << "MediaElement::setSelected" << path;
+  qDebug() << "---> " << value;
 #endif
 
-    selected = value;
-    updStyle();
+  selected = value;
+  updStyle();
 }
 
 QString MediaElement::getString() const
 {
-    QString s;
-    s += path;
-    s += " ## ";
-    if (text->text() != path) {
-        s += text->text();
+  QString s;
+  s += path;
+  s += " ## ";
+  if (text->text() != path) {
+      s += text->text();
     }
-    return s;
+  return s;
 }
 
 void MediaElement::mousePressEvent(QMouseEvent *e)
 {
-    if (e->button() == Qt::LeftButton) {
-        if (e->modifiers() & Qt::ShiftModifier) {
-            emit shiftClicked();
+  if (e->button() == Qt::LeftButton) {
+      if (e->modifiers() & Qt::ShiftModifier) {
+          emit shiftClicked();
         }
-        else if (e->modifiers() & Qt::ControlModifier) {
-            emit ctrlClicked();
+      else if (e->modifiers() & Qt::ControlModifier) {
+          emit ctrlClicked();
         }
-        else {
-            emit clicked();
+      else {
+          emit clicked();
         }
     }
-    emit focus();
+  emit focus();
 }
 
 void MediaElement::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    if (e->button() == Qt::LeftButton)
-        emit doubleClicked();
-    emit focus();
+  if (e->button() == Qt::LeftButton)
+    emit doubleClicked();
+  emit focus();
 }
 
 void MediaElement::focusInEvent(QFocusEvent *)
 {
-    emit focus();
+  emit focus();
 }
 
 void MediaElement::contextMenuEvent(QContextMenuEvent *e)
 {
-    contextMenu->exec(e->globalPos());
+  contextMenu->exec(e->globalPos());
 }
 
 void MediaElement::updStyle()
 {
-    if (playing && selected) {
-        setStyleSheet(style::me::all);
+  if (playing && selected) {
+      setStyleSheet(style::me::all);
     }
-    else if (playing) {
-        setStyleSheet(style::me::playing);
+  else if (playing) {
+      setStyleSheet(style::me::playing);
     }
-    else if (selected) {
-        setStyleSheet(style::me::selected);
+  else if (selected) {
+      setStyleSheet(style::me::selected);
     }
-    else {
-        setStyleSheet(style::me::none);
+  else {
+      setStyleSheet(style::me::none);
     }
 }

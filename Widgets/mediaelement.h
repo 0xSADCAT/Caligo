@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -12,53 +13,58 @@
 
 class MediaElement : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit MediaElement(const QString &path, QWidget *parent = nullptr);
+  explicit MediaElement(const QString &path, QWidget *parent = nullptr);
 
-    QString getPath() const;
+  QString getPath() const;
 
-    bool hasMeta() const;
+  bool hasMeta() const;
 
-    void setText(const QString &text);
+  void setText(const QString &text);
 
-    void setPlaying(bool value);
+  /// Display state
+  void setPlaying(bool value);
 
-    void setSelected(bool value);
+  /// Display state
+  void setSelected(bool value);
 
-    QString getString() const;
+  /// String for saving
+  QString getString() const;
 
 signals:
-    void clicked();
-    void shiftClicked();
-    void ctrlClicked();
-    void doubleClicked();
+  void clicked();
+  void shiftClicked();
+  void ctrlClicked();
+  void doubleClicked();
 
-    // Needs to set focus to Playlist but not on element (playlist keyboard controls)
-    void focus();
+  /// Needs to set focus to Playlist but not on element (playlist keyboard controls)
+  void focus();
 
-    // Signals from context menu.
-    void selectAll();
-    void deleteSelected();
+  /// Signal from context menu.
+  void selectAll();
+
+  /// Signal from context menu.
+  void deleteSelected();
 
 protected:
-    virtual void mousePressEvent(QMouseEvent *e) override;
-    virtual void mouseDoubleClickEvent(QMouseEvent *e) override;
-    virtual void focusInEvent(QFocusEvent *) override;
-    virtual void contextMenuEvent(QContextMenuEvent *e) override;
+  virtual void mousePressEvent(QMouseEvent *e) override;
+  virtual void mouseDoubleClickEvent(QMouseEvent *e) override;
+  virtual void focusInEvent(QFocusEvent *) override;
+  virtual void contextMenuEvent(QContextMenuEvent *e) override;
 
 private:
-    QLabel *text;
-    // Path to file.
-    QString path;
-    bool meta;
-    // Playing/selected states.
-    bool playing;
-    bool selected;
+  QLabel *text;
+  // Path to file.
+  QString path;
+  bool meta;
+  // Playing/selected states.
+  bool playing;
+  bool selected;
 
-    void updStyle();
+  void updStyle();
 
-    QMenu *contextMenu;
+  QMenu *contextMenu;
 };
 
 #endif // MEDIAELEMENT_H

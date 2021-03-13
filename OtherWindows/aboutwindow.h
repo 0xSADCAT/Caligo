@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -8,29 +9,32 @@
 
 #include <QtWidgets>
 
+/// About application
 class AboutWindow : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit AboutWindow();
+  /// About application
+  explicit AboutWindow();
 
 private:
-    QLabel *title;
+  QLabel *title;
 
-    QLabel *mainLabel;
+  QLabel *mainLabel;
 
-    QLabel *licenseLabel;
+  QLabel *licenseLabel;
 
-    QLabel *gitHubLinkLabel;
+  QLabel *gitHubLinkLabel;
 
-    QLabel *contactsLabel;
+  QLabel *contactsLabel;
 
-    QPushButton *openInBrowser;
+  QPushButton *openInBrowser;
 
-    QString link;
+  QString link;
 
 private slots:
-    void oib();
+  /// Open GitHub repository in browser
+  void oib();
 };
 
 #endif // ABOUTWINDOW_H

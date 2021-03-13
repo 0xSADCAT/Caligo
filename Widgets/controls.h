@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -11,59 +12,68 @@
 
 #include <Widgets/timeslider.h>
 
+/// Bottom control panel
 class Controls : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit Controls(QMediaPlayer *mp, QWidget *parent = nullptr);
+  /// Bottom control panel
+  explicit Controls(QMediaPlayer *mp, QWidget *parent = nullptr);
 
-    void setSizes(int v);
+  /// Set buttons sizes
+  void setSizes(int v);
 
-    void setVolume(int v);
-    int getVolume();
+  void setVolume(int v);
+  int getVolume();
 
 signals:
-    void next();
-    void prev();
-    void fullScreen();
+  /// Next media in playlist
+  void next();
+  /// Previous media in playlist
+  void prev();
+  void fullScreen();
 
 public slots:
-    void playPause();
-    void mute();
-    void stop();
+  void playPause();
+  void mute();
+  void stop();
 
-    void plusVol();
-    void minusVol();
+  void plusVol();
+  void minusVol();
 
 private:
-    QMediaPlayer *player;
+  QMediaPlayer *player;
 
-    TimeSlider *timeSlider;
-    QLabel *posLabel;
-    QLabel *durLabel;
-    QHBoxLayout *topLayout;
+  TimeSlider *timeSlider;
+  QLabel *posLabel;
+  QLabel *durLabel;
+  QHBoxLayout *topLayout;
 
-    QPushButton *prevButton;
-    QPushButton *playButton;
-    QPushButton *stopButton;
-    QPushButton *nextButton;
-    QPushButton *fullScreenButton;
-    QPushButton *muteButton;
-    QSlider *volumeSlider;
-    QHBoxLayout *botLayout;
+  QPushButton *prevButton;
+  QPushButton *playButton;
+  QPushButton *stopButton;
+  QPushButton *nextButton;
+  QPushButton *fullScreenButton;
+  QPushButton *muteButton;
+  QSlider *volumeSlider;
+  QHBoxLayout *botLayout;
 
-    QVBoxLayout *l;
+  QVBoxLayout *l;
 
 private slots:
-    void mediaState(QMediaPlayer::State s);
-    void mutedState(bool v);
+  void mediaState(QMediaPlayer::State s);
+  void mutedState(bool v);
 
-    void setDur(qint64 v);
-    void setPos(qint64 v);
+  /// Set TimeSlider duration
+  void setDur(qint64 v);
 
-    QString msToStr(qint64 ms);
+  /// Set TimeSlider position
+  void setPos(qint64 v);
 
-    void videoAvailable(bool v);
+  /// Converts miliseconds to QString
+  QString msToStr(qint64 ms);
+
+  void videoAvailable(bool v);
 };
 
 #endif // CONTROLS_H

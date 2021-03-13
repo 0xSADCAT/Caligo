@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -11,43 +12,45 @@
 
 class LibraryPlaylists : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit LibraryPlaylists(Playlist *pls, QWidget *parent = nullptr);
+  explicit LibraryPlaylists(Playlist *pls, QWidget *parent = nullptr);
 
-    QString getPathPlaylists() const;
-    void setPathPlaylists(const QString &value);
+  QString getPathPlaylists() const;
+  void setPathPlaylists(const QString &value);
 
-    void setClearBeforeOpen(bool value);
+  /// Clear current playlist before open new
+  void setClearBeforeOpen(bool value);
 
 public slots:
-    void scan();
+  /// Search playlists
+  void scan();
 
 private:
-    bool clearBeforeOpen;
+  bool clearBeforeOpen;
 
-    Playlist *playlist;
-    QList<ElementPlaylist*> list;
-    QVBoxLayout *mainLayout;
+  Playlist *playlist;
+  QList<ElementPlaylist*> list;
+  QVBoxLayout *mainLayout;
 
-    QString pathPlaylists;
+  QString pathPlaylists;
 
-    void add(QString &path, QString &name);
-    void remove(ElementPlaylist *e);
-    void remove(int index);
-    void clear();
+  void add(QString &path, QString &name);
+  void remove(ElementPlaylist *e);
+  void remove(int index);
+  void clear();
 
-    QList<ElementPlaylist*> selection;
-    ElementPlaylist *lastClicked;
+  QList<ElementPlaylist*> selection;
+  ElementPlaylist *lastClicked;
 
 private slots:
-    void elementClicked();
-    void elementDouble();
-    void elementShift();
-    void elementCtrl();
-    void elementFocus();
+  void elementClicked();
+  void elementDouble();
+  void elementShift();
+  void elementCtrl();
+  void elementFocus();
 
-    void setPath();
+  void setPath();
 };
 
 #endif // LIBRARYPLAYLISTS_H

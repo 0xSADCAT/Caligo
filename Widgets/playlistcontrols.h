@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -12,48 +13,48 @@
 
 class PlaylistControls : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit PlaylistControls(Playlist *pl, QWidget *parent = nullptr);
+  explicit PlaylistControls(Playlist *pl, QWidget *parent = nullptr);
 
-    void setSizes(int v);
+  /// Set buttons size
+  void setSizes(int v);
 
-    void setClearBeforeOpen(bool value);
+  /// Clear current playlist before open new
+  void setClearBeforeOpen(bool value);
 
-    QString getPathPlaylists() const;
-    void setPathPlaylists(const QString &value);
+  QString getPathPlaylists() const;
+  void setPathPlaylists(const QString &value);
 
-    QString getPathMusic() const;
-    void setPathMusic(const QString &value);
+  QString getPathMusic() const;
+  void setPathMusic(const QString &value);
 
 private:
-    Playlist *playlist;
+  Playlist *playlist;
 
-    QPushButton *addButton;
-    QPushButton *addUrlButton;
-    QPushButton *clearButton;
+  QPushButton *addButton;
+  QPushButton *addUrlButton;
+  QPushButton *clearButton;
 
-    QPushButton *savePlaylist;
-    QPushButton *loadPlaylist;
+  QPushButton *savePlaylist;
+  QPushButton *loadPlaylist;
 
-    QPushButton *forceScanButton;
+  QPushButton *forceScanButton;
 
-    bool clearBeforeOpen;
+  bool clearBeforeOpen;
 
-    // Path to playlists
-    QString pathPlaylists;
-    // Path to music library
-    QString pathMusic;
+  QString pathPlaylists;
+  QString pathMusic;
 
 private slots:
-    void add();
-    void addUrl();
-    void clear();
+  void add();
+  void addUrl();
+  void clear();
 
-    void save();
-    void load();
+  void save();
+  void load();
 
-    void loadPath(const QString &path);
+  void loadPath(const QString &path);
 };
 
 #endif // PLAYLISTCONTROLS_H

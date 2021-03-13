@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -12,38 +13,40 @@
 
 class LibraryElement : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit LibraryElement(QString &path, QWidget *parent = nullptr);
+  explicit LibraryElement(QString &path, QWidget *parent = nullptr);
 
-    QString getPath() const;
+  QString getPath() const;
 
-    void setText(const QString &value);
+  /// Set text to display in label
+  void setText(const QString &value);
 
-    QString getString() const;
+  /// String for saving in file
+  QString getString() const;
 
-    void setSelected(bool v);
+  void setSelected(bool v);
 
-    QString getName() const;
+  QString getName() const;
 
 signals:
-    void clicked();
-    void doubleClicked();
-    void ctrlClicked();
-    void shiftClicked();
+  void clicked();
+  void doubleClicked();
+  void ctrlClicked();
+  void shiftClicked();
 
-    void focus();
+  void focus();
 
 protected:
-    virtual void mousePressEvent(QMouseEvent *e) override;
-    virtual void mouseDoubleClickEvent(QMouseEvent *e) override;
-    virtual void focusInEvent(QFocusEvent *) override;
+  virtual void mousePressEvent(QMouseEvent *e) override;
+  virtual void mouseDoubleClickEvent(QMouseEvent *e) override;
+  virtual void focusInEvent(QFocusEvent *) override;
 
 private:
-    QLabel *nameLabel;
+  QLabel *nameLabel;
 
-    QString path;
-    QString name;
+  QString path;
+  QString name;
 };
 
 #endif // LIBRARYELEMENT_H

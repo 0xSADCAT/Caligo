@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -10,66 +11,57 @@
 
 #include <Widgets/playlistcontrols.h>
 #include <Widgets/medialibrary.h>
-#include <Widgets/radiolibrary.h>
 #include <Widgets/libraryplaylists.h>
 
 #include <Style/style.cpp>
 
+/// Application settings
 class SettingsWindow : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit SettingsWindow(QSettings *s, PlaylistControls *pc, MediaLibrary *ml, RadioLibrary *rl, LibraryPlaylists *pl, QWidget *wgt);
+  /// Application settings
+  explicit SettingsWindow(QSettings *s, PlaylistControls *pc, MediaLibrary *ml, LibraryPlaylists *pl, QWidget *wgt);
 
 private:
-    QSettings *settings;
-    PlaylistControls *listControls;
-    QWidget *widget;
+  QSettings *settings;
+  PlaylistControls *listControls;
+  QWidget *widget;
 
-    MediaLibrary *mediaLibrary;
-    RadioLibrary *radioLibrary;
-    LibraryPlaylists *playlistLibrary;
+  MediaLibrary *mediaLibrary;
+  LibraryPlaylists *playlistLibrary;
 
-    void setState();
+  /// Read settings and set
+  void setState();
 
-    QVBoxLayout *l;
+  QVBoxLayout *l;
 
-    QLabel *pathMusicLabel;
-    QLabel *pathMusicValue;
-    QPushButton *setPathMusicButton;
-    QPushButton *setDefaultPathMusicButton;
+  QLabel *pathMusicLabel;
+  QLabel *pathMusicValue;
+  QPushButton *setPathMusicButton;
+  QPushButton *setDefaultPathMusicButton;
 
-    QLabel *pathListLabel;
-    QLabel *pathListValue;
-    QPushButton *setPathListButton;
-    QPushButton *setDefaultPathListButton;
+  QLabel *pathListLabel;
+  QLabel *pathListValue;
+  QPushButton *setPathListButton;
+  QPushButton *setDefaultPathListButton;
 
-    QLabel *pathRadioLabel;
-    QLabel *pathRadioValue;
-    QPushButton *setPathRadioButton;
-    QPushButton *setDefaultPathRadioButton;
+  QCheckBox *clearBeforeOpenPlaylistCheck;
 
-    QCheckBox *clearBeforeOpenPlaylistCheck;
-
-    QCheckBox *loadOldCheck;
-
-//    QCheckBox *darkThemeCheck;
+  QCheckBox *loadOldCheck;
 
 private slots:
-    void pathMusic();
-    void pathMusicDefault();
+  void pathMusic();
+  void pathMusicDefault();
 
-    void pathList();
-    void pathListDefault();
+  void pathList();
+  void pathListDefault();
 
-    void pathRadio();
-    void pathRadioDefault();
+  /// Clear playlist before open new
+  void clearBeforeOpen(bool v);
 
-    void clearBeforeOpen(bool v);
-
-    void loadOld(bool v);
-
-//    void darkTheme(bool v);
+  /// Load old playlist (current playlist before last use)
+  void loadOld(bool v);
 };
 
 #endif // SETTINGSWINDOW_H

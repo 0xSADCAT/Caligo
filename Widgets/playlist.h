@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -15,60 +16,71 @@
 
 class Playlist : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit Playlist(QMediaPlayer *mp, QWidget *parent = nullptr);
+  explicit Playlist(QMediaPlayer *mp, QWidget *parent = nullptr);
 
-    QStringList getList();
+  /// QStringList for saving playlist in file
+  QStringList getList();
 
-    void add(const QString &path, const QString &text);
-    void add(const QString &path, bool sc=false);
-    void add(const QStringList &paths);
+  /// Add new element. [const QString&] - path to file, [const QString&] - display text (medatata)
+  void add(const QString &path, const QString &text);
 
-    void clear();
+  /// Add new element. [const QString&] - path to file, [bool (= false)] - scan element metadata
+  void add(const QString &path, bool sc=false);
+
+  /// Add new element. [const QStringList&] - paths to files
+  void add(const QStringList &paths);
+
+  /// Clear playlist
+  void clear();
 
 signals:
-    void loadPlaylist(const QString &);
+  void loadPlaylist(const QString &);
 
 public slots:
-    void next();
-    void prev();
+  void next();
+  void prev();
 
-    void forceUpdate();
+  /// Update metadata in all elements of playlist
+  void forceUpdate();
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *e) override;
-    virtual void mousePressEvent(QMouseEvent *) override;
+  virtual void keyPressEvent(QKeyEvent *e) override;
+  virtual void mousePressEvent(QMouseEvent *) override;
 
 private:
-    QMediaPlayer *player;
+  QMediaPlayer *player;
 
-    int index;
-    QList<MediaElement*> list;
+  int index;
+  QList<MediaElement*> list;
 
-    QVBoxLayout *l;
+  QVBoxLayout *l;
 
-    MediaElement *lastClicked;
-    QList<MediaElement*> selection;
+  MediaElement *lastClicked;
+  QList<MediaElement*> selection;
 
-    MetaScaner *scaner;
+  MetaScaner *scaner;
 
-    QString getMetaData();
+  QString getMetaData();
 
-    void setCurrentIndexMedia();
+  void setCurrentIndexMedia();
 
 private slots:
-    void mediaStatus(QMediaPlayer::MediaStatus s);
+  void mediaStatus(QMediaPlayer::MediaStatus s);
 
-    void clickElement();
-    void shiftClickElement();
-    void ctrlClickElement();
-    void doubleClickElement();
+  void clickElement();
+  void shiftClickElement();
+  void ctrlClickElement();
+  void doubleClickElement();
 
-    void focusFromElement();
+  void focusFromElement();
 
-    void cmSelectAll();
-    void cmDeleteSelected();
+  /// Context menu
+  void cmSelectAll();
+
+  /// Context menu
+  void cmDeleteSelected();
 };
 
 #endif // PLAYLIST_H

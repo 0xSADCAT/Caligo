@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -13,32 +14,37 @@
 
 #include <Widgets/mediaelement.h>
 
+/// Scaning metadata in playlist
 class MetaScaner : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit MetaScaner(QList<MediaElement*> *playlist, QObject *parent = nullptr);
+  /// Scaning metadata in playlist
+  explicit MetaScaner(QList<MediaElement*> *playlist, QObject *parent = nullptr);
 
-    void scan();
-    void forceScan();
+  /// Start scaning
+  void scan();
+  /// Unused, use MetaScaner::scan()
+  void forceScan();
 
 private:
-    // Contains pointers of playlist elements.
-    QList<MediaElement*> *list;
+  /// Contains pointers of playlist elements.
+  QList<MediaElement*> *list;
 
-    // Second QMediaPlayer for recursive algorithm.
-    QMediaPlayer player;
+  /// Second QMediaPlayer for recursive algorithm.
+  QMediaPlayer player;
 
-    // Current scanning index.
-    int index;
-    // Count elements of playlist.
-    int count;
+  /// Current scanning index.
+  int index;
+  /// Count elements of playlist.
+  int count;
 
-    // Old variable. Not deleted because algorithm for scanning metadata is in dev.
-    bool force;
+  /// Old variable. Not deleted because algorithm for scanning metadata is in dev.
+  bool force;
 
 private slots:
-    void mediaStatus(QMediaPlayer::MediaStatus s);
+  /// Set metadata to MediaElement in list
+  void mediaStatus(QMediaPlayer::MediaStatus s);
 };
 
 #endif // METASCANER_H

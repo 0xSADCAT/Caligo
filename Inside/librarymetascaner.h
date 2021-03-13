@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -13,37 +14,43 @@
 
 #include <Widgets/libraryelement.h>
 
+/// Scans metadata in media library
 class LibraryMetaScaner : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit LibraryMetaScaner(QList<LibraryElement*> *list, QProgressBar *prBar, QObject *parent = nullptr);
+  /// Scans metadata in media library
+  explicit LibraryMetaScaner(QList<LibraryElement*> *list, QProgressBar *prBar, QObject *parent = nullptr);
 
-    void scan();
-    void forceScan();
+  /// Start scan
+  void scan();
+  /// Unused, use LibraryMetaScaner::scan()
+  void forceScan();
 
 signals:
-    void done();
+  /// Emits then end of scaning
+  void done();
 
 private:
-    // Contains pointers of elements.
-    QList<LibraryElement*> *list;
+  /// Contains pointers of elements.
+  QList<LibraryElement*> *list;
 
-    QProgressBar *progress;
+  QProgressBar *progress;
 
-    // Second QMediaPlayer for recursive algorithm.
-    QMediaPlayer player;
+  /// Second QMediaPlayer for recursive algorithm.
+  QMediaPlayer player;
 
-    // Current scanning index.
-    int index;
-    // Count elements of playlist.
-    int count;
+  /// Current scanning index.
+  int index;
+  /// Count elements of playlist.
+  int count;
 
-    // Old variable. Not deleted because algorithm for scanning metadata is in dev.
-    bool force;
+  /// Old variable. Not deleted because algorithm for scanning metadata is in dev.
+  bool force;
 
 private slots:
-    void mediaStatus(QMediaPlayer::MediaStatus s);
+  /// Set metadata to LibraryElement in list
+  void mediaStatus(QMediaPlayer::MediaStatus s);
 };
 
 #endif // LIBRARYMETASCANER_H

@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -16,36 +17,40 @@
 
 class PlayInfo : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit PlayInfo(QMediaPlayer *mp, QWidget *parent = nullptr);
+  explicit PlayInfo(QMediaPlayer *mp, QWidget *parent = nullptr);
 
-    void setNotFull(bool v);
-    void focus();
+  /// Full screen mode
+  void setNotFull(bool v);
+  void focus();
 
-    VideoWidget *video;
+  VideoWidget *video;
 
 signals:
-    void newTitle(const QString &s);
-    void fsClicked();
+  /// Set new window title
+  void newTitle(const QString &s);
+  void fsClicked();
 
 private:
-    QMediaPlayer *player;
+  QMediaPlayer *player;
 
-    Image *image;
-    QLabel *author;
-    QLabel *name;
-    bool isVideo;
-    bool isFSVideo;
+  Image *image;
+  QLabel *author;
+  QLabel *name;
+  bool isVideo;
+  /// Video fullscreen mode
+  bool isFSVideo;
 
-    void setTitle();
+  /// Set new window title
+  void setTitle();
 
 private slots:
-    void mediaStatus(QMediaPlayer::MediaStatus s);
-    void videoChanged(bool v);
+  void mediaStatus(QMediaPlayer::MediaStatus s);
+  void videoChanged(bool v);
 
-    void videoClicked();
-    void videoDoubleClicked();
+  void videoClicked();
+  void videoDoubleClicked();
 };
 
 #endif // PLAYINFO_H

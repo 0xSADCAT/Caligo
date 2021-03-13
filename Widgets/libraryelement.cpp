@@ -1,4 +1,5 @@
 /* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -7,83 +8,83 @@
 
 LibraryElement::LibraryElement(QString &path, QWidget *parent) : QWidget(parent)
 {
-    this->path = path;
-    name = path;
+  this->path = path;
+  name = path;
 
-    nameLabel = new QLabel(path);
+  nameLabel = new QLabel(path);
 
-    QHBoxLayout *l = new QHBoxLayout;
-    l->addWidget(nameLabel, 0);
-    setLayout(l);
+  QHBoxLayout *l = new QHBoxLayout;
+  l->addWidget(nameLabel, 0);
+  setLayout(l);
 
-    layout()->setSpacing(0);
-    layout()->setContentsMargins(0, 0, 0, 0);
+  layout()->setSpacing(0);
+  layout()->setContentsMargins(0, 0, 0, 0);
 }
 
 QString LibraryElement::getPath() const
 {
-    return path;
+  return path;
 }
 
 void LibraryElement::setText(const QString &value)
 {
-    if (value.isEmpty())
-        return;
+  if (value.isEmpty())
+    return;
 
-    name = value;
-    nameLabel->setText(value);
+  name = value;
+  nameLabel->setText(value);
 }
 
 QString LibraryElement::getString() const
 {
-    QString s = "";
+  QString s = "";
 
-    s += path;
-    s += " ## ";
-    if (not name.isEmpty())
-        s += name;
+  s += path;
+  s += " ## ";
+  if (not name.isEmpty())
+    s += name;
 
-    return s;
+  return s;
 }
 
 void LibraryElement::setSelected(bool v)
 {
-    if (v) {
-        setStyleSheet(style::le::selected);
+  if (v) {
+      setStyleSheet(style::le::selected);
     }
-    else {
-        setStyleSheet(style::le::none);
+  else {
+      setStyleSheet(style::le::none);
     }
 }
 
 void LibraryElement::mousePressEvent(QMouseEvent *e)
 {
-    if (e->button() == Qt::LeftButton) {
-        if (e->modifiers() & Qt::ShiftModifier) {
-            emit shiftClicked();
+  if (e->button() == Qt::LeftButton) {
+      if (e->modifiers() & Qt::ShiftModifier) {
+          emit shiftClicked();
         }
-        else if (e->modifiers() & Qt::ControlModifier) {
-            emit ctrlClicked();
+      else if (e->modifiers() & Qt::ControlModifier) {
+          emit ctrlClicked();
         }
-        else {
-            emit clicked();
+      else {
+          emit clicked();
         }
     }
 }
 
 void LibraryElement::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    if (e->button() == Qt::LeftButton) {
-        emit doubleClicked();
+  if (e->button() == Qt::LeftButton) {
+      emit doubleClicked();
     }
 }
 
 void LibraryElement::focusInEvent(QFocusEvent *)
 {
-    emit focus();
+  emit focus();
 }
 
 QString LibraryElement::getName() const
 {
-    return name;
+  return name;
 }
