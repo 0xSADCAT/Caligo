@@ -68,6 +68,8 @@ Widget::Widget(QWidget *parent)
   tabWidget->addTab(aboutWindow, tr("About"));
   tabWidget->addTab(helpWindow, tr("Help"));
 
+  tabWidget->setTabBarAutoHide(true);
+
   connect(controls, &Controls::next, playlist, &Playlist::next);
   connect(controls, &Controls::prev, playlist, &Playlist::prev);
 
@@ -304,7 +306,6 @@ void Widget::help()
   tabWidget->setCurrentIndex(tabWidget->count()-1);
 }
 
-/* In DEV */
 void Widget::videoFullscreen()
 {
   if (not mp->isVideoAvailable()) {
@@ -320,9 +321,11 @@ void Widget::videoFullscreen()
 
   if (v) {
       showNormal();
+      tabWidget->tabBar()->setVisible(true);
     }
   else {
       showFullScreen();
+      tabWidget->tabBar()->setVisible(false);
     }
 }
 

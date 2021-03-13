@@ -38,6 +38,10 @@ signals:
   void ctrlClicked();
   void doubleClicked();
 
+  void startDrag();
+
+  void elementsDropped();
+
   /// Needs to set focus to Playlist but not on element (playlist keyboard controls)
   void focus();
 
@@ -49,9 +53,14 @@ signals:
 
 protected:
   virtual void mousePressEvent(QMouseEvent *e) override;
+  virtual void mouseReleaseEvent(QMouseEvent *e) override;
+  virtual void mouseMoveEvent(QMouseEvent *e) override;
   virtual void mouseDoubleClickEvent(QMouseEvent *e) override;
   virtual void focusInEvent(QFocusEvent *) override;
   virtual void contextMenuEvent(QContextMenuEvent *e) override;
+  virtual void dragEnterEvent(QDragEnterEvent *e) override;
+  virtual void dragLeaveEvent(QDragLeaveEvent *) override;
+  virtual void dropEvent(QDropEvent *) override;
 
 private:
   QLabel *text;
@@ -65,6 +74,8 @@ private:
   void updStyle();
 
   QMenu *contextMenu;
+
+  QPoint dragPos;
 };
 
 #endif // MEDIAELEMENT_H

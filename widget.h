@@ -63,6 +63,8 @@ private:
 
   QTabWidget *tabWidget;
 
+  QList<QWidget*> tabs;
+
 private slots:
   void setNewTitle(const QString &s);
   void help();

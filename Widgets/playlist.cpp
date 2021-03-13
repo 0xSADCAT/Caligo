@@ -61,6 +61,8 @@ void Playlist::add(const QString &path, const QString &text)
   connect(e, &MediaElement::ctrlClicked, this, &Playlist::ctrlClickElement);
   connect(e, &MediaElement::selectAll, this, &Playlist::cmSelectAll);
   connect(e, &MediaElement::deleteSelected, this, &Playlist::cmDeleteSelected);
+  connect(e, &MediaElement::startDrag, this, &Playlist::startDrag);
+  connect(e, &MediaElement::elementsDropped, this, &Playlist::elementsDropped);
 
   if (index == -1) {
       index = 0;
@@ -93,6 +95,8 @@ void Playlist::add(const QString &path, bool sc)
   connect(e, &MediaElement::ctrlClicked, this, &Playlist::ctrlClickElement);
   connect(e, &MediaElement::selectAll, this, &Playlist::cmSelectAll);
   connect(e, &MediaElement::deleteSelected, this, &Playlist::cmDeleteSelected);
+  connect(e, &MediaElement::startDrag, this, &Playlist::startDrag);
+  connect(e, &MediaElement::elementsDropped, this, &Playlist::elementsDropped);
 
   if (index == -1) {
       index = 0;
@@ -524,6 +528,29 @@ void Playlist::mousePressEvent(QMouseEvent *)
       e->deleteLater();
     }
   selection.clear();
+}
+
+void Playlist::startDrag()
+{
+  QMimeData *mimeData = new QMimeData;
+  mimeData->setText("application/mediaElements");
+
+  QDrag *drag = new QDrag(this);
+  drag->setMimeData(mimeData);
+  drag->exec();
+}
+
+void Playlist::elementsDropped()
+{
+  MediaElement *current = list[index];
+  int i = list.indexOf((MediaElement*) sender());
+  foreach (MediaElement *e, selection) {
+      list.removeAll(e);
+      l->removeWidget(e);
+      list.insert(i, e);
+      l->insertWidget(i, e);
+    }
+  index = list.indexOf(current);
 }
 
 QString Playlist::getMetaData()

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#include "widget.h"
+#include <widget.h>
 
 #include <QApplication>
 #include <QString>
@@ -24,7 +24,7 @@
 
 int main(int argc, char *argv[])
 {
-  std::string ver = "0.7.0";
+  std::string ver = "1.0.0";
 
   if (argc > 1) {
       if (QString(argv[1]) == "--version") {

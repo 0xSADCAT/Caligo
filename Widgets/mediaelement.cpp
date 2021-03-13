@@ -30,6 +30,8 @@ MediaElement::MediaElement(const QString &path, QWidget *parent) : QWidget(paren
   contextMenu = new QMenu;
   contextMenu->addAction(QPixmap(":/img/selectAll"), tr("Select all"), this, &MediaElement::selectAll);
   contextMenu->addAction(QPixmap(":/img/delete"), tr("Remove selected"), this, &MediaElement::deleteSelected);
+
+  setAcceptDrops(true);
 }
 
 QString MediaElement::getPath() const
@@ -90,6 +92,14 @@ QString MediaElement::getString() const
 void MediaElement::mousePressEvent(QMouseEvent *e)
 {
   if (e->button() == Qt::LeftButton) {
+      dragPos = e->pos();
+    }
+  emit focus();
+}
+
+void MediaElement::mouseReleaseEvent(QMouseEvent *e)
+{
+  if (e->button() == Qt::LeftButton) {
       if (e->modifiers() & Qt::ShiftModifier) {
           emit shiftClicked();
         }
@@ -100,7 +110,16 @@ void MediaElement::mousePressEvent(QMouseEvent *e)
           emit clicked();
         }
     }
-  emit focus();
+}
+
+void MediaElement::mouseMoveEvent(QMouseEvent *e)
+{
+  if (e->buttons() & Qt::LeftButton) {
+      int dist = (e->pos() - dragPos).manhattanLength();
+      if (dist > qApp->startDragDistance()) {
+          emit startDrag();
+        }
+    }
 }
 
 void MediaElement::mouseDoubleClickEvent(QMouseEvent *e)
@@ -118,6 +137,25 @@ void MediaElement::focusInEvent(QFocusEvent *)
 void MediaElement::contextMenuEvent(QContextMenuEvent *e)
 {
   contextMenu->exec(e->globalPos());
+}
+
+void MediaElement::dragEnterEvent(QDragEnterEvent *e)
+{
+  if (e->mimeData()->text() == "application/mediaElements") {
+      this->setStyleSheet(this->styleSheet() + "border-bottom: 1px solid black; margin-bottom: 3px;");
+      e->acceptProposedAction();
+    }
+}
+
+void MediaElement::dragLeaveEvent(QDragLeaveEvent *)
+{
+  updStyle();
+}
+
+void MediaElement::dropEvent(QDropEvent *)
+{
+  emit elementsDropped();
+  updStyle();
 }
 
 void MediaElement::updStyle()

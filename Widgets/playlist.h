@@ -81,6 +81,10 @@ private slots:
 
   /// Context menu
   void cmDeleteSelected();
+
+  void startDrag();
+
+  void elementsDropped();
 };
 
 #endif // PLAYLIST_H
