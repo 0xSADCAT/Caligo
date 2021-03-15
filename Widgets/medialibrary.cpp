@@ -12,7 +12,7 @@ MediaLibrary::MediaLibrary(Playlist *pls, QWidget *parent) : QWidget(parent)
 
   playlist = pls;
   lastClicked = nullptr;
-  scanPath = "/home/alex/tmp/";
+  scanPath = "";
 
   mainLayout = new QVBoxLayout;
 
@@ -23,8 +23,13 @@ MediaLibrary::MediaLibrary(Playlist *pls, QWidget *parent) : QWidget(parent)
   scanButton->setToolTip(tr("Scan media library"));
   connect(scanButton, &QPushButton::clicked, this, &MediaLibrary::scanLibrary);
 
-  QHBoxLayout *controls = new QHBoxLayout;
-  controls->addStretch(1);
+  searchEdit = new QLineEdit;
+  searchEdit->setPlaceholderText(tr("Search"));
+  connect(searchEdit, &QLineEdit::textEdited, this, &MediaLibrary::search);
+
+  controls = new QHBoxLayout;
+  controls->addWidget(searchEdit, 1);
+  controls->addSpacing(20);
   controls->addWidget(scanButton, 0);
 
   l->addLayout(controls, 0);
@@ -54,6 +59,11 @@ MediaLibrary::MediaLibrary(Playlist *pls, QWidget *parent) : QWidget(parent)
   w->setLayout(sal);
   sa->setWidget(w);
   sa->setWidgetResizable(true);
+
+  emptyLabel = new QLabel("(" + tr("Empty") + ")");
+  emptyLabel->setAlignment(Qt::AlignCenter);
+  emptyLabel->setStyleSheet(emptyLabel->styleSheet() + "QLabel {font-size: 20px;}");
+  l->addWidget(emptyLabel);
 
   l->addWidget(sa, 1);
   setLayout(l);
@@ -89,13 +99,21 @@ void MediaLibrary::setProgress(int v)
 void MediaLibrary::setStatus(Status s)
 {
   if (s == Done) {
-      status->setText("Done");
+      status->setText(tr("Done"));
       progress->setValue(100);
       QTimer::singleShot(3000, this, &MediaLibrary::done);
+      scanButton->setEnabled(true);
+      scanButton->setVisible(true);
+      searchEdit->setEnabled(true);
+      searchEdit->setVisible(true);
       return;
     }
 
   statusWidget->setVisible(true);
+  scanButton->setEnabled(false);
+  scanButton->setVisible(false);
+  searchEdit->setEnabled(false);
+  searchEdit->setVisible(false);
   if (s == Paths) {
       status->setText(tr("Scanning media files..."));
     }
@@ -163,6 +181,8 @@ void MediaLibrary::add(QString &path)
   connect(e, &LibraryElement::ctrlClicked, this, &MediaLibrary::elementCtrl);
   connect(e, &LibraryElement::shiftClicked, this, &MediaLibrary::elementShift);
   connect(e, &LibraryElement::focus, this, &MediaLibrary::elementFocus);
+
+  checkEmpty();
 }
 
 void MediaLibrary::remove(LibraryElement *e)
@@ -172,6 +192,8 @@ void MediaLibrary::remove(LibraryElement *e)
   e->~LibraryElement();
 
   rewriteLibrary = true;
+
+  checkEmpty();
 }
 
 void MediaLibrary::clear()
@@ -184,6 +206,8 @@ void MediaLibrary::clear()
       list.removeAll(e);
       e->~LibraryElement();
     }
+
+  checkEmpty();
 }
 
 void MediaLibrary::scanDir(QDir d)
@@ -253,6 +277,11 @@ void MediaLibrary::load()
             }
         }
     }
+}
+
+void MediaLibrary::checkEmpty()
+{
+  emptyLabel->setVisible(list.isEmpty());
 }
 
 void MediaLibrary::elementClicked()
@@ -381,6 +410,20 @@ void MediaLibrary::scanerDone()
 {
   setStatus(Done);
   save();
+}
+
+void MediaLibrary::search(const QString &text)
+{
+  if (text.isEmpty() or text == "") {
+      foreach (LibraryElement *e, list) {
+          e->setVisible(true);
+        }
+      return;
+    }
+
+  foreach (LibraryElement *e, list) {
+      e->setVisible(e->getName().contains(text));
+    }
 }
 
 bool compareLibraryElements(const LibraryElement *e1, const LibraryElement *e2) noexcept

@@ -53,6 +53,8 @@ private:
 
   QPushButton *scanButton;
 
+  QHBoxLayout *controls;
+
   /// Add new element
   void add(QString &path);
 
@@ -76,6 +78,12 @@ private:
   QString libraryFilePath;
   bool rewriteLibrary;
 
+  QLabel *emptyLabel;
+
+  void checkEmpty();
+
+  QLineEdit *searchEdit;
+
 private slots:
   void elementClicked();
   void elementDouble();
@@ -87,6 +95,8 @@ private slots:
   void setScanPath();
 
   void scanerDone();
+
+  void search(const QString &text);
 };
 
 /// Compare elements. Needs for sorting.

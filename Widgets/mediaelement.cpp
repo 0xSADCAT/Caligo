@@ -158,6 +158,11 @@ void MediaElement::dropEvent(QDropEvent *)
   updStyle();
 }
 
+bool MediaElement::isSelected() const
+{
+  return selected;
+}
+
 void MediaElement::updStyle()
 {
   if (playing && selected) {

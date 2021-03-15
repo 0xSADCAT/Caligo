@@ -542,8 +542,22 @@ void Playlist::startDrag()
 
 void Playlist::elementsDropped()
 {
+  if (selection.isEmpty())
+    return;
+
   MediaElement *current = list[index];
   int i = list.indexOf((MediaElement*) sender());
+  if (list.count() < 100) {
+      selection.clear();
+      foreach (MediaElement *e, list) {
+          if (e->isSelected()) {
+              selection << e;
+            }
+        }
+    }
+  if (i < list.indexOf(selection[0]))
+    std::reverse(selection.begin(), selection.end());
+
   foreach (MediaElement *e, selection) {
       list.removeAll(e);
       l->removeWidget(e);

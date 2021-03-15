@@ -32,6 +32,8 @@ public:
   /// String for saving
   QString getString() const;
 
+  bool isSelected() const;
+
 signals:
   void clicked();
   void shiftClicked();

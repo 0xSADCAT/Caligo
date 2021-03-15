@@ -24,7 +24,7 @@
 
 int main(int argc, char *argv[])
 {
-  std::string ver = "1.0.0";
+  std::string ver = "1.0.1";
 
   if (argc > 1) {
       if (QString(argv[1]) == "--version") {
