@@ -324,11 +324,8 @@ void MediaLibrary::elementShift()
   if (iFrom == iTo)
     return;
 
-  // XOR swap
   if (iFrom > iTo) {
-      iFrom ^= iTo;
-      iTo ^= iFrom;
-      iFrom ^= iTo;
+      std::swap(iFrom, iTo);
     }
 
   for (int i = iFrom; i <= iTo; ++i) {
@@ -414,15 +411,26 @@ void MediaLibrary::scanerDone()
 
 void MediaLibrary::search(const QString &text)
 {
+  int counter = 0;
   if (text.isEmpty() or text == "") {
       foreach (LibraryElement *e, list) {
           e->setVisible(true);
+          counter++;
+          if (counter == 10) {
+              qApp->processEvents();
+              counter = 0;
+            }
         }
       return;
     }
 
   foreach (LibraryElement *e, list) {
       e->setVisible(e->getName().contains(text));
+      counter++;
+      if (counter == 10) {
+          qApp->processEvents();
+          counter = 0;
+        }
     }
 }
 

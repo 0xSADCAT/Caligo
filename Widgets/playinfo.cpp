@@ -16,7 +16,9 @@ PlayInfo::PlayInfo(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
   player = mp;
   image = new Image;
   author = new QLabel;
+  author->setObjectName("AlphaBG");
   name = new QLabel;
+  name->setObjectName("AlphaBG");
   video = new VideoWidget;
   isVideo = false;
   isFSVideo = false;
@@ -24,17 +26,14 @@ PlayInfo::PlayInfo(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
   author->setFont(QFont(this->font().family(), 12, QFont::Bold));
   name->setFont(QFont(this->font().family(), 10));
 
-  author->setAlignment(Qt::AlignCenter);
-  name->setAlignment(Qt::AlignCenter);
-
   video->setVisible(false);
   player->setVideoOutput(video);
 
   QVBoxLayout *l = new QVBoxLayout;
   l->addWidget(image, 1);
   l->addWidget(video, 1);
-  l->addWidget(author, 0);
-  l->addWidget(name, 0);
+  l->addWidget(author, 0, Qt::AlignCenter);
+  l->addWidget(name, 0, Qt::AlignCenter);
   setLayout(l);
 
   connect(player, &QMediaPlayer::mediaStatusChanged, this, &PlayInfo::mediaStatus);
@@ -96,10 +95,14 @@ void PlayInfo::setTitle()
   switch (s) {
     case QMediaPlayer::MediaStatus::BufferedMedia:
     case QMediaPlayer::MediaStatus::LoadedMedia:
-      if (player->availableMetaData().contains(QMediaMetaData::CoverArtImage))
-        image->setPix(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::CoverArtImage)));
-      else
-        image->setPix(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::ThumbnailImage)));
+      if (player->availableMetaData().contains(QMediaMetaData::CoverArtImage)) {
+          image->setPix(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::CoverArtImage)));
+          emit newPixmap(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::CoverArtImage)));
+        }
+      else {
+          image->setPix(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::ThumbnailImage)));
+          emit newPixmap(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::ThumbnailImage)));
+        }
       author->setText(qvariant_cast<QString>(player->metaData(QMediaMetaData::AlbumArtist)));
       name->setText(qvariant_cast<QString>(player->metaData(QMediaMetaData::Title)));
       break;

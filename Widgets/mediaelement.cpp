@@ -13,12 +13,16 @@ MediaElement::MediaElement(const QString &path, QWidget *parent) : QWidget(paren
   qDebug() << ">>> MediaElement init:" << path;
 #endif
 
+  setObjectName("AlphaBG");
+
   this->path = path;
 
   text = new QLabel("  " + path);
+  text->setObjectName("AlphaBG");
 
   QHBoxLayout *l = new QHBoxLayout;
   l->addWidget(text);
+  l->setObjectName("AlphaBG");
   setLayout(l);
 
   layout()->setSpacing(0);
@@ -32,6 +36,8 @@ MediaElement::MediaElement(const QString &path, QWidget *parent) : QWidget(paren
   contextMenu->addAction(QPixmap(":/img/delete"), tr("Remove selected"), this, &MediaElement::deleteSelected);
 
   setAcceptDrops(true);
+
+  updStyle();
 }
 
 QString MediaElement::getPath() const
@@ -142,7 +148,7 @@ void MediaElement::contextMenuEvent(QContextMenuEvent *e)
 void MediaElement::dragEnterEvent(QDragEnterEvent *e)
 {
   if (e->mimeData()->text() == "application/mediaElements") {
-      this->setStyleSheet(this->styleSheet() + "border-bottom: 1px solid black; margin-bottom: 3px;");
+      this->setStyleSheet(this->styleSheet() + "* {border-bottom: 1px solid black; margin-bottom: 3px;}");
       e->acceptProposedAction();
     }
 }

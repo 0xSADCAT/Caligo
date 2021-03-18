@@ -34,6 +34,7 @@ protected:
   virtual void closeEvent(QCloseEvent *) override;
   virtual void dragEnterEvent(QDragEnterEvent *e) override;
   virtual void dropEvent(QDropEvent *e) override;
+  virtual void resizeEvent(QResizeEvent *) override;
 
 private:
   QMediaPlayer *mp;
@@ -65,13 +66,19 @@ private:
 
   QList<QWidget*> tabs;
 
+  QPixmap backgroundPixmap;
+
 private slots:
   void setNewTitle(const QString &s);
   void help();
+
+  void setBackgroundPixmap(const QPixmap &value);
 
   void videoFullscreen();
 
   /// Exit fullscreen mode
   void exitFull();
 };
+
+QImage applyEffectToImage(QImage src, QGraphicsEffect *effect, int extent = 0);
 #endif // WIDGET_H

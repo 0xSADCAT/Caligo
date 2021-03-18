@@ -17,8 +17,12 @@ Playlist::Playlist(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
   index = -1;
   l = new QVBoxLayout;
   QVBoxLayout *ml = new QVBoxLayout;
+  ml->setObjectName("FullAlpha");
+  l->setObjectName("FullAlpha");
   ml->addLayout(l, 0);
-  ml->addStretch(1);
+  QWidget *w = new QWidget;
+  w->setObjectName("FullAlpha");
+  ml->addWidget(w, 1);
   setLayout(ml);
 
   layout()->setContentsMargins(0, 0, 0, 0);
@@ -29,6 +33,8 @@ Playlist::Playlist(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
   lastClicked = nullptr;
 
   scaner = new MetaScaner(&list);
+
+  setObjectName("FullAlpha");
 }
 
 QStringList Playlist::getList()
@@ -438,11 +444,8 @@ void Playlist::mousePressEvent(QMouseEvent *)
   if (iFrom == iTo)
     return;
 
-  // XOR swap
   if (iFrom > iTo) {
-      iFrom ^= iTo;
-      iTo ^= iFrom;
-      iFrom ^= iTo;
+      std::swap(iFrom, iTo);
     }
 
   for (int i = iFrom; i <= iTo; ++i) {

@@ -18,7 +18,9 @@ Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
   timeSlider = new TimeSlider;
 
   posLabel = new QLabel("00:00");
+  posLabel->setObjectName("AlphaBG");
   durLabel = new QLabel("00:00");
+  durLabel->setObjectName("AlphaBG");
 
   topLayout = new QHBoxLayout;
   topLayout->addWidget(posLabel, 0);

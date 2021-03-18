@@ -29,6 +29,7 @@ Widget::Widget(QWidget *parent)
   QVBoxLayout *plL = new QVBoxLayout;
   plL->addWidget(plControls, 0);
   QScrollArea *sa = new QScrollArea;
+  sa->setObjectName("FullAlpha");
   sa->setWidget(playlist);
   sa->setWidgetResizable(true);
   sa->setFrameStyle(QFrame::NoFrame);
@@ -70,10 +71,13 @@ Widget::Widget(QWidget *parent)
 
   tabWidget->setTabBarAutoHide(true);
 
+  tabWidget->autoFillBackground();
+
   connect(controls, &Controls::next, playlist, &Playlist::next);
   connect(controls, &Controls::prev, playlist, &Playlist::prev);
 
   connect(playInfo, &PlayInfo::newTitle, this, &Widget::setNewTitle);
+  connect(playInfo, &PlayInfo::newPixmap, this, &Widget::setBackgroundPixmap);
 
   layout()->setSpacing(0);
   layout()->setContentsMargins(0, 0, 0, 0);
@@ -115,7 +119,37 @@ Widget::Widget(QWidget *parent)
   QShortcut *sHelp = new QShortcut(QKeySequence("CTRL+H"), this);
   connect(sHelp, &QShortcut::activated, this, &Widget::help);
 
+  setObjectName("FullAlpha");
   setStyleSheet(style::theme::light);
+  tabWidget->setStyleSheet("QTabWidget::pane {"
+                           "border-top: none;"
+                           "}"
+
+                           "QTabWidget::tab-bar {"
+                           "background-color: EFEFEF;"
+                           "border: 1px solid black;"
+                           "border-radius: 5px;"
+                           "left: 5px;"
+                           "}"
+
+                           "QTabBar::tab {"
+                           "background-color: EFEFEF;"
+                           "border: 1px solid black;"
+                           "border-radius: 5px;"
+                           "min-width: 8ex;"
+                           "padding: 2px;"
+                           "}"
+
+                           "QTabBar::tab:selected, QTabBar::tab:hover {"
+                           "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
+                           "stop: 0 #fafafa, stop: 0.4 #f4f4f4,"
+                           "stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);"
+                           "}"
+
+                           "QTabBar::tab:selected {"
+                           "border-color: #9B9B9B;"
+                           "border-bottom-color: #C2C7CB;"
+                           "}");
 }
 
 Widget::~Widget()
@@ -199,6 +233,11 @@ void Widget::dropEvent(QDropEvent *e)
       playlist->add(droppedFiles);
       droppedFiles.clear();
     }
+}
+
+void Widget::resizeEvent(QResizeEvent *)
+{
+  setBackgroundPixmap(backgroundPixmap);
 }
 
 void Widget::loadSettings()
@@ -294,6 +333,43 @@ void Widget::recursiveEntryPoints(QDir d)
   foreach (QString dir, dirs) {
       recursiveEntryPoints(QDir(d.absoluteFilePath(dir)));
     }
+}
+
+QImage applyEffectToImage(QImage src, QGraphicsEffect *effect, int extent)
+{
+    if(src.isNull()) return QImage();
+    if(!effect) return src;
+    QGraphicsScene scene;
+    QGraphicsPixmapItem item;
+    item.setPixmap(QPixmap::fromImage(src));
+    item.setGraphicsEffect(effect);
+    scene.addItem(&item);
+    QImage res(src.size()+QSize(extent*2, extent*2), QImage::Format_ARGB32);
+    res.fill(Qt::transparent);
+    QPainter ptr(&res);
+    scene.render(&ptr, QRectF(), QRectF( -extent, -extent, src.width()+extent*2, src.height()+extent*2 ) );
+    return res;
+}
+
+void Widget::setBackgroundPixmap(const QPixmap &value)
+{
+  backgroundPixmap = value;
+  QPalette palette;
+  if (value.isNull()) {
+      palette.setBrush(QPalette::Background, QColor(0xEE, 0xEE, 0xEE));
+    }
+  else {
+      QPixmap bkgnd(value);
+      bkgnd = width() > height() ? bkgnd.scaledToWidth(this->size().width()) : bkgnd.scaledToHeight(this->size().height());
+
+      QImage image = bkgnd.toImage();
+
+      QGraphicsBlurEffect *ge = new QGraphicsBlurEffect;
+      ge->setBlurRadius(qApp->desktop()->size().width() > 1920 ? 15 : 8);
+      palette.setBrush(QPalette::Background, applyEffectToImage(image, ge));
+    }
+  this->setPalette(palette);
+  repaint();
 }
 
 void Widget::setNewTitle(const QString &s)

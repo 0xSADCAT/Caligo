@@ -30,6 +30,7 @@ public:
 signals:
   /// Set new window title
   void newTitle(const QString &s);
+  void newPixmap(const QPixmap &pix);
   void fsClicked();
 
 private:
