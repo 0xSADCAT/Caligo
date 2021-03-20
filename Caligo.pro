@@ -18,7 +18,6 @@ SOURCES += \
     OtherWindows/aboutwindow.cpp \
     OtherWindows/helpwindow.cpp \
     OtherWindows/settingswindow.cpp \
-    Style/style.cpp \
     Widgets/controls.cpp \
     Widgets/elementplaylist.cpp \
     Widgets/image.cpp \

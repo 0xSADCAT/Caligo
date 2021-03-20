@@ -43,6 +43,13 @@ Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
   nextButton->setToolTip(tr("Next track") + " [N]");
   nextButton->setIcon(QIcon(":/img/next"));
 
+  randomPlaybackButton = new QPushButton;
+  randomPlaybackButton->setToolTip(tr("Random playback"));
+  randomPlaybackButton->setIcon(QIcon(":img/randomPlayback"));
+  randomPlaybackButton->setCheckable(true);
+  randomPlaybackButton->setChecked(false);
+  randomPlayback = false;
+
   fullScreenButton = new QPushButton;
   fullScreenButton->setToolTip(tr("Toggle fullscreen (video only)") + " [F]");
   fullScreenButton->setIcon(QPixmap(":/img/fullscreen"));
@@ -54,24 +61,32 @@ Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
   volumeSlider = new QSlider;
   volumeSlider->setRange(0, 100);
   volumeSlider->setValue(50);
-  volumeSlider->setMinimumWidth(200);
+  volumeSlider->setMinimumWidth(qApp->desktop()->size().width() > 1920 ? 150 : 100);
   volumeSlider->setOrientation(Qt::Horizontal);
   player->setVolume(volumeSlider->value());
 
   botLayout = new QHBoxLayout;
+
   botLayout->addStretch(1);
   botLayout->addSpacing(15);
+
   botLayout->addWidget(prevButton, 0);
   botLayout->addSpacing(5);
   botLayout->addWidget(playButton, 0);
   botLayout->addSpacing(5);
-  botLayout->addWidget(stopButton, 0);
   botLayout->addWidget(nextButton, 0);
-  botLayout->addSpacing(15);
+  botLayout->addSpacing(5);
+  botLayout->addWidget(stopButton, 0);
+  botLayout->addSpacing(5);
+
   botLayout->addStretch(1);
   botLayout->addWidget(fullScreenButton, 0);
+  botLayout->addSpacing(5);
+  botLayout->addWidget(randomPlaybackButton, 0);
+
+  botLayout->addSpacing(5);
   botLayout->addStretch(1);
-  botLayout->addSpacing(15);
+
   botLayout->addWidget(muteButton, 0);
   botLayout->addWidget(volumeSlider, 0);
 
@@ -98,6 +113,8 @@ Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
 
   connect(fullScreenButton, &QPushButton::clicked, this, &Controls::fullScreen);
   connect(player, &QMediaPlayer::videoAvailableChanged, this, &Controls::videoAvailable);
+
+  connect(randomPlaybackButton, &QPushButton::clicked, this, &Controls::randomPlaybackClicked);
 }
 
 void Controls::setSizes(int v)
@@ -114,6 +131,7 @@ void Controls::setSizes(int v)
   nextButton->setIconSize(s);
   muteButton->setIconSize(s);
   fullScreenButton->setIconSize(s);
+  randomPlaybackButton->setIconSize(s);
 }
 
 void Controls::setVolume(int v)
@@ -148,6 +166,13 @@ int Controls::getVolume()
 #endif
 
   fullScreenButton->setEnabled(v);
+  fullScreenButton->setVisible(v);
+}
+
+void Controls::randomPlaybackClicked(bool value)
+{
+  emit randomPlaybackChanged(value);
+  setRandomPlayback(value);
 }
 
 /* private SLOT */ void Controls::mediaState(QMediaPlayer::State s)
@@ -255,6 +280,18 @@ int Controls::getVolume()
 #endif
 
   setVolume(player->volume() - 5);
+}
+
+bool Controls::isRandomPlayback() const
+{
+  return randomPlayback;
+}
+
+void Controls::setRandomPlayback(bool value)
+{
+  randomPlaybackButton->setChecked(value);
+  randomPlayback = value;
+  emit randomPlaybackChanged(value);
 }
 
 QString Controls::msToStr(qint64 ms)

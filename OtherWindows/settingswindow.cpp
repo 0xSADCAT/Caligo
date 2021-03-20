@@ -88,7 +88,6 @@ SettingsWindow::SettingsWindow(QSettings *s, PlaylistControls *pc, MediaLibrary 
   l->addLayout(pathListLayout, 0);
   l->addLayout(clearBedoreOpenListLayout, 0);
   l->addLayout(loadOldLayout, 0);
-  //    l->addLayout(darkThemeLayout, 0);
   /* end adding elements to main layout */
 
   l->addStretch(1); /* cosmetic */

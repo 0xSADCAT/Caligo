@@ -15,7 +15,94 @@ Widget::Widget(QWidget *parent)
 
   setWindowIcon(QIcon(":/img/icon"));
 
+  QFile file(qApp->applicationDirPath() + QDir::separator() + "style.qss");
+  if (file.open(QIODevice::ReadOnly)) {
+      QString qss = file.readAll();
+      qApp->setStyleSheet(qss);
+
+      QString tmp;
+      QStringList list = qss.split('\n');
+      for (auto iter = list.constBegin(); iter != list.constEnd(); ++iter) {
+          tmp.clear();
+
+          if (iter->startsWith("#MeNone")) {
+              iter++;
+              while (not iter->startsWith("}") and iter != list.constEnd()) {
+                  tmp += *iter;
+                  iter++;
+                }
+              if (not tmp.isEmpty()) {
+                  tmp = "* {" + tmp + "}";
+                }
+              qApp->setProperty("MeNoneQSS", tmp);
+            }
+
+          if (iter->startsWith("#MePlaying") and not iter->startsWith("#MePlayingAndSelected")) {
+              iter++;
+              while (not iter->startsWith("}") and iter != list.constEnd()) {
+                  tmp += *iter;
+                  iter++;
+                }
+              if (not tmp.isEmpty()) {
+                  tmp = "* {" + tmp + "}";
+                }
+              qApp->setProperty("MePlayingQSS", tmp);
+            }
+
+          if (iter->startsWith("#MeSelected")) {
+              iter++;
+              while (not iter->startsWith("}") and iter != list.constEnd()) {
+                  tmp += *iter;
+                  iter++;
+                }
+              if (not tmp.isEmpty()) {
+                  tmp = "* {" + tmp + "}";
+                }
+              qApp->setProperty("MeSelectedQSS", tmp);
+            }
+
+          if (iter->startsWith("#MePlayingAndSelected")) {
+              iter++;
+              while (not iter->startsWith("}") and iter != list.constEnd()) {
+                  tmp += *iter;
+                  iter++;
+                }
+              if (not tmp.isEmpty()) {
+                  tmp = "* {" + tmp + "}";
+                }
+              qApp->setProperty("MePlayingAndSelectedQSS", tmp);
+            }
+
+          if (iter->startsWith("#LeNone")) {
+              iter++;
+              while (not iter->startsWith("}") and iter != list.constEnd()) {
+                  tmp += *iter;
+                  iter++;
+                }
+              if (not tmp.isEmpty()) {
+                  tmp = "* {" + tmp + "}";
+                }
+              qApp->setProperty("LeNoneQSS", tmp);
+            }
+
+          if (iter->startsWith("#LeSelected")) {
+              iter++;
+              while (not iter->startsWith("}") and iter != list.constEnd()) {
+                  tmp += *iter;
+                  iter++;
+                }
+              if (not tmp.isEmpty()) {
+                  tmp = "* {" + tmp + "}";
+                }
+              qApp->setProperty("LeSelectedQSS", tmp);
+            }
+        }
+
+      file.close();
+    }
+
   mp = new QMediaPlayer;
+
   controls = new Controls(mp);
   playInfo = new PlayInfo(mp);
   playlist = new Playlist(mp);
@@ -54,6 +141,8 @@ Widget::Widget(QWidget *parent)
 
   library = new MediaLibrary(playlist);
   playlistLibrary = new LibraryPlaylists(playlist);
+
+  connect(controls, &Controls::randomPlaybackChanged, playlist, &Playlist::randomPlaybackChanged);
 
   settings = new QSettings(qApp->applicationDirPath() + QDir::separator() + qApp->applicationName() + "_settings.ini", QSettings::IniFormat);
   loadSettings();
@@ -120,36 +209,6 @@ Widget::Widget(QWidget *parent)
   connect(sHelp, &QShortcut::activated, this, &Widget::help);
 
   setObjectName("FullAlpha");
-  setStyleSheet(style::theme::light);
-  tabWidget->setStyleSheet("QTabWidget::pane {"
-                           "border-top: none;"
-                           "}"
-
-                           "QTabWidget::tab-bar {"
-                           "background-color: EFEFEF;"
-                           "border: 1px solid black;"
-                           "border-radius: 5px;"
-                           "left: 5px;"
-                           "}"
-
-                           "QTabBar::tab {"
-                           "background-color: EFEFEF;"
-                           "border: 1px solid black;"
-                           "border-radius: 5px;"
-                           "min-width: 8ex;"
-                           "padding: 2px;"
-                           "}"
-
-                           "QTabBar::tab:selected, QTabBar::tab:hover {"
-                           "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"
-                           "stop: 0 #fafafa, stop: 0.4 #f4f4f4,"
-                           "stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);"
-                           "}"
-
-                           "QTabBar::tab:selected {"
-                           "border-color: #9B9B9B;"
-                           "border-bottom-color: #C2C7CB;"
-                           "}");
 }
 
 Widget::~Widget()
@@ -170,6 +229,7 @@ void Widget::closeEvent(QCloseEvent *)
   settings->setValue("windowConfig/splitterRight", this->spl->sizes()[1]);
   settings->setValue("other/volume", this->controls->getVolume());
   settings->setValue("other/playlist", this->playlist->getList());
+  settings->setValue("playback/random", this->controls->isRandomPlayback());
 
   /* Hide error code 139 */
   settings->~QSettings();
@@ -254,6 +314,7 @@ void Widget::loadSettings()
       spl->setSizes(s);
     }
   controls->setVolume(qvariant_cast<int>(settings->value("other/volume", 50)));
+  controls->setRandomPlayback(qvariant_cast<bool>(settings->value("playback/random", false)));
   bool loadOld = qvariant_cast<bool>(settings->value("other/loadOld", false));
   if (loadOld and qApp->arguments().count() == 1) {
       QStringList list = qvariant_cast<QStringList>(settings->value("other/playlist"));
@@ -409,6 +470,5 @@ void Widget::exitFull()
 {
   if (this->isFullScreen()) {
       videoFullscreen();
-    }
+      }
 }
-

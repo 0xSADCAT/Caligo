@@ -13,8 +13,6 @@
 #include <Widgets/medialibrary.h>
 #include <Widgets/libraryplaylists.h>
 
-#include <Style/style.cpp>
-
 /// Application settings
 class SettingsWindow : public QWidget
 {

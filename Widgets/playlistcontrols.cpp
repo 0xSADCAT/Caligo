@@ -32,15 +32,17 @@ PlaylistControls::PlaylistControls(Playlist *pl, QWidget *parent) : QWidget(pare
 
   QHBoxLayout *l = new QHBoxLayout;
   l->addWidget(addButton, 0);
-  l->addSpacing(10);
+  l->addSpacing(5);
   l->addWidget(addUrlButton, 0);
   l->addStretch(1);
+  l->addSpacing(5);
   l->addWidget(loadPlaylist, 0);
-  l->addSpacing(10);
+  l->addSpacing(5);
   l->addWidget(savePlaylist, 0);
   l->addStretch(1);
+  l->addSpacing(5);
   l->addWidget(forceScanButton, 0);
-  l->addStretch(1);
+  l->addSpacing(5);
   l->addWidget(clearButton, 0);
   setLayout(l);
 

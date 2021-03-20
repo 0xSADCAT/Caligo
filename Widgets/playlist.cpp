@@ -13,6 +13,8 @@ Playlist::Playlist(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
   qDebug() << ">>> Playlist init";
 #endif
 
+  randomPlayback = false;
+
   player = mp;
   index = -1;
   l = new QVBoxLayout;
@@ -173,6 +175,11 @@ void Playlist::clear()
   scaner->forceScan();
 }
 
+void Playlist::randomPlaybackChanged(bool value)
+{
+  randomPlayback = value;
+}
+
 /* public SLOT */ void Playlist::next()
 // Set next track
 {
@@ -184,6 +191,29 @@ void Playlist::clear()
   int c = list.count();
   if (c < 2)
     return;
+
+  if (randomPlayback) {
+      int nextIndex = randomGenerator.generate() % c;
+
+      if (c > 7) {
+          while (randomPrevious.contains(nextIndex)) {
+              nextIndex = randomGenerator.generate() % c;
+            }
+          randomPrevious << nextIndex;
+          if (randomPrevious.count() > 5)
+            randomPrevious.removeFirst();
+        }
+      else {
+          randomPrevious.clear();
+        }
+
+      list[index]->setPlaying(false);
+      index = nextIndex;
+      list[index]->setPlaying(true);
+      setCurrentIndexMedia();
+
+      return;
+    }
 
   list[index]->setPlaying(false);
   index++;
@@ -209,6 +239,34 @@ void Playlist::clear()
   int c = list.count();
   if (c < 2)
     return;
+
+  if (randomPlayback) {
+      if (not randomPrevious.isEmpty()) {
+          randomPrevious.removeLast();
+          if (randomPrevious.isEmpty()) {
+              int nextIndex = randomGenerator.generate() % c;
+              list[index]->setPlaying(false);
+              index = nextIndex;
+              list[index]->setPlaying(true);
+              setCurrentIndexMedia();
+            }
+          else {
+              int nextIndex = randomPrevious.last();
+              list[index]->setPlaying(false);
+              index = nextIndex;
+              list[index]->setPlaying(true);
+              setCurrentIndexMedia();
+            }
+        }
+      else {
+          int nextIndex = randomGenerator.generate() % c;
+          list[index]->setPlaying(false);
+          index = nextIndex;
+          list[index]->setPlaying(true);
+          setCurrentIndexMedia();
+        }
+      return;
+    }
 
   list[index]->setPlaying(false);
   index--;

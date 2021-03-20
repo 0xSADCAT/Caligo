@@ -171,16 +171,16 @@ bool MediaElement::isSelected() const
 
 void MediaElement::updStyle()
 {
-  if (playing && selected) {
-      setStyleSheet(style::me::all);
+  if (playing and selected) {
+      setStyleSheet(qvariant_cast<QString>(qApp->property("MePlayingAndSelectedQSS")));
     }
   else if (playing) {
-      setStyleSheet(style::me::playing);
+      setStyleSheet(qvariant_cast<QString>(qApp->property("MePlayingQSS")));
     }
   else if (selected) {
-      setStyleSheet(style::me::selected);
+      setStyleSheet(qvariant_cast<QString>(qApp->property("MeSelectedQSS")));
     }
   else {
-      setStyleSheet(style::me::none);
+      setStyleSheet(qvariant_cast<QString>(qApp->property("MeNoneQSS")));
     }
 }

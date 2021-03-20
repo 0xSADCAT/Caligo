@@ -9,8 +9,6 @@
 
 #include <QtWidgets>
 
-#include <Style/style.cpp>
-
 class MediaElement : public QWidget
 {
   Q_OBJECT
@@ -66,7 +64,7 @@ protected:
 
 private:
   QLabel *text;
-  // Path to file.
+  /// Path to file.
   QString path;
   bool meta;
   // Playing/selected states.

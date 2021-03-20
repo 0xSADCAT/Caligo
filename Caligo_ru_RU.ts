@@ -80,44 +80,49 @@
         <translation type="vanished">О Qt</translation>
     </message>
     <message>
-        <location filename="Widgets/controls.cpp" line="29"/>
+        <location filename="Widgets/controls.cpp" line="31"/>
         <source>Previous track</source>
         <translation>Предыдущая дорожка</translation>
     </message>
     <message>
-        <location filename="Widgets/controls.cpp" line="33"/>
-        <location filename="Widgets/controls.cpp" line="163"/>
+        <location filename="Widgets/controls.cpp" line="35"/>
+        <location filename="Widgets/controls.cpp" line="190"/>
         <source>Play</source>
         <translation>Воспроизвести</translation>
     </message>
     <message>
-        <location filename="Widgets/controls.cpp" line="37"/>
+        <location filename="Widgets/controls.cpp" line="39"/>
         <source>Stop</source>
         <translation>Стоп</translation>
     </message>
     <message>
-        <location filename="Widgets/controls.cpp" line="41"/>
+        <location filename="Widgets/controls.cpp" line="43"/>
         <source>Next track</source>
         <translation>Следующая дорожка</translation>
     </message>
     <message>
-        <location filename="Widgets/controls.cpp" line="45"/>
+        <location filename="Widgets/controls.cpp" line="47"/>
+        <source>Random playback</source>
+        <translation>Случайный порядок воспроизведения</translation>
+    </message>
+    <message>
+        <location filename="Widgets/controls.cpp" line="54"/>
         <source>Toggle fullscreen (video only)</source>
         <translation>Полноэкранный режим (только видео)</translation>
     </message>
     <message>
-        <location filename="Widgets/controls.cpp" line="49"/>
-        <location filename="Widgets/controls.cpp" line="179"/>
+        <location filename="Widgets/controls.cpp" line="58"/>
+        <location filename="Widgets/controls.cpp" line="206"/>
         <source>Mute</source>
         <translation>Выключить звук</translation>
     </message>
     <message>
-        <location filename="Widgets/controls.cpp" line="159"/>
+        <location filename="Widgets/controls.cpp" line="186"/>
         <source>Pause</source>
         <translation>Пауза</translation>
     </message>
     <message>
-        <location filename="Widgets/controls.cpp" line="175"/>
+        <location filename="Widgets/controls.cpp" line="202"/>
         <source>Unmute</source>
         <translation>Включить звук</translation>
     </message>
@@ -297,12 +302,12 @@
 <context>
     <name>MediaElement</name>
     <message>
-        <location filename="Widgets/mediaelement.cpp" line="31"/>
+        <location filename="Widgets/mediaelement.cpp" line="35"/>
         <source>Select all</source>
         <translation>Выделить все</translation>
     </message>
     <message>
-        <location filename="Widgets/mediaelement.cpp" line="32"/>
+        <location filename="Widgets/mediaelement.cpp" line="36"/>
         <source>Remove selected</source>
         <translation>Удалить выбранные</translation>
     </message>
@@ -340,7 +345,7 @@
         <translation>Разбор метаданных...</translation>
     </message>
     <message>
-        <location filename="Widgets/medialibrary.cpp" line="403"/>
+        <location filename="Widgets/medialibrary.cpp" line="400"/>
         <source>Select directory</source>
         <translation>Выбрать директорию</translation>
     </message>
@@ -348,12 +353,12 @@
 <context>
     <name>PlayInfo</name>
     <message>
-        <location filename="Widgets/playinfo.cpp" line="109"/>
+        <location filename="Widgets/playinfo.cpp" line="117"/>
         <source>No media</source>
         <translation>Список воспроизведения пуст</translation>
     </message>
     <message>
-        <location filename="Widgets/playinfo.cpp" line="115"/>
+        <location filename="Widgets/playinfo.cpp" line="123"/>
         <source>Invalid media</source>
         <translation>Не удалось открыть файл</translation>
     </message>
@@ -361,86 +366,86 @@
 <context>
     <name>PlaylistControls</name>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="56"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="58"/>
         <source>Add media</source>
         <translation>Добавить медиафайлы</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="57"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="59"/>
         <source>Add media from URL</source>
         <translation>Добавить по URL</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="58"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="60"/>
         <source>Clear playlist</source>
         <translation>Очистить список воспроизведения</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="59"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="61"/>
         <source>Save this playlist</source>
         <translation>Сохранить список воспроизведения</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="60"/>
-        <location filename="Widgets/playlistcontrols.cpp" line="295"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="62"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="297"/>
         <source>Open playlist</source>
         <translation>Открыть список воспроизведения</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="61"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="63"/>
         <source>Update metadata</source>
         <translation>Обновить метаданные</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="169"/>
-        <location filename="Widgets/playlistcontrols.cpp" line="240"/>
-        <location filename="Widgets/playlistcontrols.cpp" line="256"/>
-        <location filename="Widgets/playlistcontrols.cpp" line="284"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="171"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="242"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="258"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="286"/>
         <source>Warning</source>
         <translation>Внимание</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="169"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="171"/>
         <source>Failed to open file, check access rights.</source>
         <translation>Не удалось открыть файл, проверьте права доступа.</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="189"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="191"/>
         <source>Add media files</source>
         <translation>Добавить медиафайлы</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="202"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="204"/>
         <source>Add from URL</source>
         <translation>Добавить по URL</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="202"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="204"/>
         <source>Enter URL:</source>
         <translation>Введите URL:</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="233"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="235"/>
         <source>Save playlist</source>
         <translation>Сохранить список воспроизведения</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="233"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="235"/>
         <source>Enter playlist name:</source>
         <translation>Введите название списка воспроизведения:</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="240"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="242"/>
         <source>Playlist name is not entered. Try again.</source>
         <translation>Имя списка воспроизведения не введено.</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="256"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="258"/>
         <source>File name is already exists. Rewrite?</source>
         <translation>Список воспроизведения с таким именем уже существует. Перезаписать?</translation>
     </message>
     <message>
-        <location filename="Widgets/playlistcontrols.cpp" line="284"/>
+        <location filename="Widgets/playlistcontrols.cpp" line="286"/>
         <source>Failed to create file, check access rights.</source>
         <translation>Не удалось создать файл, проверьте права доступа.</translation>
     </message>
@@ -479,8 +484,8 @@
     <message>
         <location filename="OtherWindows/settingswindow.cpp" line="29"/>
         <location filename="OtherWindows/settingswindow.cpp" line="51"/>
-        <location filename="OtherWindows/settingswindow.cpp" line="142"/>
-        <location filename="OtherWindows/settingswindow.cpp" line="164"/>
+        <location filename="OtherWindows/settingswindow.cpp" line="141"/>
+        <location filename="OtherWindows/settingswindow.cpp" line="163"/>
         <source>Select directory</source>
         <translation>Выбрать директорию</translation>
     </message>
@@ -521,17 +526,17 @@
 <context>
     <name>Widget</name>
     <message>
-        <location filename="widget.cpp" line="64"/>
+        <location filename="widget.cpp" line="154"/>
         <source>Now Playing</source>
         <translation>Воспроизведение</translation>
     </message>
     <message>
-        <location filename="widget.cpp" line="65"/>
+        <location filename="widget.cpp" line="155"/>
         <source>Media library</source>
         <translation>Медиатека</translation>
     </message>
     <message>
-        <location filename="widget.cpp" line="66"/>
+        <location filename="widget.cpp" line="156"/>
         <source>Playlists</source>
         <translation>Списки воспроизведения</translation>
     </message>
@@ -540,17 +545,17 @@
         <translation type="vanished">Списки радио</translation>
     </message>
     <message>
-        <location filename="widget.cpp" line="67"/>
+        <location filename="widget.cpp" line="157"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="widget.cpp" line="68"/>
+        <location filename="widget.cpp" line="158"/>
         <source>About</source>
         <translation>О приложении</translation>
     </message>
     <message>
-        <location filename="widget.cpp" line="69"/>
+        <location filename="widget.cpp" line="159"/>
         <source>Help</source>
         <translation>Помощь</translation>
     </message>

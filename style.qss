@@ -1,0 +1,118 @@
+* {
+    color: #000000;
+}
+
+#AlphaBG {
+    background-color: rgba(230, 230, 230, 150);
+    margin-left: 3px;
+}
+
+#AlphaBGBorderRadius {
+    border-radius: 5px;
+    background-color: rgba(230, 230, 230, 150);
+    margin-left: 3px;
+    padding: 3px;
+}
+
+#FullAlpha {
+    background-color: rgba(230, 230, 230, 0);
+}
+
+QToolTip {
+    background-color: #EEEEEE;
+}
+
+QLineEdit {
+    background-color: #FEFEFE;
+}
+
+QPushButton {
+    background-color: #EFEFEF;
+    border: 1px solid black;
+    padding: 5px 5px 5px 5px;
+    border-radius: 5px;
+}
+
+QPushButton:checked {
+    background-color: #A1B1DD;
+}
+
+QPushButton:hover {
+    background-color: #B0D0F7;
+}
+
+QSplitter::handle:hover {
+    background-color: #B0D0F7;
+}
+
+QTabWidget::pane {
+    border-top: none;
+}
+
+QTabWidget::tab-bar {
+    background-color: #EFEFEF;
+    border: 1px solid black;
+    border-radius: 5px;
+    left: 5px;
+}
+
+QTabBar::tab {
+    background-color: #EFEFEF;
+    border: 1px solid black;
+    border-radius: 5px;
+    min-width: 8ex;
+    padding: 5px 7px 5px 7px;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #fafafa, stop: 0.4 #f4f4f4, stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
+}
+
+QTabBar::tab:selected {
+    border-color: #9B9B9B;
+    border-bottom-color: #C2C7CB;
+}
+
+QTabBar::tab:!selected {
+    top: -7px;
+    background-color: #DDDDDD;
+}
+
+QTabBar::tab:hover {
+    top: 0px;
+}
+
+#MeNone {
+    margin-right: 5px;
+    border: none;
+}
+
+#MePlaying {
+    border: 2px solid #DDDDDD;
+    background: qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 #D7EBF4, stop:1 #A4D0F4);
+    color: #000000;
+    margin-right: 5px;
+}
+
+#MeSelected {
+    background-color: #11386F;
+    color: #FFFFFF;
+    margin-right: 5px;
+    border: none;
+}
+
+#MePlayingAndSelected {
+    background-color: #11386F;
+    color: #FFFFFF;
+    border: 2px solid #000000;
+    margin-right: 5px;
+}
+
+#LeNone {
+    
+}
+
+#LeSelected {
+    background-color: #11386F;
+    color: #FFFFFF;
+}

@@ -50,10 +50,10 @@ QString LibraryElement::getString() const
 void LibraryElement::setSelected(bool v)
 {
   if (v) {
-      setStyleSheet(style::le::selected);
+      setStyleSheet(qvariant_cast<QString>(qApp->property("LeSelectedQSS")));
     }
   else {
-      setStyleSheet(style::le::none);
+      setStyleSheet(qvariant_cast<QString>(qApp->property("LeNoneQSS")));
     }
 }
 

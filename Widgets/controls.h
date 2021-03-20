@@ -26,12 +26,17 @@ public:
   void setVolume(int v);
   int getVolume();
 
+  bool isRandomPlayback() const;
+  void setRandomPlayback(bool value);
+
 signals:
   /// Next media in playlist
   void next();
   /// Previous media in playlist
   void prev();
   void fullScreen();
+
+  void randomPlaybackChanged(bool);
 
 public slots:
   void playPause();
@@ -54,11 +59,14 @@ private:
   QPushButton *stopButton;
   QPushButton *nextButton;
   QPushButton *fullScreenButton;
+  QPushButton *randomPlaybackButton;
   QPushButton *muteButton;
   QSlider *volumeSlider;
   QHBoxLayout *botLayout;
 
   QVBoxLayout *l;
+
+  bool randomPlayback;
 
 private slots:
   void mediaState(QMediaPlayer::State s);
@@ -74,6 +82,8 @@ private slots:
   QString msToStr(qint64 ms);
 
   void videoAvailable(bool v);
+
+  void randomPlaybackClicked(bool value);
 };
 
 #endif // CONTROLS_H

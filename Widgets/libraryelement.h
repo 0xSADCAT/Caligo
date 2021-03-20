@@ -9,8 +9,6 @@
 
 #include <QtWidgets>
 
-#include <Style/style.cpp>
-
 class LibraryElement : public QWidget
 {
   Q_OBJECT

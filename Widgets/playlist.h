@@ -45,6 +45,8 @@ public slots:
   /// Update metadata in all elements of playlist
   void forceUpdate();
 
+  void randomPlaybackChanged(bool value);
+
 protected:
   virtual void keyPressEvent(QKeyEvent *e) override;
   virtual void mousePressEvent(QMouseEvent *) override;
@@ -65,6 +67,11 @@ private:
   QString getMetaData();
 
   void setCurrentIndexMedia();
+
+  bool randomPlayback;
+
+  QRandomGenerator randomGenerator;
+  QList<int> randomPrevious;
 
 private slots:
   void mediaStatus(QMediaPlayer::MediaStatus s);

@@ -16,9 +16,7 @@ PlayInfo::PlayInfo(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
   player = mp;
   image = new Image;
   author = new QLabel;
-  author->setObjectName("AlphaBG");
   name = new QLabel;
-  name->setObjectName("AlphaBG");
   video = new VideoWidget;
   isVideo = false;
   isFSVideo = false;
@@ -32,8 +30,15 @@ PlayInfo::PlayInfo(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
   QVBoxLayout *l = new QVBoxLayout;
   l->addWidget(image, 1);
   l->addWidget(video, 1);
-  l->addWidget(author, 0, Qt::AlignCenter);
-  l->addWidget(name, 0, Qt::AlignCenter);
+  QVBoxLayout *nameLayout = new QVBoxLayout;
+  nameLayout->addWidget(author, 0, Qt::AlignCenter);
+  nameLayout->addWidget(name, 0, Qt::AlignCenter);
+  QWidget *w = new QWidget;
+  w->setObjectName("AlphaBGBorderRadius");
+  w->setLayout(nameLayout);
+  w->layout()->setSpacing(0);
+  w->layout()->setContentsMargins(5, 0, 5, 2);
+  l->addWidget(w, 0, Qt::AlignCenter);
   setLayout(l);
 
   connect(player, &QMediaPlayer::mediaStatusChanged, this, &PlayInfo::mediaStatus);
