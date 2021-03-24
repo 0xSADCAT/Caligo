@@ -37,6 +37,8 @@ Playlist::Playlist(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
   scaner = new MetaScaner(&list);
 
   setObjectName("FullAlpha");
+
+  randomGenerator.seed(QTime::currentTime().msec());
 }
 
 QStringList Playlist::getList()

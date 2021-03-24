@@ -8,7 +8,8 @@
 
 MediaLibrary::MediaLibrary(Playlist *pls, QWidget *parent) : QWidget(parent)
 {
-  setStyleSheet("QPushButton {border: 1px solid black;}");
+  locker = false;
+  breaker = 0;
 
   playlist = pls;
   lastClicked = nullptr;
@@ -435,9 +436,18 @@ void MediaLibrary::scanerDone()
 
 void MediaLibrary::search(const QString &text)
 {
+  if (locker)
+    return;
+
+  breaker++;
+  unsigned oldBreaker = breaker;
+
   int counter = 0;
   if (text.isEmpty() or text == "") {
       foreach (LibraryElement *e, list) {
+          if (breaker != oldBreaker)
+            return;
+
           e->setVisible(true);
           counter++;
           if (counter == 10) {
@@ -449,12 +459,20 @@ void MediaLibrary::search(const QString &text)
     }
 
   foreach (LibraryElement *e, list) {
-      e->setVisible(e->getName().contains(text));
+      if (breaker != oldBreaker)
+        return;
+
+      e->setVisible(e->getName().toLower().contains(text.toLower()));
       counter++;
       if (counter == 10) {
           qApp->processEvents();
           counter = 0;
         }
+    }
+
+  locker = false;
+  if (text != searchEdit->text()) {
+      searchEdit->setText(searchEdit->text());
     }
 }
 

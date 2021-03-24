@@ -420,14 +420,15 @@ void Widget::setBackgroundPixmap(const QPixmap &value)
       palette.setBrush(QPalette::Background, QColor(0xEE, 0xEE, 0xEE));
     }
   else {
-      QPixmap bkgnd(value);
-      bkgnd = width() > height() ? bkgnd.scaledToWidth(this->size().width()) : bkgnd.scaledToHeight(this->size().height());
+      QPixmap background(value);
+      background = width() > height() ? background.scaledToWidth(this->size().width()) : background.scaledToHeight(this->size().height());
 
-      QImage image = bkgnd.toImage();
+      QImage image = background.toImage();
 
-      QGraphicsBlurEffect *ge = new QGraphicsBlurEffect;
-      ge->setBlurRadius(qApp->desktop()->size().width() > 1920 ? 15 : 8);
-      palette.setBrush(QPalette::Background, applyEffectToImage(image, ge));
+      QGraphicsBlurEffect *graphicsEffect = new QGraphicsBlurEffect;
+      graphicsEffect->setBlurRadius(qApp->desktop()->size().width() > 1920 ? 15 : 8);
+
+      palette.setBrush(QPalette::Background, applyEffectToImage(image, graphicsEffect));
     }
   this->setPalette(palette);
   repaint();

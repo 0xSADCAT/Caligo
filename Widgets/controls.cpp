@@ -189,6 +189,7 @@ void Controls::randomPlaybackClicked(bool value)
       playButton->setIcon(QIcon(":/img/play"));
       playButton->setToolTip(tr("Play") + " [P]");
     }
+  fullScreenButton->setVisible(player->isVideoAvailable());
 }
 
 /* private SLOT */ void Controls::mutedState(bool v)
