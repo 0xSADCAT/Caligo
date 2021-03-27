@@ -8,7 +8,6 @@
 
 MediaLibrary::MediaLibrary(Playlist *pls, QWidget *parent) : QWidget(parent)
 {
-  locker = false;
   breaker = 0;
 
   playlist = pls;
@@ -239,9 +238,8 @@ void MediaLibrary::save()
         }
 
       QString endLine;
-
 #ifdef Q_OS_WINDOWS
-      endLine = " :: ";
+      endLine = "\r\n";
 #else
       endLine = "\n";
 #endif
@@ -269,7 +267,15 @@ void MediaLibrary::load()
   if (file.open(QIODevice::ReadOnly)) {
       QByteArray ba = file.readAll();
       line = QString::fromLocal8Bit(ba);
-      QStringList tmpList = line.split(" :: ");
+
+      QString endLine;
+#ifdef Q_OS_WINDOWS
+      endLine = "\r\n";
+#else
+      endLine = "\n";
+#endif
+
+      QStringList tmpList = line.split(endLine);
       foreach (QString str, tmpList) {
           if (str.startsWith("#") or str.isEmpty()) {
               continue;
@@ -436,9 +442,6 @@ void MediaLibrary::scanerDone()
 
 void MediaLibrary::search(const QString &text)
 {
-  if (locker)
-    return;
-
   breaker++;
   unsigned oldBreaker = breaker;
 
@@ -470,7 +473,6 @@ void MediaLibrary::search(const QString &text)
         }
     }
 
-  locker = false;
   if (text != searchEdit->text()) {
       searchEdit->setText(searchEdit->text());
     }

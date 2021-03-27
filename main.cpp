@@ -12,19 +12,9 @@
 
 #include <iostream>
 
-/* It works, but:
- *
- * On exit (Widget->closeEvent->[qApp->exit(0)]) throws 139 error code. I don't know why.
- *
- * Warning:
- *      QWidget::paintEngine: Should no longer be called
- * After implementing full-screen mode in Widget.
- * I don't know where it was, but all works currectly.
- * */
-
 int main(int argc, char *argv[])
 {
-  std::string ver = "1.1.3";
+  std::string ver = "1.1.4";
 
   if (argc > 1) {
       if (QString(argv[1]) == "--version") {

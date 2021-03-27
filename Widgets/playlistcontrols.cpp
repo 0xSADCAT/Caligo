@@ -148,7 +148,7 @@ void PlaylistControls::setPathMusic(const QString &value)
   f.setFileName(path);
   if (f.open(QIODevice::ReadOnly)) {
       while (not f.atEnd()) {
-          s = f.readLine();
+          s = QString::fromLocal8Bit(f.readLine());
           s.remove("\n");
           if (not s.isEmpty() and not s.startsWith("#")) {
               QString path;
@@ -269,8 +269,14 @@ void PlaylistControls::addUrl()
       // If file exists and choosed 'Yes' on question 'Rewrite?'
       if (rewrite) {
           QTextStream stream(&file);
+          QString endl;
+#ifdef Q_OS_WINDOWS
+          endl = "\r\n";
+#else
+          endl = "\n";
+#endif
           foreach (QString s, l) {
-              stream << s + "\n";
+              stream << s + endl;
             }
         }
 

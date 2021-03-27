@@ -84,7 +84,6 @@ private:
 
   QLineEdit *searchEdit;
 
-  bool locker;
   volatile unsigned breaker;
 
 private slots:

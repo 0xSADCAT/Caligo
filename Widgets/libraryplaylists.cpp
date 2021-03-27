@@ -151,7 +151,7 @@ void LibraryPlaylists::elementDouble()
   bool needScan = false;
   if (file.open(QIODevice::ReadOnly)) {
       while (not file.atEnd()) {
-          QString str = file.readLine();
+          QString str = QString::fromLocal8Bit(file.readLine());
           str.remove("\n");
           if (str.isEmpty() or str.startsWith("#")) {
               continue;
