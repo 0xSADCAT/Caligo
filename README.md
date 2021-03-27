@@ -11,6 +11,7 @@ Caligo - simple multimedia player. The idea of the project is to implement a min
 ![Screenshot Caligo media library](https://i.ibb.co/BzNyT6W/media-Library.png)
 ![Screenshot Caligo minimal view playlist](https://i.ibb.co/ZfkxXQ5/Hidden-Playlist.png)
 ![Screenshot Caligo minimal view play information](https://i.ibb.co/YWd3Jmx/Hidden-Info.png)
+
 The functionality includes scanning the selected directory for the presence of multimedia files and compiling a media library. It is also possible to create and save playlists and Internet radio lists by category.
 
 ## Playlists formats
