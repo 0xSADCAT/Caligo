@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-#include <widget.h>
+#include <localsocket.h>
 
 #include <QApplication>
 #include <QString>
@@ -14,7 +14,7 @@
 
 int main(int argc, char *argv[])
 {
-  std::string ver = "1.1.4";
+  std::string ver = "1.2";
 
   if (argc > 1) {
       if (QString(argv[1]) == "--version") {
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
   t0.load(QString(":/tr/" + a.applicationName() + "_") + QLocale::system().name());
   a.installTranslator(&t0);
 
-  Widget w;
-  w.show();
+  LocalSocket l;
+
   return a.exec();
 }

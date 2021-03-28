@@ -30,6 +30,7 @@ SOURCES += \
     Widgets/playlistcontrols.cpp \
     Widgets/timeslider.cpp \
     Widgets/videowidget.cpp \
+    localsocket.cpp \
     main.cpp \
     widget.cpp
 
@@ -51,6 +52,7 @@ HEADERS += \
     Widgets/playlistcontrols.h \
     Widgets/timeslider.h \
     Widgets/videowidget.h \
+    localsocket.h \
     widget.h
 
 TRANSLATIONS += \

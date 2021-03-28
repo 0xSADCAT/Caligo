@@ -215,6 +215,11 @@ Widget::~Widget()
 {
 }
 
+void Widget::addToPlaylist(const QString &path)
+{
+  playlist->add(path, true);
+}
+
 void Widget::closeEvent(QCloseEvent *)
 {
 #ifdef DEBUG_OUTPUT
@@ -471,5 +476,5 @@ void Widget::exitFull()
 {
   if (this->isFullScreen()) {
       videoFullscreen();
-      }
+    }
 }

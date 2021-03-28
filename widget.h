@@ -30,6 +30,8 @@ public:
   Widget(QWidget *parent = nullptr);
   ~Widget();
 
+  void addToPlaylist(const QString &path);
+
 protected:
   virtual void closeEvent(QCloseEvent *) override;
   virtual void dragEnterEvent(QDragEnterEvent *e) override;
