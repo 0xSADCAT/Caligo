@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/img">
         <file alias="icon">Res/icon.ico</file>
-        <file alias="noImage">Res/noImage.svg</file>
         <file alias="qt">Res/qt.svg</file>
         <file alias="clear">Res/clear.svg</file>
         <file alias="dir">Res/dir.svg</file>

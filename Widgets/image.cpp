@@ -34,7 +34,7 @@ void Image::paintEvent(QPaintEvent *)
 
   // pix.isNull() == true  if  music not contains image in metadata, invalid media or playlist is empty.
   if (pix.isNull()) {
-      pix = QPixmap(":/img/noImage");
+      pix = QPixmap(":/img/icon");
     }
 
   QSize s = pix.size();

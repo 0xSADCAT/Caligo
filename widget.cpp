@@ -209,6 +209,18 @@ Widget::Widget(QWidget *parent)
   connect(sHelp, &QShortcut::activated, this, &Widget::help);
 
   setObjectName("FullAlpha");
+
+  timerFullScreen = new QTimer(this);
+  connect(timerFullScreen, &QTimer::timeout, this, &Widget::timerTick);
+  timerFullScreen->setInterval(500);
+
+  timerVal = 6; // 3 sec
+
+  setMouseTracking(true);
+  playInfo->setMouseTracking(true);
+
+  connect(playInfo, &PlayInfo::mouseMoved, this, &Widget::mouseMoved);
+  connect(controls, &Controls::mouseMoved, this, &Widget::mouseMoved);
 }
 
 Widget::~Widget()
@@ -217,7 +229,12 @@ Widget::~Widget()
 
 void Widget::addToPlaylist(const QString &path)
 {
-  playlist->add(path, true);
+  playlist->add(path);
+}
+
+void Widget::forceUpdatePlaylistMetadata()
+{
+  playlist->forceUpdate();
 }
 
 void Widget::closeEvent(QCloseEvent *)
@@ -303,6 +320,18 @@ void Widget::dropEvent(QDropEvent *e)
 void Widget::resizeEvent(QResizeEvent *)
 {
   setBackgroundPixmap(backgroundPixmap);
+}
+
+void Widget::mouseMoved()
+{
+  if (not isFullScreen())
+    return;
+
+  timerVal = timerBaseVal;
+  unsetCursor();
+  controls->setVisible(true);
+  if (not timerFullScreen->isActive())
+    timerFullScreen->start();
 }
 
 void Widget::loadSettings()
@@ -458,17 +487,21 @@ void Widget::videoFullscreen()
 
   bool v = not sw->isVisible();
 
-  controls->setVisible(v);
   sw->setVisible(v);
   playInfo->setNotFull(v);
 
   if (v) {
       showNormal();
       tabWidget->tabBar()->setVisible(true);
+      controls->setVisible(true);
+      unsetCursor();
+      timerFullScreen->stop();
     }
   else {
       showFullScreen();
       tabWidget->tabBar()->setVisible(false);
+      timerVal = timerBaseVal;
+      timerFullScreen->start();
     }
 }
 
@@ -476,5 +509,25 @@ void Widget::exitFull()
 {
   if (this->isFullScreen()) {
       videoFullscreen();
+    }
+}
+
+void Widget::timerTick()
+{
+  if (not isFullScreen()) {
+      timerFullScreen->stop();
+      tabWidget->tabBar()->setVisible(true);
+      controls->setVisible(true);
+      unsetCursor();
+      return;
+    }
+
+  timerVal--;
+
+  if (timerVal < 0) {
+      timerVal = timerBaseVal;
+      timerFullScreen->stop();
+      controls->setVisible(false);
+      setCursor(Qt::BlankCursor);
     }
 }

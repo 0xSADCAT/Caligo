@@ -32,6 +32,8 @@ public:
 
   void addToPlaylist(const QString &path);
 
+  void forceUpdatePlaylistMetadata();
+
 protected:
   virtual void closeEvent(QCloseEvent *) override;
   virtual void dragEnterEvent(QDragEnterEvent *e) override;
@@ -70,6 +72,10 @@ private:
 
   QPixmap backgroundPixmap;
 
+  QTimer *timerFullScreen;
+  int timerVal;
+  const int timerBaseVal = 6;
+
 private slots:
   void setNewTitle(const QString &s);
   void help();
@@ -80,6 +86,10 @@ private slots:
 
   /// Exit fullscreen mode
   void exitFull();
+
+  void timerTick();
+
+  void mouseMoved();
 };
 
 QImage applyEffectToImage(QImage src, QGraphicsEffect *effect, int extent = 0);

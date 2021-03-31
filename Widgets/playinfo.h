@@ -32,6 +32,7 @@ signals:
   void newTitle(const QString &s);
   void newPixmap(const QPixmap &pix);
   void fsClicked();
+  void mouseMoved();
 
 private:
   QMediaPlayer *player;

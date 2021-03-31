@@ -20,10 +20,12 @@ public:
 signals:
   void clicked();
   void doubleClicked();
+  void mouseMoved();
 
 protected:
   virtual void mousePressEvent(QMouseEvent *e) override;
   virtual void mouseDoubleClickEvent(QMouseEvent *e) override;
+  virtual void mouseMoveEvent(QMouseEvent *) override;
 };
 
 #endif // VIDEOWIDGET_H

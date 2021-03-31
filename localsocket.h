@@ -1,3 +1,9 @@
+/* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
 #ifndef LOCALSOCKET_H
 #define LOCALSOCKET_H
 
@@ -31,6 +37,8 @@ private slots:
 
   virtual void serverNewConnection();
   void serverReadClient();
+
+  void socketDisconnected();
 };
 
 #endif // LOCALSOCKET_H

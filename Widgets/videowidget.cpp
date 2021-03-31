@@ -9,6 +9,7 @@
 VideoWidget::VideoWidget(QWidget *parent) : QVideoWidget(parent)
 /// Inherits QVideoWidget. Needs only for emit signals.
 {
+  setMouseTracking(true);
 }
 
 void VideoWidget::mousePressEvent(QMouseEvent *e)
@@ -23,4 +24,9 @@ void VideoWidget::mouseDoubleClickEvent(QMouseEvent *e)
   if (e->button() == Qt::LeftButton) {
       emit doubleClicked();
     }
+}
+
+void VideoWidget::mouseMoveEvent(QMouseEvent *)
+{
+  emit mouseMoved();
 }

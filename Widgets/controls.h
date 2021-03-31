@@ -38,6 +38,8 @@ signals:
 
   void randomPlaybackChanged(bool);
 
+  void mouseMoved();
+
 public slots:
   void playPause();
   void mute();
@@ -45,6 +47,9 @@ public slots:
 
   void plusVol();
   void minusVol();
+
+protected:
+  virtual void mouseMoveEvent(QMouseEvent *) override;
 
 private:
   QMediaPlayer *player;

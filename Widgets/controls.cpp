@@ -13,6 +13,8 @@ Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
   qDebug() << ">>> Controls init";
 #endif
 
+  setMouseTracking(true);
+
   player = mp;
 
   timeSlider = new TimeSlider;
@@ -281,6 +283,11 @@ void Controls::randomPlaybackClicked(bool value)
 #endif
 
   setVolume(player->volume() - 5);
+}
+
+void Controls::mouseMoveEvent(QMouseEvent *)
+{
+  emit mouseMoved();
 }
 
 bool Controls::isRandomPlayback() const

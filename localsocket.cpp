@@ -1,3 +1,9 @@
+/* This file is path of the Caligo multimedia player
+ * https://github.com/Alex13kyky/Caligo
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+*/
+
 #include "localsocket.h"
 
 LocalSocket::LocalSocket(QObject *parent) : QObject(parent)
@@ -37,7 +43,7 @@ void LocalSocket::clientConnected()
 void LocalSocket::serverNewConnection()
 {
   QTcpSocket *socket = server->nextPendingConnection();
-  connect(socket, &QTcpSocket::disconnected, socket, &QTcpSocket::deleteLater);
+  connect(socket, &QTcpSocket::disconnected, this, &LocalSocket::socketDisconnected);
   connect(socket, &QTcpSocket::readyRead, this, &LocalSocket::serverReadClient);
 }
 
@@ -54,6 +60,12 @@ void LocalSocket::serverReadClient()
     return;
 
   widget->addToPlaylist(str);
+}
+
+void LocalSocket::socketDisconnected()
+{
+  widget->forceUpdatePlaylistMetadata();
+  static_cast<QTcpSocket*>(sender())->deleteLater();
 }
 
 void LocalSocket::clientSendToServer(const QString &str)

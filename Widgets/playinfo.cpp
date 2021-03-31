@@ -51,6 +51,9 @@ PlayInfo::PlayInfo(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
 
   layout()->setSpacing(0);
   layout()->setContentsMargins(0, 0, 0, 0);
+
+  video->setMouseTracking(true);
+  connect(video, &VideoWidget::mouseMoved, this, &PlayInfo::mouseMoved);
 }
 
 void PlayInfo::setNotFull(bool v)
