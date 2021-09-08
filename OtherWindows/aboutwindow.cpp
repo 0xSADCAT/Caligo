@@ -1,5 +1,5 @@
-/* This file is path of the Caligo multimedia player
- * https://github.com/Alex13kyky/Caligo
+/* This file is part of the Caligo multimedia player
+ * https://github.com/0xSADCAT/Caligo
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -10,7 +10,7 @@ AboutWindow::AboutWindow() : QWidget(nullptr)
 {
   setWindowIcon(QIcon(":/img/icon"));
 
-  link = "https://github.com/Alex13kyky/Caligo";
+  link = "https://github.com/0xSADCAT/Caligo";
 
   setWindowTitle(tr("About application") + " # " + qApp->applicationName());
 
