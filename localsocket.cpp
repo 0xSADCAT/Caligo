@@ -6,77 +6,72 @@
 
 #include "localsocket.h"
 
-LocalSocket::LocalSocket(QObject *parent) : QObject(parent)
+Application::Application(QObject *parent) : QObject(parent)
 {
-  serverBlockSize = 0;
-  host = "localhost";
-
-  client = new QTcpSocket(this);
-  client->connectToHost(host, port);
-  connect(client, &QTcpSocket::connected, this, &LocalSocket::clientConnected);
-  connect(client, &QTcpSocket::errorOccurred, this, &LocalSocket::clientError);
+    _client = new QTcpSocket(this);
+    _client->connectToHost(_host, _port);
+    connect(_client, &QTcpSocket::connected, this, &Application::clientConnected);
+    connect(_client, &QTcpSocket::errorOccurred, this, &Application::clientError);
 }
 
-void LocalSocket::clientError(QAbstractSocket::SocketError)
+void Application::clientError(QAbstractSocket::SocketError)
 {
-  server = new QTcpServer(this);
-  if (not server->listen(QHostAddress::Any, port)) {
-      qWarning() << "Unable to start server";
-    }
-  else {
-      connect(server, &QTcpServer::newConnection, this, &LocalSocket::serverNewConnection);
-    }
+    _server = new QTcpServer(this);
+    if (not _server->listen(QHostAddress::Any, _port))
+        qWarning() << "Unable to start server";
+    else
+        connect(_server, &QTcpServer::newConnection, this, &Application::serverNewConnection);
 
-  widget = new Widget;
-  widget->show();
+    _main_window = new MainWindow;
+    _main_window->show();
 }
 
-void LocalSocket::clientConnected()
+void Application::clientConnected()
 {
-  for (int i = 1; i < qApp->arguments().count(); ++i) {
-      clientSendToServer(qApp->arguments()[i]);
-    }
+    for (auto& arg : qApp->arguments())
+        sendToServerFromClient(arg);
 
-  qApp->quit();
+    qApp->quit();
 }
 
-void LocalSocket::serverNewConnection()
+void Application::serverNewConnection()
 {
-  QTcpSocket *socket = server->nextPendingConnection();
-  connect(socket, &QTcpSocket::disconnected, this, &LocalSocket::socketDisconnected);
-  connect(socket, &QTcpSocket::readyRead, this, &LocalSocket::serverReadClient);
+    QTcpSocket* socket = _server->nextPendingConnection();
+    connect(socket, &QTcpSocket::disconnected, this, &Application::socketDisconnected);
+    connect(socket, &QTcpSocket::readyRead, this, &Application::serverReadClient);
 }
 
-void LocalSocket::serverReadClient()
+void Application::serverReadClient()
 {
-  QTcpSocket *socket = (QTcpSocket*) sender();
-  QDataStream in(socket);
-  in.setVersion(QDataStream::Qt_5_3);
+    QTcpSocket *socket = (QTcpSocket*) sender();
+    QDataStream in(socket);
+    in.setVersion(QDataStream::Qt_5_3);
 
-  QString str;
-  in >> str;
+    QString str;
+    in >> str;
 
-  if (str.isEmpty())
-    return;
+    if (str.isEmpty())
+        return;
 
-  widget->addToPlaylist(str);
+    _main_window->addToPlaylist(str);
 }
 
-void LocalSocket::socketDisconnected()
+void Application::socketDisconnected()
 {
-  widget->forceUpdatePlaylistMetadata();
-  static_cast<QTcpSocket*>(sender())->deleteLater();
+    _main_window->forceUpdatePlaylistMetadata();
+    QTcpSocket* socket = qobject_cast<QTcpSocket*>(sender());
+    if (socket != nullptr)
+        socket->deleteLater();
 }
 
-void LocalSocket::clientSendToServer(const QString &str)
+void Application::sendToServerFromClient(const QString &str)
 {
-  QByteArray arrBlock;
-  QDataStream out(&arrBlock, QIODevice::WriteOnly);
-  out.setVersion(QDataStream::Qt_5_2);
-  out << str;
+    QByteArray arrBlock;
+    QDataStream out(&arrBlock, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_2);
+    out << str;
 
-  out.device()->seek(0);
-  client->write(arrBlock);
-
-  client->flush();
+    out.device()->seek(0);
+    _client->write(arrBlock);
+    _client->flush();
 }

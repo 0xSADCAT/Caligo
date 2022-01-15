@@ -6,65 +6,48 @@
 
 #include "image.h"
 
-Image::Image(QWidget *parent) : QWidget(parent)
-// Custom widget to display image.
+Image::Image(QWidget* parent)
+    : QWidget(parent)
 {
-  pix = QPixmap(":/img/noImage");
-  setMinimumSize(32, 32);
+    _pixmap = QPixmap(":/img/noImage");
+    setMinimumSize(32, 32);
 }
 
-void Image::setPix(const QPixmap &value)
+void Image::setPixmap(const QPixmap &value)
 {
-  pix = value;
-  repaint();
+    _pixmap = value;
+    repaint();
 }
 
-void Image::paintEvent(QPaintEvent *)
+void Image::paintEvent(QPaintEvent*)
 {
-  int w = width();
-  int h = height();
+    int w = width();
+    int h = height();
 
-  // Minimum if width and height.
-  int x = w > h ? h : w;
+    int x = w > h ? h : w;
 
-  int px = w - x;
-  int py = h - x;
+    int px = w - x;
+    int py = h - x;
 
-  QPainter p(this);
+    QPainter painter (this);
 
-  // pix.isNull() == true  if  music not contains image in metadata, invalid media or playlist is empty.
-  if (pix.isNull()) {
-      pix = QPixmap(":/img/icon");
+    if (_pixmap.isNull())
+        _pixmap = QPixmap(":/img/icon");
+
+    QSize s = _pixmap.size();
+    if (s.width() < x or s.height() < x)
+        x = s.width() < s.height() ? s.height() : s.width();
+
+    if (width() > height()) {
+        px = width() / 2 - x / 2;
+        py = 0;
+    } else {
+        px = 0;
+        py = height() / 2 - x / 2;
     }
 
-  QSize s = pix.size();
-  if (s.width() < x or s.height() < x) {
-      x = s.width() < s.height() ? s.height() : s.width();
-    }
+    px = width() / 2 - x / 2;
+    py = height() / 2 - x / 2;
 
-  if (width() > height()) {
-      px = width() / 2 - x / 2;
-      py = 0;
-    }
-  else {
-      px = 0;
-      py = height() / 2 - x / 2;
-    }
-
-  px = width() / 2 - x / 2;
-  py = height() / 2 - x / 2;
-
-  p.drawPixmap(px, py, pix.scaled(x, x));
-}
-
-void Image::enterEvent(QEvent *)
-{
-  /* do nothing */
-  return;
-}
-
-void Image::leaveEvent(QEvent *)
-{
-  /* do nothing */
-  return;
+    painter.drawPixmap(px, py, _pixmap.scaled(x, x));
 }

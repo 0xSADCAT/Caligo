@@ -9,32 +9,17 @@
 
 #include <QtWidgets>
 
-/// About application
 class AboutWindow : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /// About application
-  explicit AboutWindow();
+    explicit AboutWindow();
 
 private:
-  QLabel *title;
-
-  QLabel *mainLabel;
-
-  QLabel *licenseLabel;
-
-  QLabel *gitHubLinkLabel;
-
-  QLabel *contactsLabel;
-
-  QPushButton *openInBrowser;
-
-  QString link;
+    QString _git_hub_url = "https://github.com/0xSADCAT/Caligo";
 
 private slots:
-  /// Open GitHub repository in browser
-  void oib();
+    void open_github_in_browser();
 };
 
 #endif // ABOUTWINDOW_H

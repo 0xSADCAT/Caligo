@@ -13,53 +13,48 @@
 #include <Widgets/medialibrary.h>
 #include <Widgets/libraryplaylists.h>
 
-/// Application settings
 class SettingsWindow : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /// Application settings
-  explicit SettingsWindow(QSettings *s, PlaylistControls *pc, MediaLibrary *ml, LibraryPlaylists *pl, QWidget *wgt);
+    explicit SettingsWindow(QSettings *s, PlaylistControls *pc, MediaLibrary *ml, LibraryPlaylists *pl, QWidget *wgt);
 
 private:
-  QSettings *settings;
-  PlaylistControls *listControls;
-  QWidget *widget;
+    QSettings *settings;
+    PlaylistControls *listControls;
+    QWidget *widget;
 
-  MediaLibrary *mediaLibrary;
-  LibraryPlaylists *playlistLibrary;
+    MediaLibrary *mediaLibrary;
+    LibraryPlaylists *playlistLibrary;
 
-  /// Read settings and set
-  void setState();
+    void setState();
 
-  QVBoxLayout *l;
+    QVBoxLayout *l;
 
-  QLabel *pathMusicLabel;
-  QLabel *pathMusicValue;
-  QPushButton *setPathMusicButton;
-  QPushButton *setDefaultPathMusicButton;
+    QLabel *pathMusicLabel;
+    QLabel *pathMusicValue;
+    QPushButton *setPathMusicButton;
+    QPushButton *setDefaultPathMusicButton;
 
-  QLabel *pathListLabel;
-  QLabel *pathListValue;
-  QPushButton *setPathListButton;
-  QPushButton *setDefaultPathListButton;
+    QLabel *pathListLabel;
+    QLabel *pathListValue;
+    QPushButton *setPathListButton;
+    QPushButton *setDefaultPathListButton;
 
-  QCheckBox *clearBeforeOpenPlaylistCheck;
+    QCheckBox *clearBeforeOpenPlaylistCheck;
 
-  QCheckBox *loadOldCheck;
+    QCheckBox *loadOldCheck;
 
 private slots:
-  void pathMusic();
-  void pathMusicDefault();
+    void pathMusic();
+    void pathMusicDefault();
 
-  void pathList();
-  void pathListDefault();
+    void pathList();
+    void pathListDefault();
 
-  /// Clear playlist before open new
-  void clearBeforeOpen(bool v);
+    void clearBeforeOpen(bool v);
 
-  /// Load old playlist (current playlist before last use)
-  void loadOld(bool v);
+    void loadOld(bool v);
 };
 
 #endif // SETTINGSWINDOW_H

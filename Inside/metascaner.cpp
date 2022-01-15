@@ -32,7 +32,7 @@ void MetaScaner::scan()
       count = list->count();
     }
 
-  QString u = list->at(index)->getPath();
+  QString u = list->at(index)->path();
   QUrl url;
   if (u.startsWith("http")) {
       url = QUrl(u);
@@ -56,7 +56,7 @@ void MetaScaner::forceScan()
   switch (s) {
     case QMediaPlayer::MediaStatus::BufferedMedia:
     case QMediaPlayer::MediaStatus::LoadedMedia:
-      if (not list->at(index)->hasMeta() or force) {
+      if (not list->at(index)->hasMetadata() or force) {
           QString str = "";
           QStringList l = player.availableMetaData();
           if (l.contains(QMediaMetaData::AlbumArtist)) {

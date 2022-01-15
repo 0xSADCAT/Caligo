@@ -7,50 +7,47 @@
 #ifndef LIBRARYPLAYLISTS_H
 #define LIBRARYPLAYLISTS_H
 
-#include <Widgets/elementplaylist.h>
+#include <Widgets/playlistelement.h>
 #include <Widgets/playlist.h>
 
 class LibraryPlaylists : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit LibraryPlaylists(Playlist *pls, QWidget *parent = nullptr);
+    explicit LibraryPlaylists(Playlist* playlist, QWidget* parent = nullptr);
 
-  QString getPathPlaylists() const;
-  void setPathPlaylists(const QString &value);
+    QString getPathPlaylists() const;
+    void setPathPlaylists(const QString& value);
 
-  /// Clear current playlist before open new
-  void setClearBeforeOpen(bool value);
+    void setClearBeforeOpen(bool value);
 
 public slots:
-  /// Search playlists
-  void scan();
+    void scan();
 
 private:
-  bool clearBeforeOpen;
+    bool _clear_before_open = true;
 
-  Playlist *playlist;
-  QList<ElementPlaylist*> list;
-  QVBoxLayout *mainLayout;
+    Playlist* _playlist;
+    QList<PlaylistElement*> _elements;
 
-  QString pathPlaylists;
+    QString _playlists_path = qApp->applicationDirPath() + QDir::separator() + "playlists";
 
-  void add(QString &path, QString &name);
-  void remove(ElementPlaylist *e);
-  void remove(int index);
-  void clear();
+    QList<PlaylistElement*> _selection;
+    PlaylistElement* _last_clicked = nullptr;
 
-  QList<ElementPlaylist*> selection;
-  ElementPlaylist *lastClicked;
+    void add(QString& path, QString& name);
+    void remove(PlaylistElement* element);
+    void remove(int index);
+    void clear();
 
 private slots:
-  void elementClicked();
-  void elementDouble();
-  void elementShift();
-  void elementCtrl();
-  void elementFocus();
+    void elementClicked();
+    void elementDoubleClicked();
+    void elementShift();
+    void elementCtrl();
+    void elementFocus();
 
-  void setPath();
+    void setPath();
 };
 
 #endif // LIBRARYPLAYLISTS_H

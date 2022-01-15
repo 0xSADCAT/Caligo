@@ -11,71 +11,32 @@
 
 class MediaElement : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit MediaElement(const QString &path, QWidget *parent = nullptr);
+    explicit MediaElement(const QString& path, QWidget* parent = nullptr);
 
-  QString getPath() const;
+    QString path() const;
 
-  bool hasMeta() const;
+    bool hasMetadata() const;
 
-  void setText(const QString &text);
+    void setText(const QString &text);
 
-  /// Display state
-  void setPlaying(bool value);
+    void setPlaying(bool value);
 
-  /// Display state
-  void setSelected(bool value);
-
-  /// String for saving
-  QString getString() const;
-
-  bool isSelected() const;
-
-signals:
-  void clicked();
-  void shiftClicked();
-  void ctrlClicked();
-  void doubleClicked();
-
-  void startDrag();
-
-  void elementsDropped();
-
-  /// Needs to set focus to Playlist but not on element (playlist keyboard controls)
-  void focus();
-
-  /// Signal from context menu.
-  void selectAll();
-
-  /// Signal from context menu.
-  void deleteSelected();
+    QString format() const;
 
 protected:
-  virtual void mousePressEvent(QMouseEvent *e) override;
-  virtual void mouseReleaseEvent(QMouseEvent *e) override;
-  virtual void mouseMoveEvent(QMouseEvent *e) override;
-  virtual void mouseDoubleClickEvent(QMouseEvent *e) override;
-  virtual void focusInEvent(QFocusEvent *) override;
-  virtual void contextMenuEvent(QContextMenuEvent *e) override;
-  virtual void dragEnterEvent(QDragEnterEvent *e) override;
-  virtual void dragLeaveEvent(QDragLeaveEvent *) override;
-  virtual void dropEvent(QDropEvent *) override;
+    void focusInEvent(QFocusEvent*) override;
 
 private:
-  QLabel *text;
-  /// Path to file.
-  QString path;
-  bool meta;
-  // Playing/selected states.
-  bool playing;
-  bool selected;
+    QString _file_path;
 
-  void updStyle();
+    QLabel* _text_label;
 
-  QMenu *contextMenu;
+    bool _has_metadata = false;
+    bool _is_playing = false;
 
-  QPoint dragPos;
+    QPoint _drag_position;
 };
 
 #endif // MEDIAELEMENT_H

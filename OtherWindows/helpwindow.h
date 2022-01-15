@@ -11,13 +11,12 @@
 
 class HelpWindow : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  HelpWindow();
+    HelpWindow();
 
 private slots:
-  /// Open GitHub repository in browser
-  void openGitHub();
+    void openGitHub();
 };
 
 #endif // HELPWINDOW_H

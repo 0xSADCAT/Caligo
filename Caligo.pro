@@ -19,7 +19,6 @@ SOURCES += \
     OtherWindows/helpwindow.cpp \
     OtherWindows/settingswindow.cpp \
     Widgets/controls.cpp \
-    Widgets/elementplaylist.cpp \
     Widgets/image.cpp \
     Widgets/libraryelement.cpp \
     Widgets/libraryplaylists.cpp \
@@ -28,11 +27,12 @@ SOURCES += \
     Widgets/playinfo.cpp \
     Widgets/playlist.cpp \
     Widgets/playlistcontrols.cpp \
+    Widgets/playlistelement.cpp \
     Widgets/timeslider.cpp \
     Widgets/videowidget.cpp \
     localsocket.cpp \
     main.cpp \
-    widget.cpp
+    mainwindow.cpp
 
 HEADERS += \
     Inside/librarymetascaner.h \
@@ -41,7 +41,6 @@ HEADERS += \
     OtherWindows/helpwindow.h \
     OtherWindows/settingswindow.h \
     Widgets/controls.h \
-    Widgets/elementplaylist.h \
     Widgets/image.h \
     Widgets/libraryelement.h \
     Widgets/libraryplaylists.h \
@@ -50,10 +49,11 @@ HEADERS += \
     Widgets/playinfo.h \
     Widgets/playlist.h \
     Widgets/playlistcontrols.h \
+    Widgets/playlistelement.h \
     Widgets/timeslider.h \
     Widgets/videowidget.h \
     localsocket.h \
-    widget.h
+    mainwindow.h
 
 TRANSLATIONS += \
     Caligo_ru_RU.ts

@@ -13,48 +13,46 @@
 
 class PlaylistControls : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit PlaylistControls(Playlist *pl, QWidget *parent = nullptr);
+    explicit PlaylistControls(Playlist* playlist, QWidget* parent = nullptr);
 
-  /// Set buttons size
-  void setSizes(int v);
+    void setButtonsSizes(int size);
 
-  /// Clear current playlist before open new
-  void setClearBeforeOpen(bool value);
+    void setClearBeforeOpen(bool value);
 
-  QString getPathPlaylists() const;
-  void setPathPlaylists(const QString &value);
+    QString getPathPlaylists() const;
+    void setPathPlaylists(const QString &value);
 
-  QString getPathMusic() const;
-  void setPathMusic(const QString &value);
+    QString getPathMusic() const;
+    void setPathMusic(const QString &value);
 
 private:
-  Playlist *playlist;
+    Playlist* _playlist;
 
-  QPushButton *addButton;
-  QPushButton *addUrlButton;
-  QPushButton *clearButton;
+    QPushButton* _add_button = new QPushButton;
+    QPushButton* _add_from_url_button = new QPushButton;
+    QPushButton* _clear_button = new QPushButton;
 
-  QPushButton *savePlaylist;
-  QPushButton *loadPlaylist;
+    QPushButton* _save_playlist_button = new QPushButton;
+    QPushButton* _load_playlist_button = new QPushButton;
 
-  QPushButton *forceScanButton;
+    QPushButton* _scan_all_button = new QPushButton;
 
-  bool clearBeforeOpen;
+    bool _is_clear_before_open;
 
-  QString pathPlaylists;
-  QString pathMusic;
+    QString _playlists_path = QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
+    QString _music_path = qApp->applicationDirPath() + QDir::separator() + "playlists";
 
 private slots:
-  void add();
-  void addUrl();
-  void clear();
+    void add();
+    void addUrl();
+    void clear();
 
-  void save();
-  void load();
+    void save();
+    void load();
 
-  void loadPath(const QString &path);
+    void loadPath(const QString& path);
 };
 
 #endif // PLAYLISTCONTROLS_H

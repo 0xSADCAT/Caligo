@@ -10,22 +10,21 @@
 #include <QtWidgets>
 #include <QVideoWidget>
 
-/// Inherits QVideoWidget. Has signals clicked() and doubleClicked()
 class VideoWidget : public QVideoWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit VideoWidget(QWidget *parent = nullptr);
+    explicit VideoWidget(QWidget* parent = nullptr);
 
 signals:
-  void clicked();
-  void doubleClicked();
-  void mouseMoved();
+    void clicked();
+    void doubleClicked();
+    void mouseMoved();
 
 protected:
-  virtual void mousePressEvent(QMouseEvent *e) override;
-  virtual void mouseDoubleClickEvent(QMouseEvent *e) override;
-  virtual void mouseMoveEvent(QMouseEvent *) override;
+    void mousePressEvent(QMouseEvent* event) override;
+    void mouseDoubleClickEvent(QMouseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent*) override;
 };
 
 #endif // VIDEOWIDGET_H

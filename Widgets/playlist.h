@@ -16,82 +16,52 @@
 
 class Playlist : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit Playlist(QMediaPlayer *mp, QWidget *parent = nullptr);
+    explicit Playlist(QMediaPlayer* player, QWidget* parent = nullptr);
 
-  /// QStringList for saving playlist in file
-  QStringList getList();
+    QStringList toStringList();
 
-  /// Add new element. [const QString&] - path to file, [const QString&] - display text (medatata)
-  void add(const QString &path, const QString &text);
+    void add(const QString& path, const QString &text);
 
-  /// Add new element. [const QString&] - path to file, [bool (= false)] - scan element metadata
-  void add(const QString &path, bool sc=false);
+    void add(const QString& path, bool scan = false);
 
-  /// Add new element. [const QStringList&] - paths to files
-  void add(const QStringList &paths);
+    void add(const QStringList& paths);
 
-  /// Clear playlist
-  void clear();
+    void clear();
 
 signals:
-  void loadPlaylist(const QString &);
+    void loadPlaylist(const QString&);
 
 public slots:
-  void next();
-  void prev();
+    void next();
+    void previous();
 
-  /// Update metadata in all elements of playlist
-  void forceUpdate();
+    void forceUpdate();
 
-  void randomPlaybackChanged(bool value);
-
-protected:
-  virtual void keyPressEvent(QKeyEvent *e) override;
-  virtual void mousePressEvent(QMouseEvent *) override;
+    void randomPlaybackChanged(bool value);
 
 private:
-  QMediaPlayer *player;
+    QString getMetaData();
 
-  int index;
-  QList<MediaElement*> list;
+    void setCurrentIndexMedia();
 
-  QVBoxLayout *l;
+    QMediaPlayer* _player;
 
-  MediaElement *lastClicked;
-  QList<MediaElement*> selection;
+    int _index = -1;
+    QList<MediaElement*> _list;
 
-  MetaScaner *scaner;
+    QVBoxLayout* _elements_layout = new QVBoxLayout;
 
-  QString getMetaData();
+    MetaScaner* _scaner;
 
-  void setCurrentIndexMedia();
+    bool _random_playback = false;
 
-  bool randomPlayback;
-
-  QRandomGenerator randomGenerator;
-  QList<int> randomPrevious;
+    QRandomGenerator _random_generator;
+    QList<int> _previous_on_random;
 
 private slots:
-  void mediaStatus(QMediaPlayer::MediaStatus s);
-
-  void clickElement();
-  void shiftClickElement();
-  void ctrlClickElement();
-  void doubleClickElement();
-
-  void focusFromElement();
-
-  /// Context menu
-  void cmSelectAll();
-
-  /// Context menu
-  void cmDeleteSelected();
-
-  void startDrag();
-
-  void elementsDropped();
+    void mediaStatusChanged(QMediaPlayer::MediaStatus status);
 };
 
 #endif // PLAYLIST_H

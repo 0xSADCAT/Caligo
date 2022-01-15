@@ -17,42 +17,38 @@
 
 class PlayInfo : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit PlayInfo(QMediaPlayer *mp, QWidget *parent = nullptr);
+    explicit PlayInfo(QMediaPlayer* player, QWidget* parent = nullptr);
 
-  /// Full screen mode
-  void setNotFull(bool v);
-  void focus();
-
-  VideoWidget *video;
+    void setMediaTitleVisible(bool v);
+    void focus();
 
 signals:
-  /// Set new window title
-  void newTitle(const QString &s);
-  void newPixmap(const QPixmap &pix);
-  void fsClicked();
-  void mouseMoved();
+    void newTitle(const QString&);
+    void newPixmap(const QPixmap&);
+    void fullScreenClicked();
+    void mouseMoved();
 
 private:
-  QMediaPlayer *player;
+    QMediaPlayer* _player;
+    VideoWidget* _video = new VideoWidget;
 
-  Image *image;
-  QLabel *author;
-  QLabel *name;
-  bool isVideo;
-  /// Video fullscreen mode
-  bool isFSVideo;
+    Image* _image = new Image;
+    QLabel* _author = new QLabel;
+    QLabel* _name = new QLabel;
 
-  /// Set new window title
-  void setTitle();
+    bool _is_video = false;
+    bool _is_fullscreen = false;
+
+    void setTitle();
 
 private slots:
-  void mediaStatus(QMediaPlayer::MediaStatus s);
-  void videoChanged(bool v);
+    void mediaStatus(QMediaPlayer::MediaStatus status);
+    void videoAvailableChanged(bool v);
 
-  void videoClicked();
-  void videoDoubleClicked();
+    void videoClicked();
+    void videoDoubleClicked();
 };
 
 #endif // PLAYINFO_H
