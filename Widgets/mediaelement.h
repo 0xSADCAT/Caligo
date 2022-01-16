@@ -9,24 +9,47 @@
 
 #include <QtWidgets>
 
+/**
+ * @brief The MediaElement class provides element of playlist
+ */
 class MediaElement : public QWidget
 {
     Q_OBJECT
 public:
+    /**
+     * @brief The MediaElement class provides element of playlist
+     */
     explicit MediaElement(const QString& path, QWidget* parent = nullptr);
 
+    /**
+     * @brief Path to media
+     * @return Path to media
+     */
     QString path() const;
 
+    /**
+     * @brief Checks media metadata
+     * @return Checks media metadata
+     */
     bool hasMetadata() const;
 
+    /**
+     * @brief Set text to label
+     * @param text Text
+     */
     void setText(const QString &text);
 
+    /**
+     * @brief Set playing state
+     * @param value State (true - playing)
+     */
     void setPlaying(bool value);
 
+    /**
+     * @brief Converst to string format
+     * @return Formated string
+     */
     QString format() const;
-
-protected:
-    void focusInEvent(QFocusEvent*) override;
 
 private:
     QString _file_path;
@@ -35,8 +58,6 @@ private:
 
     bool _has_metadata = false;
     bool _is_playing = false;
-
-    QPoint _drag_position;
 };
 
 #endif // MEDIAELEMENT_H

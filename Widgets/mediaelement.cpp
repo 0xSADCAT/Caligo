@@ -5,6 +5,7 @@
 */
 
 #include "mediaelement.h"
+#include "Inside/formatter.hpp"
 
 MediaElement::MediaElement(const QString& path, QWidget* parent)
     : QWidget(parent),
@@ -42,15 +43,5 @@ void MediaElement::setPlaying(bool value)
 
 QString MediaElement::format() const
 {
-    QString s;
-    s += _file_path;
-    s += " ## ";
-    if (_text_label->text() != _file_path)
-        s += _text_label->text();
-    return s;
-}
-
-void MediaElement::focusInEvent(QFocusEvent*)
-{
-#error "TODO: Implement me!"
+    return MediaElementFormat().format(_file_path, _text_label->text());
 }

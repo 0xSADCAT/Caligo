@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget* parent)
     _library = new MediaLibrary(_playlist);
     _playlist_library = new LibraryPlaylists(_playlist);
 
-    connect(_playback_controls, &Controls::randomPlaybackChanged, _playlist,
+    connect(_playback_controls, &Controls::playbackModeChanged, _playlist,
             &Playlist::randomPlaybackChanged);
 
     _settings = new QSettings(qApp->applicationDirPath() + QDir::separator()
@@ -84,8 +84,8 @@ MainWindow::MainWindow(QWidget* parent)
 
     _tab_widget->autoFillBackground();
 
-    connect(_playback_controls, &Controls::next, _playlist, &Playlist::next);
-    connect(_playback_controls, &Controls::prev, _playlist, &Playlist::previous);
+    connect(_playback_controls, &Controls::nextClicked, _playlist, &Playlist::next);
+    connect(_playback_controls, &Controls::previousClicked, _playlist, &Playlist::previous);
 
     connect(_playback_info, &PlayInfo::newTitle, this, &MainWindow::setNewWindowTitle);
 
@@ -97,7 +97,7 @@ MainWindow::MainWindow(QWidget* parent)
     this->setAcceptDrops(true);
 
     connect(_playback_info, &PlayInfo::fullScreenClicked, this, &MainWindow::videoFullscreen);
-    connect(_playback_controls, &Controls::fullScreen, this, &MainWindow::videoFullscreen);
+    connect(_playback_controls, &Controls::fullScreenClicked, this, &MainWindow::videoFullscreen);
 
     QShortcut* key_full_screen = new QShortcut(QKeySequence("F"), this);
     connect(key_full_screen, &QShortcut::activated, this, &MainWindow::videoFullscreen);
@@ -106,25 +106,25 @@ MainWindow::MainWindow(QWidget* parent)
     connect(key_exit_fullscreen, &QShortcut::activated, this, &MainWindow::exitFull);
 
     QShortcut* key_next = new QShortcut(QKeySequence("N"), this);
-    connect(key_next, &QShortcut::activated, _playback_controls, &Controls::next);
+    connect(key_next, &QShortcut::activated, _playback_controls, &Controls::nextClicked);
 
     QShortcut* key_previous = new QShortcut(QKeySequence("B"), this);
-    connect(key_previous, &QShortcut::activated, _playback_controls, &Controls::prev);
+    connect(key_previous, &QShortcut::activated, _playback_controls, &Controls::previousClicked);
 
     QShortcut* key_play = new QShortcut(QKeySequence("P"), this);
-    connect(key_play, &QShortcut::activated, _playback_controls, &Controls::playPause);
+    connect(key_play, &QShortcut::activated, _playback_controls, &Controls::onPlayPause);
 
     QShortcut* key_stop = new QShortcut(QKeySequence("S"), this);
-    connect(key_stop, &QShortcut::activated, _playback_controls, &Controls::stop);
+    connect(key_stop, &QShortcut::activated, _playback_controls, &Controls::onStop);
 
     QShortcut* key_mute = new QShortcut(QKeySequence("CTRL+M"), this);
-    connect(key_mute, &QShortcut::activated, _playback_controls, &Controls::mute);
+    connect(key_mute, &QShortcut::activated, _playback_controls, &Controls::onMute);
 
     QShortcut* key_volume_plus = new QShortcut(QKeySequence(Qt::Key_Plus), this);
-    connect(key_volume_plus, &QShortcut::activated, _playback_controls, &Controls::plusVolume);
+    connect(key_volume_plus, &QShortcut::activated, _playback_controls, &Controls::onPlusVolume);
 
     QShortcut* key_volume_minus = new QShortcut(QKeySequence(Qt::Key_Minus), this);
-    connect(key_volume_minus, &QShortcut::activated, _playback_controls, &Controls::minusVolume);
+    connect(key_volume_minus, &QShortcut::activated, _playback_controls, &Controls::onMinusVolume);
 
     QShortcut* key_help = new QShortcut(QKeySequence("CTRL+H"), this);
     connect(key_help, &QShortcut::activated, this, &MainWindow::help);

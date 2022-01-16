@@ -22,15 +22,28 @@
 #include <OtherWindows/helpwindow.h>
 #include <OtherWindows/settingswindow.h>
 
+/**
+ * @brief The MainWindow class provides application window
+ */
 class MainWindow : public QWidget
 {
     Q_OBJECT
 
 public:
+    /**
+     * @brief The MainWindow class provides application window
+     */
     MainWindow(QWidget* parent = nullptr);
 
+    /**
+     * @brief App media to playlist
+     * @param path Path to file
+     */
     void addToPlaylist(const QString& path);
 
+    /**
+     * @brief Update metadata in playlist
+     */
     void forceUpdatePlaylistMetadata();
 
 protected:
