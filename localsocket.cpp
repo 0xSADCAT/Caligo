@@ -6,10 +6,13 @@
 
 #include "localsocket.h"
 
-Application::Application(QObject *parent) : QObject(parent)
+static constexpr int datastream_version = QDataStream::Qt_5_12;
+
+Application::Application(QObject *parent)
+    : QObject(parent),
+      _client(new QTcpSocket(this))
 {
-    _client = new QTcpSocket(this);
-    _client->connectToHost(_host, _port);
+    _client->connectToHost(_HOST, _PORT);
     connect(_client, &QTcpSocket::connected, this, &Application::clientConnected);
     connect(_client, &QTcpSocket::errorOccurred, this, &Application::clientError);
 }
@@ -17,10 +20,19 @@ Application::Application(QObject *parent) : QObject(parent)
 void Application::clientError(QAbstractSocket::SocketError)
 {
     _server = new QTcpServer(this);
-    if (not _server->listen(QHostAddress::Any, _port))
+    if (not _server->listen(QHostAddress::Any, _PORT))
         qWarning() << "Unable to start server";
     else
         connect(_server, &QTcpServer::newConnection, this, &Application::serverNewConnection);
+
+    QFile file(qApp->applicationDirPath() + QDir::separator() + "style.qss");
+    if (file.open(QIODevice::ReadOnly)) {
+        QString qss = file.readAll();
+        qApp->setStyleSheet(qss);
+        file.close();
+    } else {
+        qWarning() << "Failed to open stylesheet file:" << file.errorString();
+    }
 
     _main_window = new MainWindow;
     _main_window->show();
@@ -45,7 +57,7 @@ void Application::serverReadClient()
 {
     QTcpSocket *socket = (QTcpSocket*) sender();
     QDataStream in(socket);
-    in.setVersion(QDataStream::Qt_5_3);
+    in.setVersion(datastream_version);
 
     QString str;
     in >> str;
@@ -66,12 +78,12 @@ void Application::socketDisconnected()
 
 void Application::sendToServerFromClient(const QString &str)
 {
-    QByteArray arrBlock;
-    QDataStream out(&arrBlock, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_5_2);
+    QByteArray array;
+    QDataStream out(&array, QIODevice::WriteOnly);
+    out.setVersion(datastream_version);
     out << str;
 
     out.device()->seek(0);
-    _client->write(arrBlock);
+    _client->write(array);
     _client->flush();
 }
