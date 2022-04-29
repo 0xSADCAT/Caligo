@@ -12,11 +12,6 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
-/**
- * @brief The Application class connects to main window or creates window on error
- *
- * Just create it in main
- */
 class Application : public QObject
 {
   Q_OBJECT

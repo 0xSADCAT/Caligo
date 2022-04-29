@@ -89,26 +89,26 @@ Controls::Controls(QMediaPlayer* media_player, QWidget* parent)
     main_layout->addLayout(bottom_layout);
     setLayout(main_layout);
 
-    connect(_player, &QMediaPlayer::stateChanged, this, &Controls::onMediaStateChanged);
-    connect(_player, &QMediaPlayer::mutedChanged, this, &Controls::onMutedStateChanged);
+    connect(_player, &QMediaPlayer::stateChanged, this, &Controls::mediaState);
+    connect(_player, &QMediaPlayer::mutedChanged, this, &Controls::mutedState);
 
     connect(_player, &QMediaPlayer::volumeChanged, _volume_slider, &QSlider::setValue);
     connect(_volume_slider, &QSlider::valueChanged, _player, &QMediaPlayer::setVolume);
 
-    connect(_player, &QMediaPlayer::durationChanged, this, &Controls::onDurationChanged);
-    connect(_player, &QMediaPlayer::positionChanged, this, &Controls::onPositionChanged);
+    connect(_player, &QMediaPlayer::durationChanged, this, &Controls::setDuration);
+    connect(_player, &QMediaPlayer::positionChanged, this, &Controls::setPosition);
     connect(_time_slider, &TimeSlider::clicked, _player, &QMediaPlayer::setPosition);
 
-    connect(_prev_button, &QPushButton::clicked, this, &Controls::previousClicked);
-    connect(_play_button, &QPushButton::clicked, this, &Controls::onPlayPause);
-    connect(_stop_button, &QPushButton::clicked, this, &Controls::onStop);
-    connect(_next_button, &QPushButton::clicked, this, &Controls::nextClicked);
-    connect(_mute_button, &QPushButton::clicked, this, &Controls::onMute);
+    connect(_prev_button, &QPushButton::clicked, this, &Controls::prev);
+    connect(_play_button, &QPushButton::clicked, this, &Controls::playPause);
+    connect(_stop_button, &QPushButton::clicked, this, &Controls::stop);
+    connect(_next_button, &QPushButton::clicked, this, &Controls::next);
+    connect(_mute_button, &QPushButton::clicked, this, &Controls::mute);
 
-    connect(_full_screen_button, &QPushButton::clicked, this, &Controls::fullScreenClicked);
-    connect(_player, &QMediaPlayer::videoAvailableChanged, this, &Controls::onVideoAvailableChanged);
+    connect(_full_screen_button, &QPushButton::clicked, this, &Controls::fullScreen);
+    connect(_player, &QMediaPlayer::videoAvailableChanged, this, &Controls::videoAvailable);
 
-    connect(_random_playback_button, &QPushButton::clicked, this, &Controls::onRandomPlaybackClicked);
+    connect(_random_playback_button, &QPushButton::clicked, this, &Controls::randomPlaybackClicked);
 }
 
 void Controls::setSizes(int size)
@@ -144,19 +144,19 @@ int Controls::volume() const
     return _player->volume();
 }
 
-void Controls::onVideoAvailableChanged(bool v)
+void Controls::videoAvailable(bool v)
 {
     _full_screen_button->setEnabled(v);
     _full_screen_button->setVisible(v);
 }
 
-void Controls::onRandomPlaybackClicked(bool value)
+void Controls::randomPlaybackClicked(bool value)
 {
-    emit playbackModeChanged(value);
+    emit randomPlaybackChanged(value);
     setRandomPlayback(value);
 }
 
-void Controls::onMediaStateChanged(QMediaPlayer::State state)
+void Controls::mediaState(QMediaPlayer::State state)
 {
     if (state == QMediaPlayer::State::PlayingState) {
         _play_button->setIcon(QIcon(":/img/pause"));
@@ -168,7 +168,7 @@ void Controls::onMediaStateChanged(QMediaPlayer::State state)
     _full_screen_button->setVisible(_player->isVideoAvailable());
 }
 
-void Controls::onMutedStateChanged(bool muted)
+void Controls::mutedState(bool muted)
 {
     if (muted) {
         _mute_button->setIcon(QIcon(":/img/mute"));
@@ -179,19 +179,19 @@ void Controls::onMutedStateChanged(bool muted)
     }
 }
 
-void Controls::onDurationChanged(qint64 duration)
+void Controls::setDuration(qint64 duration)
 {
     _time_slider->setDuration(duration);
     _duration_label->setText(msToString(duration));
 }
 
-void Controls::onPositionChanged(qint64 position)
+void Controls::setPosition(qint64 position)
 {
     _time_slider->setPosition(position);
     _position_label->setText(msToString(position));
 }
 
-void Controls::onPlayPause()
+void Controls::playPause()
 {
     if (_player->state() == QMediaPlayer::State::PlayingState)
         _player->pause();
@@ -199,12 +199,12 @@ void Controls::onPlayPause()
         _player->play();
 }
 
-void Controls::onMute()
+void Controls::mute()
 {
     _player->setMuted(not _player->isMuted());
 }
 
-void Controls::onStop()
+void Controls::stop()
 // Not used QMediaPlayer::stop() because emits signal
 // QMediaPlayer::mediaStatusChanged(QMediaPlayer::LoadedMedia)
 {
@@ -212,16 +212,14 @@ void Controls::onStop()
     _player->setPosition(0);
 }
 
-static constexpr int volume_delta = 5;
-
-void Controls::onPlusVolume()
+void Controls::plusVolume()
 {
-    setVolume(_player->volume() + volume_delta);
+    setVolume(_player->volume() + 5);
 }
 
-void Controls::onMinusVolume()
+void Controls::minusVolume()
 {
-    setVolume(_player->volume() - volume_delta);
+    setVolume(_player->volume() - 5);
 }
 
 void Controls::mouseMoveEvent(QMouseEvent*)
@@ -238,29 +236,32 @@ void Controls::setRandomPlayback(bool value)
 {
     _random_playback_button->setChecked(value);
     _is_random_playback = value;
-    emit playbackModeChanged(value);
+    emit randomPlaybackChanged(value);
 }
 
-QString msToString(qint64 ms)
+static QString msToString(qint64 ms)
 {
-    QString result;
+    QString ret;
     ms /= 1000;
 
-    int seconds = ms % 60;
+    int s = ms % 60;
     ms /= 60;
-    int minutes = ms % 60;
-    int hours = ms / 60;
+    int m = ms % 60;
+    int h = ms / 60;
 
-    if (hours != 0)
-        result += QString::number(hours) + ":";
+    if (h != 0) {
+        ret += QString::number(h) + ":";
+    }
 
-    if (minutes < 10)
-        result += "0";
-    result += QString::number(minutes) + ":";
+    if (m < 10) {
+        ret += "0";
+    }
+    ret += QString::number(m) + ":";
 
-    if (seconds < 10)
-        result += "0";
-    result += QString::number(seconds);
+    if (s < 10) {
+        ret += "0";
+    }
+    ret += QString::number(s);
 
-    return result;
+    return ret;
 }

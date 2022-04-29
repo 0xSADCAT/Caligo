@@ -13,7 +13,6 @@ Playlist::Playlist(QMediaPlayer* player, QWidget* parent)
     QVBoxLayout* main_layout = new QVBoxLayout;
     main_layout->addLayout(_elements_layout, 0);
     main_layout->addStretch(1);
-    setLayout(main_layout);
 
     layout()->setContentsMargins(0, 0, 0, 0);
     layout()->setSpacing(0);
@@ -56,9 +55,9 @@ void Playlist::add(const QString& path, bool scan)
         return;
     }
 
-    MediaElement *element = new MediaElement(path);
-    _elements_layout->addWidget(element, 0);
-    _list << element;
+    MediaElement *e = new MediaElement(path);
+    _elements_layout->addWidget(e, 0);
+    _list << e;
 
     if (_index == -1) {
         _index = 0;
@@ -98,10 +97,10 @@ void Playlist::clear()
     _player->stop();
     _player->setMedia(QUrl());
     for (auto* element : _list) {
+        _list.removeAll(element);
         _elements_layout->removeWidget(element);
-        element->deleteLater();
+        element->~MediaElement();
     }
-    _list.clear();
     _index = -1;
 }
 
@@ -121,7 +120,8 @@ void Playlist::next()
     if (media_count < 2)
         return;
 
-    _list[_index++]->setPlaying(false);
+    _list[_index]->setPlaying(false);
+    _index++;
     if (_index >= media_count)
         _index = 0;
     _list[_index]->setPlaying(true);
@@ -134,9 +134,12 @@ void Playlist::previous()
     if (media_count < 2)
         return;
 
-    _list[_index--]->setPlaying(false);
+    _list[_index]->setPlaying(false);
+    _index--;
+
     if (_index < 0)
         _index = media_count - 1;
+
     _list[_index]->setPlaying(true);
     setCurrentIndexMedia();
 }
@@ -183,7 +186,11 @@ void Playlist::setCurrentIndexMedia()
     _player->stop();
     QString url_string = _list[_index]->path();
 
-    QUrl url = url_string.startsWith("http") ? QUrl(url_string) : QUrl::fromLocalFile(url_string);
+    QUrl url;
+    if (url_string.startsWith("http"))
+        url = QUrl(url_string);
+    else
+        url = QUrl::fromLocalFile(url_string);
 
     _player->setMedia(url);
     _player->play();
