@@ -29,7 +29,7 @@ void LibraryMetaScaner::scan()
       count = list->count();
     }
 
-  QString u = list->at(index)->path();
+  QString u = list->at(index)->getPath();
   QUrl url;
   if (u.startsWith("http")) {
       url = QUrl(u);

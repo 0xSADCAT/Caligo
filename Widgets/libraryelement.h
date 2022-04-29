@@ -11,38 +11,40 @@
 
 class LibraryElement : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit LibraryElement(QString &path, QWidget *parent = nullptr);
+  explicit LibraryElement(QString &path, QWidget *parent = nullptr);
 
-    QString path() const;
+  QString getPath() const;
 
-    void setText(const QString &value);
+  /// Set text to display in label
+  void setText(const QString &value);
 
-    QString format() const;
+  /// String for saving in file
+  QString getString() const;
 
-    void setSelected(bool selected);
+  void setSelected(bool v);
 
-    QString name() const;
+  QString getName() const;
 
 signals:
-    void clicked();
-    void doubleClicked();
-    void ctrlClicked();
-    void shiftClicked();
+  void clicked();
+  void doubleClicked();
+  void ctrlClicked();
+  void shiftClicked();
 
-    void focus();
+  void focus();
 
 protected:
-    void mousePressEvent(QMouseEvent* event) override;
-    void mouseDoubleClickEvent(QMouseEvent* event) override;
-    void focusInEvent(QFocusEvent*) override;
+  virtual void mousePressEvent(QMouseEvent *e) override;
+  virtual void mouseDoubleClickEvent(QMouseEvent *e) override;
+  virtual void focusInEvent(QFocusEvent *) override;
 
 private:
-    QLabel* _name_label;
+  QLabel *nameLabel;
 
-    QString _path;
-    QString _name;
+  QString path;
+  QString name;
 };
 
 #endif // LIBRARYELEMENT_H

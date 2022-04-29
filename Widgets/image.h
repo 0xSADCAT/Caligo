@@ -11,19 +11,22 @@
 #include <QPixmap>
 #include <QPainter>
 
+/// Displays size-adaptive image
 class Image : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit Image(QWidget* parent = nullptr);
+  explicit Image(QWidget *parent = nullptr);
 
-    void setPixmap(const QPixmap& value);
+  void setPix(const QPixmap &value);
 
 protected:
-    void paintEvent(QPaintEvent*) override;
+  virtual void paintEvent(QPaintEvent *) override;
+  virtual void enterEvent(QEvent *) override;
+  virtual void leaveEvent(QEvent *) override;
 
 private:
-    QPixmap _pixmap;
+  QPixmap pix;
 };
 
 #endif // IMAGE_H

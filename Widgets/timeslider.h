@@ -13,27 +13,31 @@
 
 class TimeSlider : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit TimeSlider(QWidget *parent = nullptr);
+  explicit TimeSlider(QWidget *parent = nullptr);
 
 signals:
-    void clicked(qint64);
+  /// Clicked on element (_pos)
+  void clicked(qint64);
 
 public slots:
-    void setDuration(qint64 duration);
-    void setPosition(qint64 position);
+  /// Track duration
+  void setDuration(qint64 v);
+
+  /// Current media position
+  void setPosition(qint64 v);
 
 protected:
-    void enterEvent(QEvent*) override;
-    void leaveEvent(QEvent*) override;
-    void mousePressEvent(QMouseEvent* event) override;
-    void paintEvent(QPaintEvent*) override;
+  virtual void enterEvent(QEvent *) override;
+  virtual void leaveEvent(QEvent *) override;
+  virtual void mousePressEvent(QMouseEvent *e) override;
+  virtual void paintEvent(QPaintEvent *) override;
 
 private:
-    qint64 _position = 0;
-    qint64 _duration = 0;
-    bool _is_mouse_in = false;
+  qint64 _pos, _dur;
+  /// Mouse in widget rectangle
+  bool isIn;
 };
 
 #endif // TIMESLIDER_H

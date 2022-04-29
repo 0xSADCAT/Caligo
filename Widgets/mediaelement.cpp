@@ -6,51 +6,181 @@
 
 #include "mediaelement.h"
 
-MediaElement::MediaElement(const QString& path, QWidget* parent)
-    : QWidget(parent),
-      _file_path(path),
-      _text_label(new QLabel("  " + path))
+MediaElement::MediaElement(const QString &path, QWidget *parent) : QWidget(parent)
+// Custom widget. Element of playlist. Contains model and view of component.
 {
-    QHBoxLayout *main_layout = new QHBoxLayout;
-    main_layout->addWidget(_text_label);
-    setLayout(main_layout);
+#ifdef DEBUG_OUTPUT
+  qDebug() << ">>> MediaElement init:" << path;
+#endif
 
-    layout()->setSpacing(0);
-    layout()->setContentsMargins(0, 0, 0, 0);
+  setObjectName("AlphaBG");
+
+  this->path = path;
+
+  text = new QLabel("  " + path);
+  text->setObjectName("AlphaBG");
+
+  QHBoxLayout *l = new QHBoxLayout;
+  l->addWidget(text);
+  l->setObjectName("AlphaBG");
+  setLayout(l);
+
+  layout()->setSpacing(0);
+  layout()->setContentsMargins(0, 0, 0, 0);
+
+  playing = false;
+  selected = false;
+
+  contextMenu = new QMenu;
+  contextMenu->addAction(QPixmap(":/img/selectAll"), tr("Select all"), this, &MediaElement::selectAll);
+  contextMenu->addAction(QPixmap(":/img/delete"), tr("Remove selected"), this, &MediaElement::deleteSelected);
+
+  setAcceptDrops(true);
+
+  updStyle();
 }
 
-QString MediaElement::path() const
+QString MediaElement::getPath() const
 {
-    return _file_path;
+  return path;
 }
 
-bool MediaElement::hasMetadata() const
+bool MediaElement::hasMeta() const
 {
-    return _has_metadata;
+  return meta;
 }
 
 void MediaElement::setText(const QString &text)
+// Set metadata
 {
-    _text_label->setText(text);
-    _has_metadata = true;
+#ifdef DEBUG_OUTPUT
+  qDebug() << "MediaElement::setText" << path;
+  qDebug() << "---> " << text;
+#endif
+
+  this->text->setText(text);
+  meta = true;
 }
 
 void MediaElement::setPlaying(bool value)
 {
-    _is_playing = value;
+#ifdef DEBUG_OUTPUT
+  qDebug() << "MediaElement::setPlaying" << path;
+  qDebug() << "---> " << value;
+#endif
+
+  playing = value;
+  updStyle();
 }
 
-QString MediaElement::format() const
+void MediaElement::setSelected(bool value)
 {
-    QString s;
-    s += _file_path;
-    s += " ## ";
-    if (_text_label->text() != _file_path)
-        s += _text_label->text();
-    return s;
+#ifdef DEBUG_OUTPUT
+  qDebug() << "MediaElement::setSelected" << path;
+  qDebug() << "---> " << value;
+#endif
+
+  selected = value;
+  updStyle();
 }
 
-void MediaElement::focusInEvent(QFocusEvent*)
+QString MediaElement::getString() const
 {
-#error "TODO: Implement me!"
+  QString s;
+  s += path;
+  s += " ## ";
+  if (text->text() != path) {
+      s += text->text();
+    }
+  return s;
+}
+
+void MediaElement::mousePressEvent(QMouseEvent *e)
+{
+  if (e->button() == Qt::LeftButton) {
+      dragPos = e->pos();
+    }
+  emit focus();
+}
+
+void MediaElement::mouseReleaseEvent(QMouseEvent *e)
+{
+  if (e->button() == Qt::LeftButton) {
+      if (e->modifiers() & Qt::ShiftModifier) {
+          emit shiftClicked();
+        }
+      else if (e->modifiers() & Qt::ControlModifier) {
+          emit ctrlClicked();
+        }
+      else {
+          emit clicked();
+        }
+    }
+}
+
+void MediaElement::mouseMoveEvent(QMouseEvent *e)
+{
+  if (e->buttons() & Qt::LeftButton) {
+      int dist = (e->pos() - dragPos).manhattanLength();
+      if (dist > qApp->startDragDistance()) {
+          emit startDrag();
+        }
+    }
+}
+
+void MediaElement::mouseDoubleClickEvent(QMouseEvent *e)
+{
+  if (e->button() == Qt::LeftButton)
+    emit doubleClicked();
+  emit focus();
+}
+
+void MediaElement::focusInEvent(QFocusEvent *)
+{
+  emit focus();
+}
+
+void MediaElement::contextMenuEvent(QContextMenuEvent *e)
+{
+  contextMenu->exec(e->globalPos());
+}
+
+void MediaElement::dragEnterEvent(QDragEnterEvent *e)
+{
+  if (e->mimeData()->text() == "application/mediaElements") {
+      this->setStyleSheet(this->styleSheet() + "* {border-bottom: 1px solid black; margin-bottom: 3px;}");
+      e->acceptProposedAction();
+    }
+}
+
+void MediaElement::dragLeaveEvent(QDragLeaveEvent *)
+{
+  updStyle();
+}
+
+void MediaElement::dropEvent(QDropEvent *)
+{
+  emit elementsDropped();
+  updStyle();
+}
+
+bool MediaElement::isSelected() const
+{
+  return selected;
+}
+
+void MediaElement::updStyle()
+{
+  if (playing and selected) {
+      setStyleSheet(qvariant_cast<QString>(qApp->property("MePlayingAndSelectedQSS")));
+    }
+  else if (playing) {
+      setStyleSheet(qvariant_cast<QString>(qApp->property("MePlayingQSS")));
+    }
+  else if (selected) {
+      setStyleSheet(qvariant_cast<QString>(qApp->property("MeSelectedQSS")));
+    }
+  else {
+      setStyleSheet(qvariant_cast<QString>(qApp->property("MeNoneQSS")));
+    }
 }

@@ -8,108 +8,107 @@
 
 AboutWindow::AboutWindow() : QWidget(nullptr)
 {
-    setWindowIcon(QIcon(":/img/icon"));
+  setWindowIcon(QIcon(":/img/icon"));
 
-    setWindowTitle(tr("About application") + " # " + qApp->applicationName());
+  link = "https://github.com/0xSADCAT/Caligo";
 
-    QLabel* title_label = new QLabel;
+  setWindowTitle(tr("About application") + " # " + qApp->applicationName());
 
-    QLabel* main_label = new QLabel;
-    main_label->setWordWrap(true);
+  title = new QLabel;
+  mainLabel = new QLabel;
+  mainLabel->setWordWrap(true);
+  gitHubLinkLabel = new QLabel;
+  gitHubLinkLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  openInBrowser = new QPushButton(tr("GitHub"));
+  openInBrowser->setIcon(QIcon(":/img/github"));
+  openInBrowser->setToolTip(tr("Open in browser"));
+  setStyleSheet("QPushButton {border: 1px solid black;}");
+  contactsLabel = new QLabel;
+  contactsLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  licenseLabel = new QLabel;
+  licenseLabel->setWordWrap(true);
+  QHBoxLayout *licenseLayout = new QHBoxLayout;
+  QLabel *licenseImage = new QLabel;
+  int imageWidth = qApp->desktop()->width() > 1920 ? 250 : 200;
+  licenseImage->setPixmap(QPixmap(":/img/gpl").scaledToWidth(imageWidth));
+  licenseImage->setFixedWidth(imageWidth);
+  licenseLayout->addWidget(licenseImage, 0);
+  licenseLayout->addWidget(licenseLabel, 1);
 
-    QLabel* git_hub_link_label = new QLabel;
-    git_hub_link_label->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  QHBoxLayout *hl = new QHBoxLayout;
+  QVBoxLayout *l = new QVBoxLayout;
 
-    QPushButton* open_in_browser_button = new QPushButton(tr("GitHub"));
-    open_in_browser_button->setIcon(QIcon(":/img/github"));
-    open_in_browser_button->setToolTip(tr("Open in browser"));
+  QHBoxLayout *gl = new QHBoxLayout;
+  gl->addWidget(gitHubLinkLabel, 1);
+  gl->addWidget(openInBrowser, 0);
+  gl->setSpacing(0);
+  gl->setContentsMargins(0, 0, 0, 0);
 
-    QLabel* licence_label = new QLabel;
-    licence_label->setWordWrap(true);
+  QPushButton *aboutQtButton = new QPushButton(tr("About Qt"));
+  aboutQtButton->setIcon(QIcon(":/img/qt"));
+  connect(aboutQtButton, &QPushButton::clicked, qApp, &QApplication::aboutQt);
+  aboutQtButton->setStyleSheet("QPushButton {padding: 10px 10px 10px 10px; border: 1px solid black;}");
 
-    QHBoxLayout* license_layout = new QHBoxLayout;
-    QLabel* license_image = new QLabel;
+  QHBoxLayout *cl = new QHBoxLayout;
+  cl->addStretch(1);
+  cl->addWidget(aboutQtButton, 0);
+  cl->addStretch(1);
+  cl->setSpacing(0);
+  cl->setContentsMargins(0, 0, 0, 0);
 
-    int image_width = qApp->desktop()->width() > 1920 ? 250 : 200;
-    license_image->setPixmap(QPixmap(":/img/gpl").scaledToWidth(image_width));
-    license_image->setFixedWidth(image_width);
+  l->addWidget(title, 0);
+  l->addWidget(mainLabel, 0);
+  l->addStretch(1);
+  l->addLayout(licenseLayout, 0);
+  l->addStretch(1);
+  l->addLayout(gl, 0);
+  l->addWidget(contactsLabel, 0);
+  l->addLayout(cl, 0);
 
-    license_layout->addWidget(license_image, 0);
-    license_layout->addWidget(licence_label, 1);
+  hl->addLayout(l, 0);
+  QScrollArea *sa = new QScrollArea;
+  QWidget *w = new QWidget;
+  w->setLayout(hl);
+  sa->setWidget(w);
+  sa->setWidgetResizable(true);
+  QVBoxLayout *la = new QVBoxLayout;
+  la->addWidget(sa);
+  setLayout(la);
 
-    QHBoxLayout* git_layout = new QHBoxLayout;
-    git_layout->addWidget(git_hub_link_label, 1);
-    git_layout->addWidget(open_in_browser_button, 0);
-    git_layout->setSpacing(0);
-    git_layout->setContentsMargins(0, 0, 0, 0);
+  title->setText(
+        "<center><h2>" + qApp->applicationName() + " " + qApp->applicationVersion() +
+        "</h2><br><h3>" + tr("About application") + "</h3></center>"
+        );
 
-    QPushButton* about_qt_button = new QPushButton(tr("About Qt"));
-    about_qt_button->setIcon(QIcon(":/img/qt"));
-    connect(about_qt_button, &QPushButton::clicked, qApp, &QApplication::aboutQt);
-    about_qt_button->setStyleSheet("QPushButton {padding: 10px 10px 10px 10px; border: 1px solid black;}");
+  gitHubLinkLabel->setText(tr("Source code") + ": <a href='" + link + "'>" + link + "</a>");
 
-    QHBoxLayout *qt_layout = new QHBoxLayout;
-    qt_layout->addStretch(1);
-    qt_layout->addWidget(about_qt_button, 0);
-    qt_layout->addStretch(1);
-    qt_layout->setSpacing(0);
-    qt_layout->setContentsMargins(0, 0, 0, 0);
+  contactsLabel->setText(
+        tr("Contacts") + ":<br>"
+                         "Email: alexsaltykow@gmail.com"
+        );
 
-    QVBoxLayout* l = new QVBoxLayout;
-    l->addWidget(title_label, 0);
-    l->addWidget(main_label, 0);
-    l->addStretch(1);
-    l->addLayout(license_layout, 0);
-    l->addStretch(1);
-    l->addLayout(git_layout, 0);
-    l->addLayout(qt_layout, 0);
+  mainLabel->setText(
+        tr("<b>Caligo</b> - is an open source multimedia player.<br>"
+           "At the moment, testing is taking place on Linux and Windows, no testing has been conducted on OSX, "
+           "iOS and Android are not currently supported. The source code is available at the link below.<br>"
+           "The idea of the application is to implement the minimum - necessary components of a multimedia player with "
+           "an emphasis on performance.<br>"
+           "Help in using it is available in the corresponding menu.<br>"
+           "Development is currently being conducted by one person, some functions have not yet been implemented. "
+           "Development assistance would be welcome.<br>")
+        );
 
-    QHBoxLayout* hl = new QHBoxLayout;
-    hl->addLayout(l, 0);
+  licenseLabel->setText(
+        tr("This application is free software and is distributed under the GNU "
+           "General Public License. The license text can be found in the program directory.")
+        );
 
-    QScrollArea *scroll_area = new QScrollArea;
-    QWidget *scroll_area_widget = new QWidget;
+  mainLabel->setAlignment(Qt::AlignJustify);
 
-    scroll_area_widget->setLayout(hl);
-    scroll_area->setWidget(scroll_area_widget);
-    scroll_area->setWidgetResizable(true);
-
-    QVBoxLayout *main_layout = new QVBoxLayout;
-    main_layout->addWidget(scroll_area);
-    setLayout(main_layout);
-
-    title_label->setText(
-                "<center><h2>" + qApp->applicationName() + " " + qApp->applicationVersion() +
-                "</h2><br><h3>" + tr("About application") + "</h3></center>"
-                );
-
-    git_hub_link_label->setText(tr("Source code") + ": <a href='" + _git_hub_url + "'>"
-                                + _git_hub_url + "</a>");
-
-    main_label->setText(
-                tr("<b>Caligo</b> - is an open source multimedia player.<br> At the moment, "
-                   "testing is taking place on Linux and Windows, no testing has been conducted "
-                   "on OSX, iOS and Android are not currently supported. The source code is "
-                   "available at the link below.<br>The idea of the application is to implement "
-                   "the minimum - necessary components of a multimedia player with an emphasis on "
-                   "performance.<br>Help in using it is available in the corresponding menu.<br>"
-                   "Development is currently being conducted by one person, some functions have "
-                   "not yet been implemented. Development assistance would be welcome.<br>")
-                );
-
-    licence_label->setText(
-                tr("This application is free software and is distributed under the GNU "
-                   "General Public License. The license text can be found in the program "
-                   "directory.")
-                );
-
-    main_label->setAlignment(Qt::AlignJustify);
-
-    connect(open_in_browser_button, &QPushButton::clicked, this,
-            &AboutWindow::open_github_in_browser);
+  connect(openInBrowser, &QPushButton::clicked, this, &AboutWindow::oib);
 }
 
-void AboutWindow::open_github_in_browser()
+void AboutWindow::oib()
 {
-    QDesktopServices::openUrl(_git_hub_url);
+  QDesktopServices::openUrl(link);
 }

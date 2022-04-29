@@ -6,262 +6,325 @@
 
 #include "controls.h"
 
-static QString msToString(qint64 ms);
-
-Controls::Controls(QMediaPlayer* media_player, QWidget* parent)
-    : QWidget(parent),
-      _player(media_player)
+Controls::Controls(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
+// Bottom widget. Playback/volume controls and Settings and About buttons.
 {
-    setMouseTracking(true);
+#ifdef DEBUG_OUTPUT
+  qDebug() << ">>> Controls init";
+#endif
 
-    _position_label->setObjectName("AlphaBG");
-    _duration_label->setObjectName("AlphaBG");
+  setMouseTracking(true);
 
-    QHBoxLayout* top_layout = new QHBoxLayout;
-    top_layout->addWidget(_position_label, 0);
-    top_layout->addWidget(_time_slider, 1);
-    top_layout->addWidget(_duration_label, 0);
+  player = mp;
 
-    _prev_button = new QPushButton;
-    _prev_button->setToolTip(tr("Previous track") + " [B]");
-    _prev_button->setIcon(QIcon(":/img/previous"));
+  timeSlider = new TimeSlider;
 
-    _play_button = new QPushButton;
-    _play_button->setToolTip(tr("Play") + " [P]");
-    _play_button->setIcon(QIcon(":/img/play"));
+  posLabel = new QLabel("00:00");
+  posLabel->setObjectName("AlphaBG");
+  durLabel = new QLabel("00:00");
+  durLabel->setObjectName("AlphaBG");
 
-    _stop_button = new QPushButton;
-    _stop_button->setToolTip(tr("Stop") + " [S]");
-    _stop_button->setIcon(QIcon(":/img/stop"));
+  topLayout = new QHBoxLayout;
+  topLayout->addWidget(posLabel, 0);
+  topLayout->addWidget(timeSlider, 1);
+  topLayout->addWidget(durLabel, 0);
 
-    _next_button = new QPushButton;
-    _next_button->setToolTip(tr("Next track") + " [N]");
-    _next_button->setIcon(QIcon(":/img/next"));
+  prevButton = new QPushButton;
+  prevButton->setToolTip(tr("Previous track") + " [B]");
+  prevButton->setIcon(QIcon(":/img/previous"));
 
-    _random_playback_button = new QPushButton;
-    _random_playback_button->setToolTip(tr("Random playback"));
-    _random_playback_button->setIcon(QIcon(":img/randomPlayback"));
-    _random_playback_button->setCheckable(true);
-    _random_playback_button->setChecked(false);
+  playButton = new QPushButton;
+  playButton->setToolTip(tr("Play") + " [P]");
+  playButton->setIcon(QIcon(":/img/play"));
 
-    _full_screen_button = new QPushButton;
-    _full_screen_button->setToolTip(tr("Toggle fullscreen (video only)") + " [F]");
-    _full_screen_button->setIcon(QPixmap(":/img/fullscreen"));
+  stopButton = new QPushButton;
+  stopButton->setToolTip(tr("Stop") + " [S]");
+  stopButton->setIcon(QIcon(":/img/stop"));
 
-    _mute_button = new QPushButton;
-    _mute_button->setToolTip(tr("Mute") + " [Ctrl+M]");
-    _mute_button->setIcon(QPixmap(":/img/volume"));
+  nextButton = new QPushButton;
+  nextButton->setToolTip(tr("Next track") + " [N]");
+  nextButton->setIcon(QIcon(":/img/next"));
 
-    _volume_slider = new QSlider;
-    _volume_slider->setRange(0, 100);
-    _volume_slider->setValue(50);
-    _volume_slider->setMinimumWidth(qApp->desktop()->size().width() > 1920 ? 150 : 100);
-    _volume_slider->setOrientation(Qt::Horizontal);
-    _player->setVolume(_volume_slider->value());
+  randomPlaybackButton = new QPushButton;
+  randomPlaybackButton->setToolTip(tr("Random playback"));
+  randomPlaybackButton->setIcon(QIcon(":img/randomPlayback"));
+  randomPlaybackButton->setCheckable(true);
+  randomPlaybackButton->setChecked(false);
+  randomPlayback = false;
 
-    QHBoxLayout* bottom_layout = new QHBoxLayout;
+  fullScreenButton = new QPushButton;
+  fullScreenButton->setToolTip(tr("Toggle fullscreen (video only)") + " [F]");
+  fullScreenButton->setIcon(QPixmap(":/img/fullscreen"));
 
-    bottom_layout->addStretch(1);
-    bottom_layout->addSpacing(15);
+  muteButton = new QPushButton;
+  muteButton->setToolTip(tr("Mute") + " [Ctrl+M]");
+  muteButton->setIcon(QPixmap(":/img/volume"));
 
-    bottom_layout->addWidget(_prev_button, 0);
-    bottom_layout->addSpacing(5);
-    bottom_layout->addWidget(_play_button, 0);
-    bottom_layout->addSpacing(5);
-    bottom_layout->addWidget(_next_button, 0);
-    bottom_layout->addSpacing(5);
-    bottom_layout->addWidget(_stop_button, 0);
-    bottom_layout->addSpacing(5);
+  volumeSlider = new QSlider;
+  volumeSlider->setRange(0, 100);
+  volumeSlider->setValue(50);
+  volumeSlider->setMinimumWidth(qApp->desktop()->size().width() > 1920 ? 150 : 100);
+  volumeSlider->setOrientation(Qt::Horizontal);
+  player->setVolume(volumeSlider->value());
 
-    bottom_layout->addStretch(1);
-    bottom_layout->addWidget(_full_screen_button, 0);
-    bottom_layout->addSpacing(5);
-    bottom_layout->addWidget(_random_playback_button, 0);
+  botLayout = new QHBoxLayout;
 
-    bottom_layout->addSpacing(5);
-    bottom_layout->addStretch(1);
+  botLayout->addStretch(1);
+  botLayout->addSpacing(15);
 
-    bottom_layout->addWidget(_mute_button, 0);
-    bottom_layout->addWidget(_volume_slider, 0);
+  botLayout->addWidget(prevButton, 0);
+  botLayout->addSpacing(5);
+  botLayout->addWidget(playButton, 0);
+  botLayout->addSpacing(5);
+  botLayout->addWidget(nextButton, 0);
+  botLayout->addSpacing(5);
+  botLayout->addWidget(stopButton, 0);
+  botLayout->addSpacing(5);
 
-    QVBoxLayout* main_layout = new QVBoxLayout;
-    main_layout->addLayout(top_layout);
-    main_layout->addLayout(bottom_layout);
-    setLayout(main_layout);
+  botLayout->addStretch(1);
+  botLayout->addWidget(fullScreenButton, 0);
+  botLayout->addSpacing(5);
+  botLayout->addWidget(randomPlaybackButton, 0);
 
-    connect(_player, &QMediaPlayer::stateChanged, this, &Controls::mediaState);
-    connect(_player, &QMediaPlayer::mutedChanged, this, &Controls::mutedState);
+  botLayout->addSpacing(5);
+  botLayout->addStretch(1);
 
-    connect(_player, &QMediaPlayer::volumeChanged, _volume_slider, &QSlider::setValue);
-    connect(_volume_slider, &QSlider::valueChanged, _player, &QMediaPlayer::setVolume);
+  botLayout->addWidget(muteButton, 0);
+  botLayout->addWidget(volumeSlider, 0);
 
-    connect(_player, &QMediaPlayer::durationChanged, this, &Controls::setDuration);
-    connect(_player, &QMediaPlayer::positionChanged, this, &Controls::setPosition);
-    connect(_time_slider, &TimeSlider::clicked, _player, &QMediaPlayer::setPosition);
+  l = new QVBoxLayout;
+  l->addLayout(topLayout);
+  l->addLayout(botLayout);
+  setLayout(l);
 
-    connect(_prev_button, &QPushButton::clicked, this, &Controls::prev);
-    connect(_play_button, &QPushButton::clicked, this, &Controls::playPause);
-    connect(_stop_button, &QPushButton::clicked, this, &Controls::stop);
-    connect(_next_button, &QPushButton::clicked, this, &Controls::next);
-    connect(_mute_button, &QPushButton::clicked, this, &Controls::mute);
+  connect(mp, &QMediaPlayer::stateChanged, this, &Controls::mediaState);
+  connect(mp, &QMediaPlayer::mutedChanged, this, &Controls::mutedState);
 
-    connect(_full_screen_button, &QPushButton::clicked, this, &Controls::fullScreen);
-    connect(_player, &QMediaPlayer::videoAvailableChanged, this, &Controls::videoAvailable);
+  connect(mp, &QMediaPlayer::volumeChanged, volumeSlider, &QSlider::setValue);
+  connect(volumeSlider, &QSlider::valueChanged, mp, &QMediaPlayer::setVolume);
 
-    connect(_random_playback_button, &QPushButton::clicked, this, &Controls::randomPlaybackClicked);
+  connect(mp, &QMediaPlayer::durationChanged, this, &Controls::setDur);
+  connect(mp, &QMediaPlayer::positionChanged, this, &Controls::setPos);
+  connect(timeSlider, &TimeSlider::clicked, mp, &QMediaPlayer::setPosition);
+
+  connect(prevButton, &QPushButton::clicked, this, &Controls::prev);
+  connect(playButton, &QPushButton::clicked, this, &Controls::playPause);
+  connect(stopButton, &QPushButton::clicked, this, &Controls::stop);
+  connect(nextButton, &QPushButton::clicked, this, &Controls::next);
+  connect(muteButton, &QPushButton::clicked, this, &Controls::mute);
+
+  connect(fullScreenButton, &QPushButton::clicked, this, &Controls::fullScreen);
+  connect(player, &QMediaPlayer::videoAvailableChanged, this, &Controls::videoAvailable);
+
+  connect(randomPlaybackButton, &QPushButton::clicked, this, &Controls::randomPlaybackClicked);
 }
 
-void Controls::setSizes(int size)
+void Controls::setSizes(int v)
 {
-    assert(size >= 16 and size <= 128);
+  if (v < 16)
+    return;
 
-    qreal vr = qreal(size) * 1.5;
-    QSize regular_button_size(size, size);
-    QSize play_button_size((int(vr)), (int(vr)));
-
-    _prev_button->setIconSize(regular_button_size);
-    _play_button->setIconSize(play_button_size);
-    _stop_button->setIconSize(regular_button_size);
-    _next_button->setIconSize(regular_button_size);
-    _mute_button->setIconSize(regular_button_size);
-    _full_screen_button->setIconSize(regular_button_size);
-    _random_playback_button->setIconSize(regular_button_size);
+  QSize s(v, v);
+  qreal vr = qreal(v) * 1.5;
+  QSize ps((int(vr)), (int(vr)));
+  prevButton->setIconSize(s);
+  playButton->setIconSize(ps);
+  stopButton->setIconSize(s);
+  nextButton->setIconSize(s);
+  muteButton->setIconSize(s);
+  fullScreenButton->setIconSize(s);
+  randomPlaybackButton->setIconSize(s);
 }
 
-void Controls::setVolume(int volume)
+void Controls::setVolume(int v)
 {
-    if (volume < 0)
-        volume = 0;
-    else if (volume > 100)
-        volume = 100;
+#ifdef DEBUG_OUTPUT
+  qDebug() << "Controls::setVolume" << v;
+#endif
 
-    _player->setVolume(volume);
-    _volume_slider->setValue(volume);
+  if (v >= 0 && v <= 100) {
+      player->setVolume(v);
+      volumeSlider->setValue(v);
+    }
+  else if (v < 0) {
+      player->setVolume(0);
+      volumeSlider->setValue(0);
+    }
+  else if (v > 100) {
+      player->setVolume(100);
+      volumeSlider->setValue(100);
+    }
 }
 
-int Controls::volume() const
+int Controls::getVolume()
 {
-    return _player->volume();
+  return player->volume();
 }
 
-void Controls::videoAvailable(bool v)
+/* private SLOT */ void Controls::videoAvailable(bool v)
 {
-    _full_screen_button->setEnabled(v);
-    _full_screen_button->setVisible(v);
+#ifdef DEBUG_OUTPUT
+  qDebug() << "SLOT Controls::videoAvailable" << v;
+#endif
+
+  fullScreenButton->setEnabled(v);
+  fullScreenButton->setVisible(v);
 }
 
 void Controls::randomPlaybackClicked(bool value)
 {
-    emit randomPlaybackChanged(value);
-    setRandomPlayback(value);
+  emit randomPlaybackChanged(value);
+  setRandomPlayback(value);
 }
 
-void Controls::mediaState(QMediaPlayer::State state)
+/* private SLOT */ void Controls::mediaState(QMediaPlayer::State s)
 {
-    if (state == QMediaPlayer::State::PlayingState) {
-        _play_button->setIcon(QIcon(":/img/pause"));
-        _play_button->setToolTip(tr("Pause") + " [P]");
-    } else {
-        _play_button->setIcon(QIcon(":/img/play"));
-        _play_button->setToolTip(tr("Play") + " [P]");
+#ifdef DEBUG_OUTPUT
+  qDebug() << "SLOT Controls::mediaState" << s;
+#endif
+
+  if (s == QMediaPlayer::State::PlayingState) {
+      playButton->setIcon(QIcon(":/img/pause"));
+      playButton->setToolTip(tr("Pause") + " [P]");
     }
-    _full_screen_button->setVisible(_player->isVideoAvailable());
+  else {
+      playButton->setIcon(QIcon(":/img/play"));
+      playButton->setToolTip(tr("Play") + " [P]");
+    }
+  fullScreenButton->setVisible(player->isVideoAvailable());
 }
 
-void Controls::mutedState(bool muted)
+/* private SLOT */ void Controls::mutedState(bool v)
 {
-    if (muted) {
-        _mute_button->setIcon(QIcon(":/img/mute"));
-        _mute_button->setToolTip(tr("Unmute") + " [Ctrl+M]");
-    } else {
-        _mute_button->setIcon(QIcon(":/img/volume"));
-        _mute_button->setToolTip(tr("Mute") + " [Ctrl+M]");
+#ifdef DEBUG_OUTPUT
+  qDebug() << "SLOT Controls::mutedState" << v;
+#endif
+
+  if (v) {
+      muteButton->setIcon(QIcon(":/img/mute"));
+      muteButton->setToolTip(tr("Unmute") + " [Ctrl+M]");
+    }
+  else {
+      muteButton->setIcon(QIcon(":/img/volume"));
+      muteButton->setToolTip(tr("Mute") + " [Ctrl+M]");
     }
 }
 
-void Controls::setDuration(qint64 duration)
+/* private SLOT */ void Controls::setDur(qint64 v)
 {
-    _time_slider->setDuration(duration);
-    _duration_label->setText(msToString(duration));
+#ifdef DEBUG_OUTPUT
+  qDebug() << "SLOT Controls::setDur" << v;
+#endif
+
+  timeSlider->setDuration(v);
+  durLabel->setText(msToStr(v));
 }
 
-void Controls::setPosition(qint64 position)
+/* private SLOT */ void Controls::setPos(qint64 v)
 {
-    _time_slider->setPosition(position);
-    _position_label->setText(msToString(position));
+  timeSlider->setPosition(v);
+  posLabel->setText(msToStr(v));
 }
 
-void Controls::playPause()
+/* public SLOT */ void Controls::playPause()
 {
-    if (_player->state() == QMediaPlayer::State::PlayingState)
-        _player->pause();
-    else
-        _player->play();
+#ifdef DEBUG_OUTPUT
+  qDebug() << "SLOT Controls::playPause()";
+#endif
+
+  if (player->state() == QMediaPlayer::State::PlayingState) {
+      player->pause();
+    }
+  else {
+      player->play();
+    }
 }
 
-void Controls::mute()
+/* public SLOT */ void Controls::mute()
 {
-    _player->setMuted(not _player->isMuted());
+#ifdef DEBUG_OUTPUT
+  qDebug() << "SLOT Controls::mute()";
+#endif
+
+  if (player->isMuted()) {
+      player->setMuted(false);
+    }
+  else {
+      player->setMuted(true);
+    }
 }
 
-void Controls::stop()
-// Not used QMediaPlayer::stop() because emits signal
-// QMediaPlayer::mediaStatusChanged(QMediaPlayer::LoadedMedia)
+/* public SLOT */ void Controls::stop()
+// Not used QMediaPlayer::stop() because emits signal QMediaPlayer::mediaStatusChanged(QMediaPlayer::LoadedMedia)
 {
-    _player->pause();
-    _player->setPosition(0);
+#ifdef DEBUG_OUTPUT
+  qDebug() << "SLOT Controls::stop()";
+#endif
+
+  player->pause();
+  player->setPosition(0);
 }
 
-void Controls::plusVolume()
+/* public SLOT */ void Controls::plusVol()
+// Hotkey
 {
-    setVolume(_player->volume() + 5);
+#ifdef DEBUG_OUTPUT
+  qDebug() << "SLOT Controls::plusVol()";
+#endif
+
+  setVolume(player->volume() + 5);
 }
 
-void Controls::minusVolume()
+/* public SLOT */ void Controls::minusVol()
+// Hotkey
 {
-    setVolume(_player->volume() - 5);
+#ifdef DEBUG_OUTPUT
+  qDebug() << "SLOT Controls::minusVol()";
+#endif
+
+  setVolume(player->volume() - 5);
 }
 
-void Controls::mouseMoveEvent(QMouseEvent*)
+void Controls::mouseMoveEvent(QMouseEvent *)
 {
-    emit mouseMoved();
+  emit mouseMoved();
 }
 
 bool Controls::isRandomPlayback() const
 {
-    return _is_random_playback;
+  return randomPlayback;
 }
 
 void Controls::setRandomPlayback(bool value)
 {
-    _random_playback_button->setChecked(value);
-    _is_random_playback = value;
-    emit randomPlaybackChanged(value);
+  randomPlaybackButton->setChecked(value);
+  randomPlayback = value;
+  emit randomPlaybackChanged(value);
 }
 
-static QString msToString(qint64 ms)
+QString Controls::msToStr(qint64 ms)
 {
-    QString ret;
-    ms /= 1000;
+  QString ret;
+  ms /= 1000;
 
-    int s = ms % 60;
-    ms /= 60;
-    int m = ms % 60;
-    int h = ms / 60;
+  int s = ms % 60;
+  ms /= 60;
+  int m = ms % 60;
+  int h = ms / 60;
 
-    if (h != 0) {
-        ret += QString::number(h) + ":";
+  if (h != 0) {
+      ret += QString::number(h) + ":";
     }
 
-    if (m < 10) {
-        ret += "0";
+  if (m < 10) {
+      ret += "0";
     }
-    ret += QString::number(m) + ":";
+  ret += QString::number(m) + ":";
 
-    if (s < 10) {
-        ret += "0";
+  if (s < 10) {
+      ret += "0";
     }
-    ret += QString::number(s);
+  ret += QString::number(s);
 
-    return ret;
+  return ret;
 }

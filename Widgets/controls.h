@@ -12,69 +12,83 @@
 
 #include <Widgets/timeslider.h>
 
+/// Bottom control panel
 class Controls : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit Controls(QMediaPlayer* media_player, QWidget* parent = nullptr);
+  /// Bottom control panel
+  explicit Controls(QMediaPlayer *mp, QWidget *parent = nullptr);
 
-    void setSizes(int size);
+  /// Set buttons sizes
+  void setSizes(int v);
 
-    void setVolume(int volume);
-    int volume() const;
+  void setVolume(int v);
+  int getVolume();
 
-    bool isRandomPlayback() const;
-    void setRandomPlayback(bool value);
+  bool isRandomPlayback() const;
+  void setRandomPlayback(bool value);
 
 signals:
-    void next();
-    void prev();
-    void fullScreen();
+  /// Next media in playlist
+  void next();
+  /// Previous media in playlist
+  void prev();
+  void fullScreen();
 
-    void randomPlaybackChanged(bool);
+  void randomPlaybackChanged(bool);
 
-    void mouseMoved();
+  void mouseMoved();
 
 public slots:
-    void playPause();
-    void mute();
-    void stop();
+  void playPause();
+  void mute();
+  void stop();
 
-    void plusVolume();
-    void minusVolume();
+  void plusVol();
+  void minusVol();
 
 protected:
-    void mouseMoveEvent(QMouseEvent*) override;
+  virtual void mouseMoveEvent(QMouseEvent *) override;
 
 private:
-    QMediaPlayer* _player;
+  QMediaPlayer *player;
 
-    TimeSlider* _time_slider = new TimeSlider;
-    QLabel* _position_label = new QLabel("00:00");
-    QLabel* _duration_label = new QLabel("00:00");
+  TimeSlider *timeSlider;
+  QLabel *posLabel;
+  QLabel *durLabel;
+  QHBoxLayout *topLayout;
 
-    QPushButton* _prev_button;
-    QPushButton* _play_button;
-    QPushButton* _stop_button;
-    QPushButton* _next_button;
-    QPushButton* _full_screen_button;
-    QPushButton* _random_playback_button;
-    QPushButton* _mute_button;
-    QSlider* _volume_slider;
+  QPushButton *prevButton;
+  QPushButton *playButton;
+  QPushButton *stopButton;
+  QPushButton *nextButton;
+  QPushButton *fullScreenButton;
+  QPushButton *randomPlaybackButton;
+  QPushButton *muteButton;
+  QSlider *volumeSlider;
+  QHBoxLayout *botLayout;
 
-    bool _is_random_playback = false;
+  QVBoxLayout *l;
+
+  bool randomPlayback;
 
 private slots:
-    void mediaState(QMediaPlayer::State state);
-    void mutedState(bool muted);
+  void mediaState(QMediaPlayer::State s);
+  void mutedState(bool v);
 
-    void setDuration(qint64 duration);
+  /// Set TimeSlider duration
+  void setDur(qint64 v);
 
-    void setPosition(qint64 position);
+  /// Set TimeSlider position
+  void setPos(qint64 v);
 
-    void videoAvailable(bool v);
+  /// Converts miliseconds to QString
+  QString msToStr(qint64 ms);
 
-    void randomPlaybackClicked(bool value);
+  void videoAvailable(bool v);
+
+  void randomPlaybackClicked(bool value);
 };
 
 #endif // CONTROLS_H

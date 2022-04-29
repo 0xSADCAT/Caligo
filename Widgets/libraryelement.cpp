@@ -8,77 +8,83 @@
 
 LibraryElement::LibraryElement(QString &path, QWidget *parent) : QWidget(parent)
 {
-    _path = path;
-    _name = path;
+  this->path = path;
+  name = path;
 
-    _name_label = new QLabel(path);
+  nameLabel = new QLabel(path);
 
-    QHBoxLayout *main_layout = new QHBoxLayout;
-    main_layout->addWidget(_name_label, 0);
-    setLayout(main_layout);
+  QHBoxLayout *l = new QHBoxLayout;
+  l->addWidget(nameLabel, 0);
+  setLayout(l);
 
-    layout()->setSpacing(0);
-    layout()->setContentsMargins(0, 0, 0, 0);
+  layout()->setSpacing(0);
+  layout()->setContentsMargins(0, 0, 0, 0);
 }
 
-QString LibraryElement::path() const
+QString LibraryElement::getPath() const
 {
-    return _path;
+  return path;
 }
 
 void LibraryElement::setText(const QString &value)
 {
-    if (value.isEmpty())
-        return;
+  if (value.isEmpty())
+    return;
 
-    _name = value;
-    _name_label->setText(value);
+  name = value;
+  nameLabel->setText(value);
 }
 
-QString LibraryElement::format() const
+QString LibraryElement::getString() const
 {
-    QString s = "";
+  QString s = "";
 
-    s += _path;
-    s += " ## ";
-    if (not _name.isEmpty())
-        s += _name;
+  s += path;
+  s += " ## ";
+  if (not name.isEmpty())
+    s += name;
 
-    return s;
+  return s;
 }
 
-void LibraryElement::setSelected(bool selected)
+void LibraryElement::setSelected(bool v)
 {
-    if (selected)
-        setStyleSheet(qvariant_cast<QString>(qApp->property("LeSelectedQSS")));
-    else
-        setStyleSheet(qvariant_cast<QString>(qApp->property("LeNoneQSS")));
-}
-
-void LibraryElement::mousePressEvent(QMouseEvent* event)
-{
-    if (event->button() == Qt::LeftButton) {
-        if (event->modifiers() & Qt::ShiftModifier)
-            emit shiftClicked();
-        else if (event->modifiers() & Qt::ControlModifier)
-            emit ctrlClicked();
-        else
-            emit clicked();
+  if (v) {
+      setStyleSheet(qvariant_cast<QString>(qApp->property("LeSelectedQSS")));
+    }
+  else {
+      setStyleSheet(qvariant_cast<QString>(qApp->property("LeNoneQSS")));
     }
 }
 
-void LibraryElement::mouseDoubleClickEvent(QMouseEvent* event)
+void LibraryElement::mousePressEvent(QMouseEvent *e)
 {
-    if (event->button() == Qt::LeftButton)
-        emit doubleClicked();
+  if (e->button() == Qt::LeftButton) {
+      if (e->modifiers() & Qt::ShiftModifier) {
+          emit shiftClicked();
+        }
+      else if (e->modifiers() & Qt::ControlModifier) {
+          emit ctrlClicked();
+        }
+      else {
+          emit clicked();
+        }
+    }
 }
 
-void LibraryElement::focusInEvent(QFocusEvent*)
+void LibraryElement::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    emit focus();
+  if (e->button() == Qt::LeftButton) {
+      emit doubleClicked();
+    }
 }
 
-QString LibraryElement::name() const
+void LibraryElement::focusInEvent(QFocusEvent *)
 {
-    return _name;
+  emit focus();
+}
+
+QString LibraryElement::getName() const
+{
+  return name;
 }

@@ -6,134 +6,162 @@
 
 #include "playinfo.h"
 
-PlayInfo::PlayInfo(QMediaPlayer* player, QWidget* parent)
-    : QWidget(parent),
-      _player(player)
+PlayInfo::PlayInfo(QMediaPlayer *mp, QWidget *parent) : QWidget(parent)
+// Shows metadata of current track if this is music or video.
 {
-    _author->setFont(QFont(font().family(), 12, QFont::Bold));
-    _name->setFont(QFont(font().family(), 10));
+#ifdef DEBUG_OUTPUT
+  qDebug() << ">>> PlayInfo init";
+#endif
 
-    _video->setVisible(false);
-    _video->setMouseTracking(true);
-    _player->setVideoOutput(_video);
+  player = mp;
+  image = new Image;
+  author = new QLabel;
+  name = new QLabel;
+  video = new VideoWidget;
+  isVideo = false;
+  isFSVideo = false;
 
-    connect(_player, &QMediaPlayer::mediaStatusChanged, this, &PlayInfo::mediaStatus);
-    connect(_player, &QMediaPlayer::videoAvailableChanged, this, &PlayInfo::videoAvailableChanged);
+  author->setFont(QFont(this->font().family(), 12, QFont::Bold));
+  name->setFont(QFont(this->font().family(), 10));
 
-    connect(_video, &VideoWidget::clicked, this, &PlayInfo::videoClicked);
-    connect(_video, &VideoWidget::doubleClicked, this, &PlayInfo::videoDoubleClicked);
+  video->setVisible(false);
+  player->setVideoOutput(video);
 
-    connect(_video, &VideoWidget::mouseMoved, this, &PlayInfo::mouseMoved);
+  QVBoxLayout *l = new QVBoxLayout;
+  l->addWidget(image, 1);
+  l->addWidget(video, 1);
+  QVBoxLayout *nameLayout = new QVBoxLayout;
+  nameLayout->addWidget(author, 0, Qt::AlignCenter);
+  nameLayout->addWidget(name, 0, Qt::AlignCenter);
+  QWidget *w = new QWidget;
+  w->setObjectName("AlphaBGBorderRadius");
+  w->setLayout(nameLayout);
+  w->layout()->setSpacing(0);
+  w->layout()->setContentsMargins(5, 0, 5, 2);
+  l->addWidget(w, 0, Qt::AlignCenter);
+  setLayout(l);
 
-    mediaStatus(QMediaPlayer::MediaStatus::NoMedia);
+  connect(player, &QMediaPlayer::mediaStatusChanged, this, &PlayInfo::mediaStatus);
+  connect(player, &QMediaPlayer::videoAvailableChanged, this, &PlayInfo::videoChanged);
 
-    QVBoxLayout* main_layout = new QVBoxLayout;
-    main_layout->addWidget(_image, 1);
-    main_layout->addWidget(_video, 1);
+  connect(video, &VideoWidget::clicked, this, &PlayInfo::videoClicked);
+  connect(video, &VideoWidget::doubleClicked, this, &PlayInfo::videoDoubleClicked);
 
-    QVBoxLayout* nameLayout = new QVBoxLayout;
-    nameLayout->addWidget(_author, 0, Qt::AlignCenter);
-    nameLayout->addWidget(_name, 0, Qt::AlignCenter);
+  mediaStatus(QMediaPlayer::MediaStatus::NoMedia);
 
-    QWidget* media_title_widget = new QWidget;
-    media_title_widget->setObjectName("AlphaBGBorderRadius");
-    media_title_widget->setLayout(nameLayout);
-    media_title_widget->layout()->setSpacing(0);
-    media_title_widget->layout()->setContentsMargins(5, 0, 5, 2);
-    main_layout->addWidget(media_title_widget, 0, Qt::AlignCenter);
+  layout()->setSpacing(0);
+  layout()->setContentsMargins(0, 0, 0, 0);
 
-    setLayout(main_layout);
-
-    layout()->setSpacing(0);
-    layout()->setContentsMargins(0, 0, 0, 0);
+  video->setMouseTracking(true);
+  connect(video, &VideoWidget::mouseMoved, this, &PlayInfo::mouseMoved);
 }
 
-void PlayInfo::setMediaTitleVisible(bool v)
+void PlayInfo::setNotFull(bool v)
 {
-    _author->setVisible(v);
-    _name->setVisible(v);
+  author->setVisible(v);
+  name->setVisible(v);
 }
 
 void PlayInfo::focus()
 {
-    _video->setFocus();
+  video->setFocus();
 }
 
 void PlayInfo::setTitle()
+// Set new winodw title.
 {
-    QString title = "";
+  QString s = "";
 
-    switch (_player->mediaStatus()) {
+  switch (player->mediaStatus()) {
     case QMediaPlayer::MediaStatus::InvalidMedia:
     case QMediaPlayer::MediaStatus::NoMedia:
     case QMediaPlayer::MediaStatus::UnknownMediaStatus:
-        break;
+      break;
 
     default:
-        if (not _author->text().isEmpty())
-            title += _author->text();
-        if (not _name->text().isEmpty())
-            title += " - " + _name->text();
+      if (not author->text().isEmpty()) {
+          s += author->text();
+        }
+      if (not name->text().isEmpty()) {
+          s += " - " + name->text();
+        }
     }
 
-    if (not title.isEmpty())
-        title += " # " + qApp->applicationName();
+  if (not s.isEmpty()) {
+      s += " # " + qApp->applicationName();
+    }
 
-    emit newTitle(title);
+  emit newTitle(s);
 }
 
-void PlayInfo::mediaStatus(QMediaPlayer::MediaStatus status)
+/* private SLOT */ void PlayInfo::mediaStatus(QMediaPlayer::MediaStatus s)
 {
-    switch (status) {
+#ifdef DEBUG_OUTPUT
+  qDebug() << "PlayInfo::mediaStatus" << s;
+#endif
+
+  switch (s) {
     case QMediaPlayer::MediaStatus::BufferedMedia:
     case QMediaPlayer::MediaStatus::LoadedMedia:
-        if (_player->availableMetaData().contains(QMediaMetaData::CoverArtImage)) {
-            _image->setPixmap(qvariant_cast<QPixmap>(_player->metaData(QMediaMetaData::CoverArtImage)));
-            emit newPixmap(qvariant_cast<QPixmap>(_player->metaData(QMediaMetaData::CoverArtImage)));
-        } else {
-            _image->setPixmap(qvariant_cast<QPixmap>(_player->metaData(QMediaMetaData::ThumbnailImage)));
-            emit newPixmap(qvariant_cast<QPixmap>(_player->metaData(QMediaMetaData::ThumbnailImage)));
+      if (player->availableMetaData().contains(QMediaMetaData::CoverArtImage)) {
+          image->setPix(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::CoverArtImage)));
+          emit newPixmap(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::CoverArtImage)));
         }
-        _author->setText(qvariant_cast<QString>(_player->metaData(QMediaMetaData::AlbumArtist)));
-        _name->setText(qvariant_cast<QString>(_player->metaData(QMediaMetaData::Title)));
-        break;
+      else {
+          image->setPix(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::ThumbnailImage)));
+          emit newPixmap(qvariant_cast<QPixmap>(player->metaData(QMediaMetaData::ThumbnailImage)));
+        }
+      author->setText(qvariant_cast<QString>(player->metaData(QMediaMetaData::AlbumArtist)));
+      name->setText(qvariant_cast<QString>(player->metaData(QMediaMetaData::Title)));
+      break;
 
     case QMediaPlayer::MediaStatus::NoMedia:
-        _image->setPixmap(QPixmap());
-        _author->setText(tr("No media"));
-        _name->setText("");
-        break;
+      image->setPix(QPixmap());
+      author->setText(tr("No media"));
+      name->setText("");
+      break;
 
     case QMediaPlayer::MediaStatus::InvalidMedia:
-        _image->setPixmap(QPixmap());
-        _author->setText(tr("Invalid media"));
-        _name->setText("");
-        break;
+      image->setPix(QPixmap());
+      author->setText(tr("Invalid media"));
+      name->setText("");
+      break;
 
     default:
-        break;
+      break;
     }
 
-    setTitle();
+  setTitle();
 }
 
-void PlayInfo::videoAvailableChanged(bool v)
+/* private SLOT */ void PlayInfo::videoChanged(bool v)
+// Sets visibility of Album image or QVideoWidget
 {
-    _is_video = v;
-    _image->setVisible(not v);
-    _author->setVisible(not v);
-    _video->setVisible(v);
+#ifdef DEBUG_OUTPUT
+  qDebug() << "PlayInfo::videoChanged" << v;
+#endif
 
-    if (not _is_video and not _name->isVisible())
-        emit fullScreenClicked();
+  isVideo = v;
+  image->setVisible(not v);
+  author->setVisible(not v);
+  video->setVisible(v);
+
+  if (not isVideo and not name->isVisible()) {
+      emit fsClicked();
+    }
 }
 
-void PlayInfo::videoClicked()
+/* private SLOT */ void PlayInfo::videoClicked()
 {
-    _player->state() == QMediaPlayer::PlayingState ? _player->pause() : _player->play();
+  if (player->state() == QMediaPlayer::PlayingState) {
+      player->pause();
+    }
+  else {
+      player->play();
+    }
 }
 
-void PlayInfo::videoDoubleClicked()
+/* private SLOT */ void PlayInfo::videoDoubleClicked()
 {
-    emit fullScreenClicked();
+  emit fsClicked();
 }

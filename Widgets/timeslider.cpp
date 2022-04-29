@@ -6,62 +6,74 @@
 
 #include "timeslider.h"
 
-TimeSlider::TimeSlider(QWidget *parent)
-    : QWidget(parent)
-{ }
-
-void TimeSlider::setDuration(qint64 duration)
+TimeSlider::TimeSlider(QWidget *parent) : QWidget(parent)
+// Custom widget. Shows QMediaPlayer::position().
+// QSlider not used because:
+// 1. Connect recursivly:
+//        sliderMoved --> setPlayerPosition --> positionChanged --> moveSlider --> sliderMoved --> etc...
+//        Bad audio output...
+// 2. Signal QSlider::sliderMoved() emits not then mousePress or mouseRelease, but then mouseMoved:
+//        Noise then mouseMoved
 {
-    if (duration < 0)
-        duration = 0;
-    _duration = duration;
-    repaint();
+  _pos = _dur = 0;
+  isIn = false;
 }
 
-void TimeSlider::setPosition(qint64 position)
+/* public SLOT */ void TimeSlider::setDuration(qint64 v)
+// Set maximum value
 {
-    if (position > _duration)
-        position = _duration;
-    _position = position;
-    repaint();
+  if (v < 0)
+    v = 0;
+  _dur = v;
+  repaint();
 }
 
-void TimeSlider::enterEvent(QEvent*)
+/* public SLOT */ void TimeSlider::setPosition(qint64 v)
+// Set current value
 {
-    _is_mouse_in = true;
-    repaint();
+  if (v > _dur)
+    v = _dur;
+  _pos = v;
+  repaint();
 }
 
-void TimeSlider::leaveEvent(QEvent*)
+void TimeSlider::enterEvent(QEvent *)
 {
-    _is_mouse_in = false;
-    repaint();
+  isIn = true;
+  repaint();
 }
 
-void TimeSlider::mousePressEvent(QMouseEvent* event)
+void TimeSlider::leaveEvent(QEvent *)
 {
-    emit clicked(qint64(qreal(_duration) / qreal(width()) * (qreal) event->x()));
+  isIn = false;
+  repaint();
 }
 
-void TimeSlider::paintEvent(QPaintEvent*)
+void TimeSlider::mousePressEvent(QMouseEvent *e)
 {
-    QPainter painter (this);
-    int w = width();
-    int h = height();
+  qreal x = (qreal) e->x();
+  emit clicked(qint64(qreal(_dur) / qreal(width()) * x));
+}
 
-    painter.save();
-    painter.setPen(QColor(0, 0, 0, 127));
-    painter.drawRect(0, 0, w, h);
-    painter.restore();
+void TimeSlider::paintEvent(QPaintEvent *)
+{
+  QPainter p(this);
+  int w = width();
+  int h = height();
 
-    if (_is_mouse_in)
-        painter.fillRect(0, 0, w, h, QColor(245, 245, 245, 127));
-    else
-        painter.fillRect(0, 0, w, h, QColor(230, 230, 230, 127));
+  p.save();
+  p.setPen(QColor(0, 0, 0, 127));
+  p.drawRect(0, 0, w, h);
+  p.restore();
 
-    if (_duration == 0)
-        return;
+  if (isIn)
+    p.fillRect(0, 0, w, h, QColor(245, 245, 245, 127));
+  else
+    p.fillRect(0, 0, w, h, QColor(230, 230, 230, 127));
 
-    int fx = int(qreal(_position) / qreal(_duration) * qreal(w));
-    painter.fillRect(0, 0, fx, h, QColor(0, 127, 255, 127));
+  if (_dur == 0)
+    return;
+
+  int fx = int(qreal(_pos) / qreal(_dur) * qreal(w));
+  p.fillRect(0, 0, fx, h, QColor(0, 127, 255, 127));
 }

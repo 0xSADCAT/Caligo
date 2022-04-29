@@ -154,7 +154,7 @@ void MediaLibrary::keyPressEvent(QKeyEvent *e)
         return;
 
       foreach (LibraryElement *e, selection) {
-          playlist->add(e->path(), e->name());
+          playlist->add(e->getPath(), e->getName());
         }
     }
 }
@@ -234,7 +234,7 @@ void MediaLibrary::save()
   if (file.open(QIODevice::WriteOnly)) {
       QStringList li;
       foreach (LibraryElement *e, list) {
-          li << e->format();
+          li << e->getString();
         }
 
       QString endLine;
@@ -329,7 +329,7 @@ void MediaLibrary::elementClicked()
 void MediaLibrary::elementDouble()
 {
   LibraryElement *e = (LibraryElement*) sender();
-  playlist->add(e->path(), e->name());
+  playlist->add(e->getPath(), e->getName());
 
   lastClicked = e;
 }
@@ -465,7 +465,7 @@ void MediaLibrary::search(const QString &text)
       if (breaker != oldBreaker)
         return;
 
-      e->setVisible(e->name().toLower().contains(text.toLower()));
+      e->setVisible(e->getName().toLower().contains(text.toLower()));
       counter++;
       if (counter == 10) {
           qApp->processEvents();
@@ -480,5 +480,5 @@ void MediaLibrary::search(const QString &text)
 
 bool compareLibraryElements(const LibraryElement *e1, const LibraryElement *e2) noexcept
 {
-  return e1->name() < e2->name();
+  return e1->getName() < e2->getName();
 }

@@ -7,35 +7,35 @@
 #ifndef LOCALSOCKET_H
 #define LOCALSOCKET_H
 
-#include <mainwindow.h>
+#include <widget.h>
 
 #include <QTcpServer>
 #include <QTcpSocket>
 
-class Application : public QObject
+class LocalSocket : public QObject
 {
   Q_OBJECT
 public:
-  explicit Application(QObject *parent = nullptr);
+  explicit LocalSocket(QObject *parent = nullptr);
 
 private:
-  MainWindow* _main_window;
+  Widget *widget;
 
-  QTcpServer* _server;
-  QTcpSocket* _client;
+  QTcpServer *server;
+  QTcpSocket *client;
 
-  quint16 _serverBlockSize = 0;
+  quint16 serverBlockSize;
 
-  QString _host = "localhost";
-  int _port = 9999;
+  QString host;
+  int port = 9999;
 
-  void sendToServerFromClient(const QString &str);
+  void clientSendToServer(const QString &str);
 
 private slots:
   void clientError(QAbstractSocket::SocketError);
   void clientConnected();
 
-  void serverNewConnection();
+  virtual void serverNewConnection();
   void serverReadClient();
 
   void socketDisconnected();

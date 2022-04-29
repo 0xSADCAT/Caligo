@@ -6,25 +6,27 @@
 
 #include "videowidget.h"
 
-VideoWidget::VideoWidget(QWidget* parent)
-    : QVideoWidget(parent)
+VideoWidget::VideoWidget(QWidget *parent) : QVideoWidget(parent)
+/// Inherits QVideoWidget. Needs only for emit signals.
 {
-    setMouseTracking(true);
+  setMouseTracking(true);
 }
 
-void VideoWidget::mousePressEvent(QMouseEvent* event)
+void VideoWidget::mousePressEvent(QMouseEvent *e)
 {
-    if (event->button() == Qt::LeftButton)
-        emit clicked();
+  if (e->button() == Qt::LeftButton) {
+      emit clicked();
+    }
 }
 
-void VideoWidget::mouseDoubleClickEvent(QMouseEvent* event)
+void VideoWidget::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    if (event->button() == Qt::LeftButton)
-        emit doubleClicked();
+  if (e->button() == Qt::LeftButton) {
+      emit doubleClicked();
+    }
 }
 
-void VideoWidget::mouseMoveEvent(QMouseEvent*)
+void VideoWidget::mouseMoveEvent(QMouseEvent *)
 {
-    emit mouseMoved();
+  emit mouseMoved();
 }

@@ -6,48 +6,65 @@
 
 #include "image.h"
 
-Image::Image(QWidget* parent)
-    : QWidget(parent)
+Image::Image(QWidget *parent) : QWidget(parent)
+// Custom widget to display image.
 {
-    _pixmap = QPixmap(":/img/noImage");
-    setMinimumSize(32, 32);
+  pix = QPixmap(":/img/noImage");
+  setMinimumSize(32, 32);
 }
 
-void Image::setPixmap(const QPixmap &value)
+void Image::setPix(const QPixmap &value)
 {
-    _pixmap = value;
-    repaint();
+  pix = value;
+  repaint();
 }
 
-void Image::paintEvent(QPaintEvent*)
+void Image::paintEvent(QPaintEvent *)
 {
-    int w = width();
-    int h = height();
+  int w = width();
+  int h = height();
 
-    int x = w > h ? h : w;
+  // Minimum if width and height.
+  int x = w > h ? h : w;
 
-    int px = w - x;
-    int py = h - x;
+  int px = w - x;
+  int py = h - x;
 
-    QPainter painter (this);
+  QPainter p(this);
 
-    if (_pixmap.isNull())
-        _pixmap = QPixmap(":/img/icon");
-
-    QSize s = _pixmap.size();
-    if (s.width() < x or s.height() < x)
-        x = s.width() < s.height() ? s.height() : s.width();
-
-    if (width() > height()) {
-        px = width() / 2 - x / 2;
-        py = 0;
-    } else {
-        px = 0;
-        py = height() / 2 - x / 2;
+  // pix.isNull() == true  if  music not contains image in metadata, invalid media or playlist is empty.
+  if (pix.isNull()) {
+      pix = QPixmap(":/img/icon");
     }
 
-    px = width() / 2 - x / 2;
-    py = height() / 2 - x / 2;
+  QSize s = pix.size();
+  if (s.width() < x or s.height() < x) {
+      x = s.width() < s.height() ? s.height() : s.width();
+    }
 
-    painter.drawPixmap(px, py, _pixmap.scaled(x, x));
+  if (width() > height()) {
+      px = width() / 2 - x / 2;
+      py = 0;
+    }
+  else {
+      px = 0;
+      py = height() / 2 - x / 2;
+    }
+
+  px = width() / 2 - x / 2;
+  py = height() / 2 - x / 2;
+
+  p.drawPixmap(px, py, pix.scaled(x, x));
+}
+
+void Image::enterEvent(QEvent *)
+{
+  /* do nothing */
+  return;
+}
+
+void Image::leaveEvent(QEvent *)
+{
+  /* do nothing */
+  return;
 }
