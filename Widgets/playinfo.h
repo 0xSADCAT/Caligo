@@ -26,6 +26,7 @@ public:
 
 signals:
     void newTitle(const QString&);
+    void newPixmap(const QPixmap&);
     void fullScreenClicked();
     void mouseMoved();
 
@@ -44,7 +45,7 @@ private:
 
 private slots:
     void mediaStatus(QMediaPlayer::MediaStatus status);
-    void videoAvailableChanged(bool video_available);
+    void videoAvailableChanged(bool v);
 
     void videoClicked();
     void videoDoubleClicked();

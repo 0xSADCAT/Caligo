@@ -31,8 +31,8 @@ private:
 
   quint16 _serverBlockSize = 0;
 
-  const QString _HOST = "localhost";
-  const int _PORT = 9999;
+  QString _host = "localhost";
+  int _port = 9999;
 
   void sendToServerFromClient(const QString &str);
 

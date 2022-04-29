@@ -7,35 +7,71 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget* parent)
-    : QWidget(parent),
-      _media_player(new QMediaPlayer(this)),
-      _playlist_widget(new PlaylistWidget(_media_player)),
-      _playback_controls(new Controls(_media_player)),
-      _playback_info(new PlayInfo(_media_player)),
-      _library(new MediaLibrary(_playlist_widget->playlist())),
-      _playlist_library(new LibraryPlaylists(_playlist_widget->playlist())),
-      _settings_widget(new SettingsWindow(_settings, _playlist_widget->playlistControls(), _library,
-                                          _playlist_library, this))
+    : QWidget(parent)
 {
     setWindowIcon(QIcon(":/img/icon"));
 
+    QFile file(qApp->applicationDirPath() + QDir::separator() + "style.qss");
+    if (file.open(QIODevice::ReadOnly)) {
+        QString qss = file.readAll();
+        qApp->setStyleSheet(qss);
+
+        file.close();
+    } else {
+        qWarning() << "Failed to open stylesheet file: " << file.errorString();
+    }
+
+    _media_player = new QMediaPlayer;
+
+    _playback_controls = new Controls(_media_player);
+    _playback_info = new PlayInfo(_media_player);
+    _playlist = new Playlist(_media_player);
+    _playlist_controls = new PlaylistControls(_playlist);
+
+    _tab_widget = new QTabWidget;
+
     _playback_controls->setSizes(20);
+    _playlist_controls->setButtonsSizes(16);
 
+    QVBoxLayout *plL = new QVBoxLayout;
+    plL->addWidget(_playlist_controls, 0);
+    QScrollArea *sa = new QScrollArea;
+    sa->setWidget(_playlist);
+    sa->setWidgetResizable(true);
+    sa->setFrameStyle(QFrame::NoFrame);
+    plL->addWidget(sa, 1);
+
+    sw = new QWidget;
+    sw->setLayout(plL);
+    sw->layout()->setSpacing(0);
+    sw->layout()->setContentsMargins(0, 0, 0, 0);
+
+    _splitter = new QSplitter;
     _splitter->addWidget(_tab_widget);
-    _splitter->addWidget(_playlist_widget);
+    _splitter->addWidget(sw);
 
-    QVBoxLayout* main_layout = new QVBoxLayout;
-    main_layout->addWidget(_splitter, 1);
-    main_layout->addWidget(_playback_controls, 0);
-    main_layout->setSpacing(0);
-    main_layout->setContentsMargins(0, 0, 0, 0);
+    QVBoxLayout *l = new QVBoxLayout;
+    l->addWidget(_splitter, 1);
+    l->addWidget(_playback_controls, 0);
+    l->setSpacing(0);
+    l->setContentsMargins(0, 0, 0, 0);
 
-    setLayout(main_layout);
+    setLayout(l);
 
-    layout()->setSpacing(0);
-    layout()->setContentsMargins(0, 0, 0, 0);
+    _library = new MediaLibrary(_playlist);
+    _playlist_library = new LibraryPlaylists(_playlist);
 
+    connect(_playback_controls, &Controls::playbackModeChanged, _playlist,
+            &Playlist::randomPlaybackChanged);
+
+    _settings = new QSettings(qApp->applicationDirPath() + QDir::separator()
+                              + qApp->applicationName() + "_settings.ini", QSettings::IniFormat);
     loadSettings();
+
+    _settings_widget = new SettingsWindow(_settings, _playlist_controls, _library,
+                                          _playlist_library, this);
+    _about_widget = new AboutWindow;
+    _help_widget = new HelpWindow;
 
     _tab_widget->addTab(_playback_info, tr("Now Playing"));
     _tab_widget->addTab(_library, tr("Media library"));
@@ -45,56 +81,88 @@ MainWindow::MainWindow(QWidget* parent)
     _tab_widget->addTab(_help_widget, tr("Help"));
 
     _tab_widget->setTabBarAutoHide(true);
+
     _tab_widget->autoFillBackground();
 
-    setAcceptDrops(true);
-    setMouseTracking(true);
-
-    _fullscreen_timer = new QTimer(this);
-    _fullscreen_timer->setInterval(500);
-
-    _playback_info->setMouseTracking(true);
-
-    connect(_playback_controls, &Controls::playbackModeChanged, _playlist_widget->playlist(),
-            &Playlist::randomPlaybackChanged);
-
-    connect(_playback_controls, &Controls::nextClicked,
-            _playlist_widget->playlist(), &Playlist::next);
-    connect(_playback_controls, &Controls::previousClicked,
-            _playlist_widget->playlist(), &Playlist::previous);
+    connect(_playback_controls, &Controls::nextClicked, _playlist, &Playlist::next);
+    connect(_playback_controls, &Controls::previousClicked, _playlist, &Playlist::previous);
 
     connect(_playback_info, &PlayInfo::newTitle, this, &MainWindow::setNewWindowTitle);
 
-    connect(_playback_info, &PlayInfo::fullScreenClicked, this, &MainWindow::videoFullscreen);
-    connect(_playback_info, &PlayInfo::mouseMoved, this, &MainWindow::mouseMoved);
+    layout()->setSpacing(0);
+    layout()->setContentsMargins(0, 0, 0, 0);
 
-    connect(_playback_controls, &Controls::mouseMoved, this, &MainWindow::mouseMoved);
+    _playlist->setFocus();
+
+    this->setAcceptDrops(true);
+
+    connect(_playback_info, &PlayInfo::fullScreenClicked, this, &MainWindow::videoFullscreen);
     connect(_playback_controls, &Controls::fullScreenClicked, this, &MainWindow::videoFullscreen);
 
+    QShortcut* key_full_screen = new QShortcut(QKeySequence("F"), this);
+    connect(key_full_screen, &QShortcut::activated, this, &MainWindow::videoFullscreen);
+
+    QShortcut* key_exit_fullscreen = new QShortcut(QKeySequence("Esc"), this);
+    connect(key_exit_fullscreen, &QShortcut::activated, this, &MainWindow::exitFull);
+
+    QShortcut* key_next = new QShortcut(QKeySequence("N"), this);
+    connect(key_next, &QShortcut::activated, _playback_controls, &Controls::nextClicked);
+
+    QShortcut* key_previous = new QShortcut(QKeySequence("B"), this);
+    connect(key_previous, &QShortcut::activated, _playback_controls, &Controls::previousClicked);
+
+    QShortcut* key_play = new QShortcut(QKeySequence("P"), this);
+    connect(key_play, &QShortcut::activated, _playback_controls, &Controls::onPlayPause);
+
+    QShortcut* key_stop = new QShortcut(QKeySequence("S"), this);
+    connect(key_stop, &QShortcut::activated, _playback_controls, &Controls::onStop);
+
+    QShortcut* key_mute = new QShortcut(QKeySequence("CTRL+M"), this);
+    connect(key_mute, &QShortcut::activated, _playback_controls, &Controls::onMute);
+
+    QShortcut* key_volume_plus = new QShortcut(QKeySequence(Qt::Key_Plus), this);
+    connect(key_volume_plus, &QShortcut::activated, _playback_controls, &Controls::onPlusVolume);
+
+    QShortcut* key_volume_minus = new QShortcut(QKeySequence(Qt::Key_Minus), this);
+    connect(key_volume_minus, &QShortcut::activated, _playback_controls, &Controls::onMinusVolume);
+
+    QShortcut* key_help = new QShortcut(QKeySequence("CTRL+H"), this);
+    connect(key_help, &QShortcut::activated, this, &MainWindow::help);
+
+    _fullscreen_timer = new QTimer(this);
     connect(_fullscreen_timer, &QTimer::timeout, this, &MainWindow::timerTick);
+    _fullscreen_timer->setInterval(500);
+
+    _timer_value = 6; // 3 sec
+
+    setMouseTracking(true);
+    _playback_info->setMouseTracking(true);
+
+    connect(_playback_info, &PlayInfo::mouseMoved, this, &MainWindow::mouseMoved);
+    connect(_playback_controls, &Controls::mouseMoved, this, &MainWindow::mouseMoved);
 }
 
 void MainWindow::addToPlaylist(const QString &path)
 {
-    _playlist_widget->playlist()->add(path);
+    _playlist->add(path);
 }
 
 void MainWindow::forceUpdatePlaylistMetadata()
 {
-    _playlist_widget->playlist()->forceUpdate();
+    _playlist->forceUpdate();
 }
 
 void MainWindow::closeEvent(QCloseEvent *)
 {
     _library->save();
 
-    _settings->setValue("windowConfig/size", size());
-    _settings->setValue("windowConfig/position", pos());
-    _settings->setValue("windowConfig/splitterLeft", _splitter->sizes()[0]);
-    _settings->setValue("windowConfig/splitterRight", _splitter->sizes()[1]);
-    _settings->setValue("other/volume", _playback_controls->volume());
-    _settings->setValue("other/playlist", _playlist_widget->playlist()->toStringList());
-    _settings->setValue("playback/random", _playback_controls->isRandomPlayback());
+    _settings->setValue("windowConfig/size", this->size());
+    _settings->setValue("windowConfig/position", this->pos());
+    _settings->setValue("windowConfig/splitterLeft", this->_splitter->sizes()[0]);
+    _settings->setValue("windowConfig/splitterRight", this->_splitter->sizes()[1]);
+    _settings->setValue("other/volume", this->_playback_controls->volume());
+    _settings->setValue("other/playlist", this->_playlist->toStringList());
+    _settings->setValue("playback/random", this->_playback_controls->isRandomPlayback());
 
     /* Hide error code 139 */
     _settings->~QSettings();
@@ -127,7 +195,8 @@ void MainWindow::dropEvent(QDropEvent* event)
             if (file_info.isDir()) {
                 QDir dir(path);
                 recursiveEntryPoints(dir);
-            } else {
+            }
+            else {
                 _droppedFiles << path;
             }
         }
@@ -135,7 +204,7 @@ void MainWindow::dropEvent(QDropEvent* event)
 
     if (not _droppedFiles.isEmpty()) {
         QString mime_type = "";
-        for (auto& file : _droppedFiles) {
+        foreach (QString file, _droppedFiles) {
             mime_type = QMimeDatabase().mimeTypeForFile(file).name();
             if (not mime_type.contains("audio/")
                 and not mime_type.contains("video/")
@@ -144,7 +213,7 @@ void MainWindow::dropEvent(QDropEvent* event)
             }
         }
 
-        _playlist_widget->playlist()->add(_droppedFiles);
+        _playlist->add(_droppedFiles);
         _droppedFiles.clear();
     }
 }
@@ -190,24 +259,22 @@ void MainWindow::loadSettings()
         for (auto& media_file : old_playlist) {
             QStringList splitted_media_file = media_file.split(" ## ");
             if (splitted_media_file.count() == 1) {
-                _playlist_widget->playlist()->add(splitted_media_file[0]);
+                _playlist->add(splitted_media_file[0]);
                 need_scan = true;
             }
             else {
                 if (splitted_media_file[1] == " ") {
-                    _playlist_widget->playlist()->add(splitted_media_file[0]);
+                    _playlist->add(splitted_media_file[0]);
                     need_scan = true;
                 }
                 else {
-                    _playlist_widget->playlist()->add(splitted_media_file[0],
-                            splitted_media_file[1]);
+                    _playlist->add(splitted_media_file[0], splitted_media_file[1]);
                 }
             }
         }
 
         if (need_scan)
-            _playlist_widget->playlist()->forceUpdate();
-
+            _playlist->forceUpdate();
     } else if (qApp->arguments().count() != 1) {
         QStringList media_files;
 
@@ -221,34 +288,10 @@ void MainWindow::loadSettings()
                 media_files << arg;
             }
         }
-        _playlist_widget->playlist()->add(media_files);
+        _playlist->add(media_files);
     }
 
     _playlist_library->scan();
-}
-
-void MainWindow::createShortcuts()
-{
-    connect(new QShortcut(QKeySequence("F"), this), &QShortcut::activated,
-            this, &MainWindow::videoFullscreen);
-    connect(new QShortcut(QKeySequence("Esc"), this), &QShortcut::activated,
-            this, &MainWindow::exitFull);
-    connect(new QShortcut(QKeySequence("CTRL+H"), this), &QShortcut::activated,
-            this, &MainWindow::help);
-    connect(new QShortcut(QKeySequence("N"), this), &QShortcut::activated,
-            _playback_controls, &Controls::nextClicked);
-    connect(new QShortcut(QKeySequence("B"), this), &QShortcut::activated,
-            _playback_controls, &Controls::previousClicked);
-    connect(new QShortcut(QKeySequence("P"), this), &QShortcut::activated,
-            _playback_controls, &Controls::onPlayPause);
-    connect(new QShortcut(QKeySequence("S"), this), &QShortcut::activated,
-            _playback_controls, &Controls::onStop);
-    connect(new QShortcut(QKeySequence("CTRL+M"), this), &QShortcut::activated,
-            _playback_controls, &Controls::onMute);
-    connect(new QShortcut(QKeySequence(Qt::Key_Plus), this), &QShortcut::activated,
-            _playback_controls, &Controls::onPlusVolume);
-    connect(new QShortcut(QKeySequence(Qt::Key_Minus), this), &QShortcut::activated,
-            _playback_controls, &Controls::onMinusVolume);
 }
 
 void MainWindow::recursiveEntryPoints(QDir dir)
@@ -260,8 +303,9 @@ void MainWindow::recursiveEntryPoints(QDir dir)
         _droppedFiles << dir.absoluteFilePath(file);
 
     QStringList dirs = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    for (auto& dir_path : dirs)
+    for(auto& dir_path : dirs) {
         recursiveEntryPoints(QDir(dir.absoluteFilePath(dir_path)));
+    }
 }
 
 void MainWindow::setNewWindowTitle(const QString& title)
@@ -276,12 +320,14 @@ void MainWindow::help()
 
 void MainWindow::videoFullscreen()
 {
-    if (not _media_player->isVideoAvailable() and not isFullScreen())
+    if (not _media_player->isVideoAvailable()) {
+        if (not this->isFullScreen())
             return;
+    }
 
-    bool v = not _playlist_widget->isVisible();
+    bool v = not sw->isVisible();
 
-    _playlist_widget->setVisible(v);
+    sw->setVisible(v);
     _playback_info->setMediaTitleVisible(v);
 
     if (v) {
@@ -290,7 +336,8 @@ void MainWindow::videoFullscreen()
         _playback_controls->setVisible(true);
         unsetCursor();
         _fullscreen_timer->stop();
-    } else {
+    }
+    else {
         showFullScreen();
         _tab_widget->tabBar()->setVisible(false);
         _timer_value = _TIMER_BASE_VALUE;

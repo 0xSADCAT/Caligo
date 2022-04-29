@@ -13,7 +13,8 @@
 
 #include <Widgets/controls.h>
 #include <Widgets/playinfo.h>
-#include <Widgets/playlistwidget.hpp>
+#include <Widgets/playlist.h>
+#include <Widgets/playlistcontrols.h>
 #include <Widgets/medialibrary.h>
 #include <Widgets/libraryplaylists.h>
 
@@ -53,37 +54,35 @@ protected:
 private:
     void loadSettings();
 
-    void createShortcuts();
-
     void recursiveEntryPoints(QDir dir);
 
     QMediaPlayer* _media_player;
 
-    PlaylistWidget* _playlist_widget;
-
     Controls* _playback_controls;
     PlayInfo* _playback_info;
+    Playlist* _playlist;
+    PlaylistControls* _playlist_controls;
 
     MediaLibrary* _library;
     LibraryPlaylists* _playlist_library;
 
-    QSplitter* _splitter = new QSplitter;
+    QSplitter* _splitter;
+    QWidget* sw;
 
-    QSettings* _settings = new QSettings(qApp->applicationDirPath() + QDir::separator()
-                                         + qApp->applicationName() + "_settings.ini",
-                                         QSettings::IniFormat);
-
-    SettingsWindow* _settings_widget;
-
-    AboutWindow* _about_widget = new AboutWindow;
-    HelpWindow* _help_widget = new HelpWindow;
-    QTabWidget* _tab_widget = new QTabWidget;
-
+    QSettings* _settings;
     QStringList _droppedFiles;
 
+    AboutWindow* _about_widget;
+    HelpWindow* _help_widget;
+    SettingsWindow* _settings_widget;
+
+    QTabWidget* _tab_widget;
+
+    QList<QWidget*> _tabs;
+
     QTimer* _fullscreen_timer;
+    int _timer_value;
     const int _TIMER_BASE_VALUE = 6;
-    int _timer_value = _TIMER_BASE_VALUE;
 
 private slots:
     void setNewWindowTitle(const QString& title);

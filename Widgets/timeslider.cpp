@@ -62,7 +62,6 @@ void TimeSlider::paintEvent(QPaintEvent*)
     if (_duration == 0)
         return;
 
-    int fx = static_cast<int>(static_cast<qreal>(_position) / static_cast<qreal>(_duration)
-                              * static_cast<qreal>(w));
+    int fx = int(qreal(_position) / qreal(_duration) * qreal(w));
     painter.fillRect(0, 0, fx, h, QColor(0, 127, 255, 127));
 }
